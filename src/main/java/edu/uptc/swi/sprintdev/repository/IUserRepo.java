@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface IUserRepo extends JpaRepository<User,Integer> {
+public interface IUserRepo extends JpaRepository<User, Integer> {
     @Query("from User u WHERE u.userName = :username")
     Optional<User> findByUsername(@Param("username") String username);
 }
