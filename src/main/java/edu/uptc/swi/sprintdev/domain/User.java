@@ -16,6 +16,7 @@ import java.util.Objects;
  * Creador de unos Sprints y Lector de otros: el rol no es un atributo
  * propio del usuario, sino de su relación con cada {Sprint}.
  */
+//xd
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_user_email", columnNames = "email"))
 public class User {
