@@ -25,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name", nullable = false, length = 120)
+    @Column(name = "full_name", nullable = false, length = 120) //esta mal es username no nombrecompleto
     private String fullName;
 
     @Column(name = "email", nullable = false, length = 150)
