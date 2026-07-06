@@ -1,4 +1,4 @@
-package com.devbrains.sprintdev.domain.model;
+package edu.uptc.swi.sprintdev.domain;
 
 /**
  * Columnas del tablero Scrum. Solo enumera los valores posibles; la

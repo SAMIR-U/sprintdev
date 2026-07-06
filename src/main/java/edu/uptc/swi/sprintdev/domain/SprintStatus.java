@@ -1,4 +1,4 @@
-package com.devbrains.sprintdev.domain.model;
+package edu.uptc.swi.sprintdev.domain;
 
 /**
  * Ciclo de vida de un Sprint. Solo enumera los valores posibles; las
