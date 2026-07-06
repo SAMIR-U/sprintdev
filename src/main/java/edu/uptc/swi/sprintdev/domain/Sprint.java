@@ -50,7 +50,7 @@ public class Sprint {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private com.devbrains.sprintdev.domain.model.SprintStatus status;
+    private SprintStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "creator_id", nullable = false)
@@ -106,11 +106,11 @@ public class Sprint {
         this.endDate = endDate;
     }
 
-    public com.devbrains.sprintdev.domain.model.SprintStatus getStatus() {
+    public SprintStatus getStatus() {
         return status;
     }
 
-    public void setStatus(com.devbrains.sprintdev.domain.model.SprintStatus status) {
+    public void setStatus(SprintStatus status) {
         this.status = status;
     }
 

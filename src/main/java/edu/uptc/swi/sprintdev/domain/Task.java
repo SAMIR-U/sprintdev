@@ -35,7 +35,7 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private com.devbrains.sprintdev.domain.model.TaskStatus status;
+    private TaskStatus status;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime creationDate;
@@ -68,11 +68,11 @@ public class Task {
         this.description = description;
     }
 
-    public com.devbrains.sprintdev.domain.model.TaskStatus getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(com.devbrains.sprintdev.domain.model.TaskStatus status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
