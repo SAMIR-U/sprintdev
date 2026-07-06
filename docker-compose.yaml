@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: spr1ntd3v_
       MYSQL_DATABASE: sprintdev_db
-      MYSQL_USER: root
+      MYSQL_USER: admin
       MYSQL_PASSWORD: spr1ntd3v_
     ports:
       - "23306:3306"
