@@ -37,6 +37,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     private boolean isCorrectPassword(User user, String password) {
-        return user.getPasswordHash().equals(password);
+        return user.getPassword().equals(password);
     }
 }

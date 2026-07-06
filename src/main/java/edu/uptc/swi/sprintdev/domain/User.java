@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import java.time.LocalDateTime;
-
 /**
  * Entidad JPA de Usuario. Es una estructura de datos simple: solo
  * atributos y accesores. Las reglas de negocio (duplicados por número de
@@ -26,11 +24,7 @@ public class User {
     private Long id;
 
     @Column(name = "user_name", nullable = false, length = 120)
-    private String fullName;
-
-    @Column(name = "document_number", nullable = false, length = 20)
-    private String documentNumber;
-
+    private String UserName;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -44,20 +38,19 @@ public class User {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getUserName() {
+        return UserName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUserName(String userName) {
+        this.UserName = userName;
     }
 
-    public String getDocumentNumber() {
-        return documentNumber;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
 }
