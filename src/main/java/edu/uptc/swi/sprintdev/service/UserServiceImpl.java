@@ -15,7 +15,7 @@ public class UserServiceImpl implements IUserService {
             this.userRepo.save(user);
             return true;
         }
-        throw new UserNameAlreadyExist(user.getFullName());
+        throw new UserNameAlreadyExist(user.getUserName());
     }
 
     @Override
@@ -33,7 +33,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     private boolean userExist(User user) {
-        return this.userRepo.findByUsername(user.getFullName()) != null;
+        return this.userRepo.findByUsername(user.getUserName()) != null;
     }
 
     private boolean isCorrectPassword(User user, String password) {
