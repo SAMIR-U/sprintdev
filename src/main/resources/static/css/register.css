@@ -1,0 +1,14 @@
+.auth-box{
+    width:430px;
+}
+
+.auth-footer{
+    text-align:center;
+    margin-top:18px;
+    font-size:13px;
+}
+
+.auth-footer a{
+    color:var(--sprint);
+    font-weight:600;
+}

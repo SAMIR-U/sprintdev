@@ -29,6 +29,7 @@ public class LoginController {
 
         if (userService.loginUser(user, password)) {
             session.setAttribute("loginmessage", "success");
+            session.setAttribute("user", userService.obtainUserByUsername(user));
             return "mainmenu";
         }
         session.setAttribute("loginmessage", "fail");
