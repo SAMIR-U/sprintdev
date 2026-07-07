@@ -1,7 +1,6 @@
 package edu.uptc.swi.sprintdev.service;
 
 import edu.uptc.swi.sprintdev.domain.User;
-import edu.uptc.swi.sprintdev.exceptions.UserNameAlreadyExistException;
 import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 import edu.uptc.swi.sprintdev.repository.IUserRepo;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class UserServiceImpl implements IUserService {
             this.userRepo.save(user);
             return true;
         }
-        throw new UserNameAlreadyExistException(user.getUserName());
+        return false;
     }
 
     @Override
