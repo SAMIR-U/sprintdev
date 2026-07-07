@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-String loginMessage = (String) session.getAttribute("loginmessage");
+String registMessage = (String) session.getAttribute("registmessage");
 %>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@ String loginMessage = (String) session.getAttribute("loginmessage");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Iniciar sesión | SprintDev</title>
+    <title>Registro | SprintDev</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -25,6 +25,9 @@ String loginMessage = (String) session.getAttribute("loginmessage");
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/css/login.css">
 
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/register.css">
+
 </head>
 
 <body>
@@ -35,75 +38,68 @@ String loginMessage = (String) session.getAttribute("loginmessage");
 
         <div class="auth-logo">
 
-            <img src="${pageContext.request.contextPath}/images/logo_esprindev.jpeg" alt="Logo SprintDev" class="logo">
+        <img src="${pageContext.request.contextPath}/images/logo_esprindev.jpeg" alt="Logo SprintDev" class="logo">
 
-            <span>
-                Sprint<em>Dev</em>
-            </span>
 
         </div>
 
-        <h2 class="auth-title">Iniciar sesión</h2>
+        <h2 class="auth-title">Crear cuenta</h2>
 
         <p class="auth-sub">
-            Accede a tu cuenta
+            Registra un nuevo usuario para acceder a SprintDev.
         </p>
 
-        <% if ("fail".equals(loginMessage)) { %>
+        <% if ("fail".equals(registMessage)) { %>
 
             <div class="banner error">
-                Usuario o contraseña incorrectos.
+                No fue posible registrar el usuario.
             </div>
 
-        <% } else if ("success".equals(loginMessage)) { %>
+        <% } else if ("success".equals(registMessage)) { %>
 
             <div class="banner success">
-                Inicio de sesión exitoso.
+                Usuario registrado correctamente.
             </div>
 
         <% }
 
-        session.removeAttribute("loginmessage");
+        session.removeAttribute("registmessage");
         %>
 
-        <form action="${pageContext.request.contextPath}/login"
+        <form action="${pageContext.request.contextPath}/registuser"
               method="post">
 
             <div class="field">
 
-                <label for="user">
-                    Usuario
-                </label>
+                <label for="user">Usuario</label>
 
                 <input
                         type="text"
                         id="user"
                         name="user"
-                        placeholder="Ingrese su usuario"
+                        placeholder="Ingrese un usuario"
                         required>
 
             </div>
 
             <div class="field">
 
-                <label for="password">
-                    Contraseña
-                </label>
+                <label for="password">Contraseña</label>
 
                 <input
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="Ingrese su contraseña"
+                        placeholder="Ingrese una contraseña"
                         required>
 
             </div>
 
             <button
-                    class="btn btn-primary"
-                    type="submit">
+                    type="submit"
+                    class="btn btn-primary">
 
-                Iniciar sesión
+                Registrarme
 
             </button>
 
@@ -111,11 +107,11 @@ String loginMessage = (String) session.getAttribute("loginmessage");
 
         <div class="auth-footer">
 
-            ¿No tienes una cuenta?
+            ¿Ya tienes una cuenta?
 
-            <a href="${pageContext.request.contextPath}/registuser">
+            <a href="${pageContext.request.contextPath}/">
 
-                Regístrate
+                Iniciar sesión
 
             </a>
 
