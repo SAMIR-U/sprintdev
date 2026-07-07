@@ -1,6 +1,7 @@
 package edu.uptc.swi.sprintdev.service;
 
 import edu.uptc.swi.sprintdev.domain.Sprint;
+import edu.uptc.swi.sprintdev.domain.SprintStatus;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 
 import java.util.Comparator;
@@ -16,6 +17,7 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public boolean createSprint(Sprint sprint) {
+        sprint.setStatus(SprintStatus.CREATED);
         this.sprintRepo.save(sprint);
         for (Sprint s : sprintRepo.findAll()) {
             if (s.getSprintId() == sprint.getSprintId()) {
