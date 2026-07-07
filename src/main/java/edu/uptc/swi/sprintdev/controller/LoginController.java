@@ -33,6 +33,6 @@ public class LoginController {
             return "mainmenu";
         }
         session.setAttribute("loginmessage", "fail");
-        return "index";
+        return "redirect:/mainmenu";
     }
 }
