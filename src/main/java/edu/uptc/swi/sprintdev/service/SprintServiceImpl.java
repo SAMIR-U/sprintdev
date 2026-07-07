@@ -3,11 +3,12 @@ package edu.uptc.swi.sprintdev.service;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.SprintStatus;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class SprintServiceImpl implements ISprintService {
     private final ISprintRepo sprintRepo;
 
