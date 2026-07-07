@@ -33,6 +33,7 @@ public class RegistUserController {
 
         if (userService.registerUser(userObj)) {
             session.setAttribute("registmessage", "success");
+            session.setAttribute("user", userService.obtainUserByUsername(user));
             return "mainmenu";
         }
         session.setAttribute("registmessage", "fail");
