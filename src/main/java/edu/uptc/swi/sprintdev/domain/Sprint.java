@@ -34,7 +34,7 @@ public class Sprint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long sprintId;
+    private int sprintId;
 
     @Column(nullable = false, length = 120)
     private String name;
@@ -66,11 +66,11 @@ public class Sprint {
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
-    public Long getSprintId() {
+    public int getSprintId() {
         return sprintId;
     }
 
-    public void setSprintId(Long sprintId) {
+    public void setSprintId(int sprintId) {
         this.sprintId = sprintId;
     }
 
