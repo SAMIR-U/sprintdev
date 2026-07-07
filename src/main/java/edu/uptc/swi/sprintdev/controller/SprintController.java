@@ -64,6 +64,6 @@ public class SprintController {
             session.setAttribute("sprintmessage", "fail");
         }
 
-        return "redirect:/mainmenu";
+        return "mainmenu";
     }
 }

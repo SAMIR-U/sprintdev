@@ -37,6 +37,6 @@ public class RegistUserController {
             return "mainmenu";
         }
         session.setAttribute("registmessage", "fail");
-        return "registuser";
+        return "redirect:/mainmenu";
     }
 }
