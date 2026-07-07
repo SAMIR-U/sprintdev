@@ -30,25 +30,6 @@
         rgba(46,58,70,.35);
 }
 
-.auth-logo{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    gap:10px;
-
-    margin-bottom:22px;
-}
-
-.auth-logo span{
-    font-size:18px;
-    font-weight:700;
-}
-
-.auth-logo em{
-    color:var(--sprint-deep);
-    font-style:normal;
-}
 
 .auth-title{
     text-align:center;
@@ -72,11 +53,4 @@
 .auth-footer a{
     color:var(--sprint-deep);
     font-weight:600;
-}
-
-.logo{
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
 }

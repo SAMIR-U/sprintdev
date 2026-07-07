@@ -108,3 +108,31 @@ a{
     background:#eef3ea;
     color:var(--verde);
 }
+
+.auth-logo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:22px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    border-radius:50%;
+    display:block;
+    flex-shrink:0;
+}
+
+.auth-logo span{
+    font-family:'Poppins',sans-serif;
+    font-size:18px;
+    font-weight:700;
+}
+
+.auth-logo span em{
+    font-style:normal;
+    color:var(--sprint-deep);
+}
