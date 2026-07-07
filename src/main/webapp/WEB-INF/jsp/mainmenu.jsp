@@ -15,11 +15,13 @@
 
     <meta charset="UTF-8">
 
-    <title>SprintDev</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Sprints | SprintDev</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet">
@@ -28,121 +30,133 @@
           href="${pageContext.request.contextPath}/css/common.css">
 
     <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/sidebar.css">
+
+    <link rel="stylesheet"
           href="${pageContext.request.contextPath}/css/mainmenu.css">
 
 </head>
 
 <body>
 
-<div class="main-container">
+<div class="layout">
 
-    <div class="topbar">
+    <jsp:include page="sidebar.jsp"/>
 
-        <div>
+    <main class="content">
 
-            <h1 class="page-title">
-                Mis Sprints
-            </h1>
+        <header class="topbar">
 
-            <p class="page-subtitle">
-                Administra todos tus Sprint
-            </p>
+            <div>
 
-        </div>
+                <p class="page-subtitle">
+                    SprintDev
+                </p>
 
-        <button class="btn-new"
-                onclick="document.getElementById('modal').style.display='flex'">
-
-            + Nuevo Sprint
-
-        </button>
-
-    </div>
-
-    <% if ("success".equals(sprintMessage)) { %>
-
-    <div class="banner success">
-        Sprint creado correctamente.
-    </div>
-
-    <% } %>
-
-    <% if ("fail".equals(sprintMessage)) { %>
-
-    <div class="banner error">
-        No fue posible crear el Sprint.
-    </div>
-
-    <% } %>
-
-    <div class="sprint-grid">
-
-        <%
-            if (sprints != null && !sprints.isEmpty()) {
-
-                for (Sprint sprint : sprints) {
-        %>
-
-        <div class="sprint-card">
-
-            <h3>
-
-                <%= sprint.getName() %>
-
-            </h3>
-
-            <p>
-
-                <%= sprint.getGoal() %>
-
-            </p>
-
-            <div class="sprint-dates">
-
-                <strong>Inicio:</strong>
-
-                <%= sprint.getStartDate() %>
-
-                <br>
-
-                <strong>Fin:</strong>
-
-                <%= sprint.getEndDate() %>
+                <h1 class="page-title">
+                    Mis Sprints
+                </h1>
 
             </div>
 
-        </div>
+            <button class="btn-new"
+                    onclick="document.getElementById('modal').style.display='flex'">
 
-        <%
-                }
-            } else {
-        %>
+                + Nuevo Sprint
 
-        <div class="empty">
+            </button>
 
-            <h2>
+        </header>
 
-                No tienes Sprints
+        <% if ("success".equals(sprintMessage)) { %>
 
-            </h2>
+            <div class="banner success">
 
-            <p>
+                Sprint creado correctamente.
 
-                Haz clic en <b>Nuevo Sprint</b> para crear el primero.
+            </div>
 
-            </p>
+        <% } %>
 
-        </div>
+        <% if ("fail".equals(sprintMessage)) { %>
 
-        <%
-            }
-        %>
+            <div class="banner error">
 
-    </div>
+                No fue posible crear el Sprint.
+
+            </div>
+
+        <% } %>
+
+        <section class="sprint-grid">
+
+            <% if (sprints != null && !sprints.isEmpty()) { %>
+
+                <% for (Sprint sprint : sprints) { %>
+
+                    <article class="sprint-card">
+
+                        <h3>
+
+                            <%= sprint.getName() %>
+
+                        </h3>
+
+                        <p>
+
+                            <%= sprint.getGoal() %>
+
+                        </p>
+
+                        <div class="sprint-dates">
+
+                            <strong>Inicio:</strong>
+
+                            <%= sprint.getStartDate() %>
+
+                            <br>
+
+                            <strong>Fin:</strong>
+
+                            <%= sprint.getEndDate() %>
+
+                        </div>
+
+                        <span class="sprint-status preparacion">
+
+                            En preparación
+
+                        </span>
+
+                    </article>
+
+                <% } %>
+
+            <% } else { %>
+
+                <div class="empty">
+
+                    <h2>
+
+                        No hay Sprints
+
+                    </h2>
+
+                    <p>
+
+                        Crea tu primer Sprint para comenzar.
+
+                    </p>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </main>
 
 </div>
-
-<!-- =================== MODAL =================== -->
 
 <div class="modal" id="modal">
 
@@ -159,73 +173,83 @@
 
             <div class="field">
 
-                <label>
+                <label for="name">
 
                     Nombre
 
                 </label>
 
-                <input type="text"
-                       name="name"
-                       required>
+                <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        required>
 
             </div>
 
             <div class="field">
 
-                <label>
+                <label for="goal">
 
                     Objetivo
 
                 </label>
 
-                <textarea name="goal"
-                          required></textarea>
+                <textarea
+                        id="goal"
+                        name="goal"
+                        required></textarea>
 
             </div>
 
             <div class="field">
 
-                <label>
+                <label for="startDate">
 
-                    Fecha Inicio
+                    Fecha de inicio
 
                 </label>
 
-                <input type="date"
-                       name="startDate"
-                       required>
+                <input
+                        id="startDate"
+                        type="date"
+                        name="startDate"
+                        required>
 
             </div>
 
             <div class="field">
 
-                <label>
+                <label for="endDate">
 
-                    Fecha Fin
+                    Fecha de finalización
 
                 </label>
 
-                <input type="date"
-                       name="endDate"
-                       required>
+                <input
+                        id="endDate"
+                        type="date"
+                        name="endDate"
+                        required>
 
             </div>
 
             <div class="modal-buttons">
 
-                <button type="button"
+                <button
+                        type="button"
                         class="btn-cancel"
-                        onclick="document.getElementById('modal').style.display='none'">
+                        onclick="closeModal()">
 
                     Cancelar
 
                 </button>
 
-                <button type="submit"
+                <button
+                        type="submit"
                         class="btn-save">
 
-                    Guardar
+                    Guardar Sprint
 
                 </button>
 
@@ -239,17 +263,27 @@
 
 <script>
 
-window.onclick = function(event){
+const modal = document.getElementById("modal");
 
-    const modal = document.getElementById("modal");
+function openModal() {
+    modal.style.display = "flex";
+}
 
-    if(event.target === modal){
+function closeModal() {
+    modal.style.display = "none";
+}
 
-        modal.style.display = "none";
+window.onclick = function(event) {
+
+    if (event.target === modal) {
+
+        closeModal();
 
     }
 
-}
+};
+
+document.querySelector(".btn-new").addEventListener("click", openModal);
 
 </script>
 
