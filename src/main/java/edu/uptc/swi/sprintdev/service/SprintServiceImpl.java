@@ -17,8 +17,8 @@ public class SprintServiceImpl implements ISprintService {
     @Override
     public boolean createSprint(Sprint sprint) {
         this.sprintRepo.save(sprint);
-        for(Sprint s: sprintRepo.findAll()){
-            if(s.getSprintId() == sprint.getSprintId()){
+        for (Sprint s : sprintRepo.findAll()) {
+            if (s.getSprintId() == sprint.getSprintId()) {
                 return true;
             }
         }
@@ -33,4 +33,6 @@ public class SprintServiceImpl implements ISprintService {
                 .sorted(Comparator.comparing(Sprint::getStartDate).reversed())
                 .collect(Collectors.toList());
     }
+
+
 }
