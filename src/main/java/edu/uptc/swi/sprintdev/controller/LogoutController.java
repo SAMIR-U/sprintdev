@@ -12,6 +12,7 @@ public class LogoutController {
     public String logout(HttpSession session) {
         session.removeAttribute("user");
         session.removeAttribute("registmessage");
-        return "redirect:/index";
+        session.removeAttribute("loginmessage");
+        return "redirect:/";
     }
 }
