@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ISprintRepo extends JpaRepository<Sprint, Integer> {
     @Query("SELECT DISTINCT s FROM Sprint s LEFT JOIN s.readers r " +
-            "WHERE s.creator.id = :userId OR r.id = :userId")
+            "WHERE s.creator.id = :userId OR r.userId = :userId")
     List<Sprint> findAllUserSprints(@Param("userId") int userId);
 
 }
