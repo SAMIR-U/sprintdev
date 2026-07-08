@@ -5,8 +5,6 @@ import edu.uptc.swi.sprintdev.domain.SprintStatus;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -58,12 +56,16 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean addReaderToSprint(int sprintId, User user) { //lista < 8 y el usuario no este en la lista
-
-        return null;
+    public Boolean addReaderToSprint(int sprintId, User user) {
+        if (this.validateAddReaderConditions(sprintId, user)) {
+            Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
+            sprint.getReaders().add(user);
+            return true;
+        }
+        return false;
     }
     private boolean validateAddReaderConditions(int sprintId, User user) {
-        return this.validateReaderListSize(sprintId) && this.isReader(sprintId, user);
+        return this.validateReaderListSize(sprintId) && !this.isReader(sprintId, user);
     }
 
     private boolean validateReaderListSize(int sprintId) {
