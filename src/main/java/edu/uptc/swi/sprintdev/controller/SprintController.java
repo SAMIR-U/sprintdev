@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
@@ -24,15 +25,12 @@ public class SprintController {
 
     @GetMapping("/mainmenu")
     public String loadSprints(HttpSession session) {
-
-        User user = (User) session.getAttribute("user");
-
+        User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
-            return "index";
+            return "redirect:/";
         }
 
         List<Sprint> sprints = sprintService.obtainMySprints(user.getId());
-
         session.setAttribute("sprints", sprints);
 
         return "mainmenu";
@@ -45,12 +43,11 @@ public class SprintController {
                                @RequestParam LocalDate endDate,
                                HttpSession session) {
 
-        User creator = (User) session.getAttribute("user");
-
+        User creator = SessionUtlis.autenticatedUserIn(session);
         if (creator == null) {
-            return "index";
+            return "redirect:/";
         }
-
+        
         Sprint sprint = new Sprint();
         sprint.setName(name);
         sprint.setGoal(goal);
@@ -59,9 +56,9 @@ public class SprintController {
         sprint.setCreator(creator);
 
         if (sprintService.createSprint(sprint)) {
-            session.setAttribute("sprintmessage", "success");
+            SessionUtlis.operSuccessMsg(session, "createsprint");
         } else {
-            session.setAttribute("sprintmessage", "fail");
+            SessionUtlis.operfailMsg(session, "createsprint");
         }
 
         return "redirect:/mainmenu";
