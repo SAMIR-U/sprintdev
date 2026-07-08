@@ -1,4 +1,4 @@
-package edu.uptc.swi.sprintdev.service.serviceInterface;
+package edu.uptc.swi.sprintdev.service.interfaces;
 
 import edu.uptc.swi.sprintdev.domain.User;
 

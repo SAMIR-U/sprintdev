@@ -1,9 +1,9 @@
-package edu.uptc.swi.sprintdev.service.serviceImpl;
+package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 import edu.uptc.swi.sprintdev.repository.IUserRepo;
-import edu.uptc.swi.sprintdev.service.serviceInterface.IUserService;
+import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

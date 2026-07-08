@@ -1,8 +1,8 @@
-package edu.uptc.swi.sprintdev.service.serviceImpl;
+package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
-import edu.uptc.swi.sprintdev.service.serviceInterface.ISprintTaskService;
+import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
 
 @Service

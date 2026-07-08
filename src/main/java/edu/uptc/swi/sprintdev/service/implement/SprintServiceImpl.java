@@ -1,9 +1,9 @@
-package edu.uptc.swi.sprintdev.service.serviceImpl;
+package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.SprintStatus;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
-import edu.uptc.swi.sprintdev.service.serviceInterface.ISprintService;
+import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
