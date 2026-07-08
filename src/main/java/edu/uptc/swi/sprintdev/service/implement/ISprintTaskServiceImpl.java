@@ -1,6 +1,7 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.Task;
+import edu.uptc.swi.sprintdev.domain.TaskStatus;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     @Override
     public boolean createTask(Task task) {
         if (!this.existsTask(task)) {
+            task.setStatus(TaskStatus.PENDING);
             this.sprintTaskRepo.save(task);
             return true;
         }

@@ -47,13 +47,18 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public Boolean closeSprint(int sprintId) {
-        //verificar estado de todas las tareas
-        return null;
+
+        return false;
     }
 
     @Override
     public Boolean activateSprint(int sprintId) {
-        return null;
+        Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
+        if (this.obtainTaskListSize(sprintId) > 0 && sprint.getStatus() != SprintStatus.CLOSED) {
+            sprint.setStatus(SprintStatus.ACTIVE);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -76,5 +81,7 @@ public class SprintServiceImpl implements ISprintService {
     private boolean isReader(int sprintId, User user) {
         return this.sprintRepo.findSprintReaders(sprintId).contains(user);
     }
-
+    private int obtainTaskListSize(int sprintId) {
+        return this.sprintRepo.findAllSprintTask(sprintId).size();
+    }
 }
