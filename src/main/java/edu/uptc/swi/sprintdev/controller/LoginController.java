@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.service.IUserService;
+import edu.uptc.swi.sprintdev.service.serviceInterface.IUserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller

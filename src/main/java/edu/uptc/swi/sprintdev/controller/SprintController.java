@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
-import edu.uptc.swi.sprintdev.service.ISprintService;
+import edu.uptc.swi.sprintdev.service.serviceInterface.ISprintService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
