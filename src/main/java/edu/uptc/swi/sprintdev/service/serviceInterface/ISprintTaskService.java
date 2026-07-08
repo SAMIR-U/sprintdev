@@ -6,4 +6,5 @@ public interface ISprintTaskService {
     boolean createTask(Task task);
     boolean updateTask(Task task);
     boolean deleteTask(Task task);
+    Task findTaskById(int id);
 }

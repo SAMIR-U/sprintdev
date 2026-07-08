@@ -25,7 +25,7 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, length = 150)
     private String title;
@@ -44,11 +44,11 @@ public class Task {
     @JoinColumn(name = "sprint_id", nullable = false)
     private Sprint sprint;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
