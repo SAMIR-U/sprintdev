@@ -1,8 +1,6 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
-import edu.uptc.swi.sprintdev.domain.Sprint;
-import edu.uptc.swi.sprintdev.domain.SprintStatus;
-import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.domain.*;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import org.springframework.stereotype.Service;
@@ -46,17 +44,18 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean closeSprint(int sprintId) {
+    public Boolean closeSprint(int sprintId, int userId) {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
-        if (sprint.getStatus().equals(SprintStatus.ACTIVE)) {
-
+        if (this.validateCloseSprintConditions(sprint)) {
+            sprint.setStatus(SprintStatus.CLOSED);
+            return true;
         }
         return false;
     }
 
     @Override
-    public Boolean activateSprint(int sprintId) {
-        Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
+    public Boolean activateSprint(int sprintId, int userId) {
+        Sprint sprint = this.findSprintById(sprintId);
         if (this.validateActivateSprintConditions(sprint)) {
             sprint.setStatus(SprintStatus.ACTIVE);
             return true;
@@ -67,14 +66,15 @@ public class SprintServiceImpl implements ISprintService {
     @Override
     public Boolean addReaderToSprint(int sprintId, User user) {
         if (this.validateAddReaderConditions(sprintId, user)) {
-            Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
+            Sprint sprint = this.findSprintById(sprintId);
             sprint.getReaders().add(user);
             return true;
         }
         return false;
     }
+
     @Override
-    public Sprint findSprintById(int sprintId) {
+    public Sprint findSprintById(int sprintId, int userId) {
         return this.sprintRepo.getReferenceById(sprintId);
     }
 
@@ -98,4 +98,23 @@ public class SprintServiceImpl implements ISprintService {
         return this.obtainTaskListSize(sprint.getSprintId()) > 0 && sprint.getStatus() == SprintStatus.ACTIVE;
     }
 
+    private boolean validateCloseSprintConditions(Sprint sprint) {
+        if (sprint.getStatus() == SprintStatus.ACTIVE) {
+            for (Task task : sprint.getTasks()) {
+                if (task.getStatus() != TaskStatus.COMPLETED) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    private boolean isCreator(Sprint sprint, int userId) {
+        User creator = sprint.getCreator();
+        return creator.getId() == userId;
+    }
+    private boolean hasAccess(Sprint sprint, int userId) {
+
+        return false;
+    }
 }
