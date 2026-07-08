@@ -8,5 +8,8 @@ import java.util.List;
 public interface ISprintService {
     boolean createSprint(Sprint sprint);
     List<Sprint> obtainMySprints(int userId);
-    List<User> findAllReadersSprint(int sprintId, int page);
+    List<User> findAllReadersSprint(int sprintId);
+    Boolean closeSprint(int sprintId);
+    Boolean activateSprint(int sprintId);
+    Boolean addReaderToSprint(int sprintId, User user);
 }

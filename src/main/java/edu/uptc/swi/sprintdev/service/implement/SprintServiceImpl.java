@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class SprintServiceImpl implements ISprintService {
     private final ISprintRepo sprintRepo;
@@ -42,10 +43,35 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public List<User> findAllReadersSprint(int sprintId, int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        return this.sprintRepo.findSprintReaders(sprintId, pageable);
+    public List<User> findAllReadersSprint(int sprintId) {
+        return this.sprintRepo.findSprintReaders(sprintId);
     }
 
+    @Override
+    public Boolean closeSprint(int sprintId) {
+        return null;
+    }
+
+    @Override
+    public Boolean activateSprint(int sprintId) {
+        return null;
+    }
+
+    @Override
+    public Boolean addReaderToSprint(int sprintId, User user) { //lista < 8 y el usuario no este en la lista
+
+        return null;
+    }
+    private boolean validateAddReaderConditions(int sprintId, User user) {
+        return this.validateReaderListSize(sprintId) && this.isReader(sprintId, user);
+    }
+
+    private boolean validateReaderListSize(int sprintId) {
+       return this.findAllReadersSprint(sprintId).size() < 8;
+    }
+
+    private boolean isReader(int sprintId, User user) {
+        return this.sprintRepo.findSprintReaders(sprintId).contains(user);
+    }
 
 }

@@ -16,6 +16,6 @@ public interface ISprintRepo extends JpaRepository<Sprint, Integer> {
 
 
     @Query("SELECT r FROM Sprint s JOIN s.readers r WHERE s.id = :sprintId")
-    List<User> findSprintReaders(@Param("sprintId") int sprintId, Pageable pageable);
+    List<User> findSprintReaders(@Param("sprintId") int sprintId);
 
 }
