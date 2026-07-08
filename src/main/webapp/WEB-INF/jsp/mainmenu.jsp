@@ -4,8 +4,8 @@
 
 <%
     List<Sprint> sprints = (List<Sprint>) session.getAttribute("sprints");
-    String sprintMessage = (String) session.getAttribute("sprintmessage");
-    session.removeAttribute("sprintmessage");
+    String sprintMessage = (String) session.getAttribute("createsprint");
+    session.removeAttribute("createsprint");
 %>
 
 <!DOCTYPE html>

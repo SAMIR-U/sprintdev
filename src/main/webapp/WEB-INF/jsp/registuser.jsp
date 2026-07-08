@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-String registMessage = (String) session.getAttribute("registmessage");
+String registMessage = (String) session.getAttribute("regist");
 %>
 
 <!DOCTYPE html>

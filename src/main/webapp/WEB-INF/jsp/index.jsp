@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-String loginMessage = (String) session.getAttribute("loginmessage");
+String loginMessage = (String) session.getAttribute("login");
 %>
 
 <!DOCTYPE html>
@@ -63,7 +63,7 @@ String loginMessage = (String) session.getAttribute("loginmessage");
 
         <% }
 
-        session.removeAttribute("loginmessage");
+        session.removeAttribute("login");
         %>
 
         <form action="${pageContext.request.contextPath}/login"
