@@ -1,6 +1,5 @@
 package edu.uptc.swi.sprintdev.controller.utils;
 
-import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
 import jakarta.servlet.http.HttpSession;
 
@@ -8,10 +7,6 @@ public final class SessionUtlis {
     public static User autenticatedUserIn(HttpSession session){
         User user = (User) session.getAttribute("user");
         return user;
-    }
-    public static Sprint selectSprintIn(HttpSession session){
-        Sprint sprint = (Sprint) session.getAttribute("sprintselected");
-        return sprint;
     }
     public static void setAutenticatedUserIn(HttpSession session, User user){
         operSuccessMsg(session, "login");
