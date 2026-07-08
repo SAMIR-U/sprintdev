@@ -12,6 +12,6 @@ public interface IUserRepo extends JpaRepository<User, Integer> {
     @Query("from User u WHERE u.userName = :username")
     Optional<User> findByUsername(@Param("username") String username);
 
-    @Query("SELECT u from User u WHERE LOWER(u.username) LIKE LOWER(CONCAT(:keyword, '%')) ")
+    @Query("SELECT u from User u WHERE LOWER(u.userName) LIKE LOWER(CONCAT(:keyword, '%')) ")
     List<User> findUserByKeyWord(@Param("keyword") String keyword);
 }
