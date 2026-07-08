@@ -44,9 +44,9 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean closeSprint(int sprintId, int userId) {
+    public Boolean closeSprint(int sprintId, int creatorId) {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
-        if (this.validateCloseSprintConditions(sprint)) {
+        if (this.validateCloseSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.CLOSED);
             return true;
         }
@@ -54,9 +54,9 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean activateSprint(int sprintId, int userId) {
-        Sprint sprint = this.findSprintById(sprintId);
-        if (this.validateActivateSprintConditions(sprint)) {
+    public Boolean activateSprint(int sprintId, int creatorId) {
+        Sprint sprint = this.findSprintById(sprintId, creatorId);
+        if (this.validateActivateSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.ACTIVE);
             return true;
         }
@@ -64,9 +64,9 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean addReaderToSprint(int sprintId, User user) {
-        if (this.validateAddReaderConditions(sprintId, user)) {
-            Sprint sprint = this.findSprintById(sprintId);
+    public Boolean addReaderToSprint(int sprintId, int creatorId, User user) {
+        if (this.validateAddReaderConditions(sprintId, user.getId())) {
+            Sprint sprint = this.findSprintById(sprintId, creatorId);
             sprint.getReaders().add(user);
             return true;
         }
@@ -75,46 +75,64 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public Sprint findSprintById(int sprintId, int userId) {
-        return this.sprintRepo.getReferenceById(sprintId);
+        Sprint sprint = this.findSprintById(sprintId);
+        if (this.hasAccess(sprint, userId)) {
+            return sprint;
+        }
+            return null;
     }
 
-    private boolean validateAddReaderConditions(int sprintId, User user) {
-        return this.validateReaderListSize(sprintId) && !this.isReader(sprintId, user);
+    private boolean validateAddReaderConditions(int sprintId, int userId) {
+        return this.validateReaderListSize(sprintId) && !this.isReader(sprintId, userId);
     }
 
     private boolean validateReaderListSize(int sprintId) {
         return this.findAllReadersSprint(sprintId).size() < 8;
     }
 
-    private boolean isReader(int sprintId, User user) {
-        return this.sprintRepo.findSprintReaders(sprintId).contains(user);
+    private boolean isReader(int sprintId, int userId) {
+        Sprint sprint = this.findSprintById(sprintId);
+        for (User user : sprint.getReaders()) {
+            if (user.getId() == userId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int obtainTaskListSize(int sprintId) {
         return this.sprintRepo.findAllSprintTask(sprintId).size();
     }
 
-    private boolean validateActivateSprintConditions(Sprint sprint) {
-        return this.obtainTaskListSize(sprint.getSprintId()) > 0 && sprint.getStatus() == SprintStatus.ACTIVE;
+    private boolean validateActivateSprintConditions(Sprint sprint, int creatorId) {
+        return this.obtainTaskListSize(sprint.getSprintId()) > 0 && sprint.getStatus() == SprintStatus.ACTIVE && this.isCreator(sprint, creatorId);
     }
 
-    private boolean validateCloseSprintConditions(Sprint sprint) {
-        if (sprint.getStatus() == SprintStatus.ACTIVE) {
-            for (Task task : sprint.getTasks()) {
-                if (task.getStatus() != TaskStatus.COMPLETED) {
-                    return false;
+    private boolean validateCloseSprintConditions(Sprint sprint, int creatorId) {
+        if (this.isCreator(sprint, creatorId)) {
+            if (sprint.getStatus() == SprintStatus.ACTIVE) {
+                for (Task task : sprint.getTasks()) {
+                    if (task.getStatus() != TaskStatus.COMPLETED) {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
         }
+
         return false;
     }
+
     private boolean isCreator(Sprint sprint, int userId) {
         User creator = sprint.getCreator();
         return creator.getId() == userId;
     }
-    private boolean hasAccess(Sprint sprint, int userId) {
 
-        return false;
+    private boolean hasAccess(Sprint sprint, int userId) {
+        return this.isCreator(sprint, userId) || this.isReader(sprint.getSprintId(), userId);
+    }
+
+    private Sprint findSprintById(int sprintId) {
+        return this.sprintRepo.getReferenceById(sprintId);
     }
 }
