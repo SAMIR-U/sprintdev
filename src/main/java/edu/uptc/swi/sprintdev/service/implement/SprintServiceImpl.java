@@ -47,14 +47,17 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public Boolean closeSprint(int sprintId) {
+        Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
+        if (sprint.getStatus().equals(SprintStatus.ACTIVE)) {
 
+        }
         return false;
     }
 
     @Override
     public Boolean activateSprint(int sprintId) {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
-        if (this.obtainTaskListSize(sprintId) > 0 && sprint.getStatus() != SprintStatus.CLOSED) {
+        if (this.validateActivateSprintConditions(sprint)) {
             sprint.setStatus(SprintStatus.ACTIVE);
             return true;
         }
@@ -70,18 +73,29 @@ public class SprintServiceImpl implements ISprintService {
         }
         return false;
     }
+    @Override
+    public Sprint findSprintById(int sprintId) {
+        return this.sprintRepo.getReferenceById(sprintId);
+    }
+
     private boolean validateAddReaderConditions(int sprintId, User user) {
         return this.validateReaderListSize(sprintId) && !this.isReader(sprintId, user);
     }
 
     private boolean validateReaderListSize(int sprintId) {
-       return this.findAllReadersSprint(sprintId).size() < 8;
+        return this.findAllReadersSprint(sprintId).size() < 8;
     }
 
     private boolean isReader(int sprintId, User user) {
         return this.sprintRepo.findSprintReaders(sprintId).contains(user);
     }
+
     private int obtainTaskListSize(int sprintId) {
         return this.sprintRepo.findAllSprintTask(sprintId).size();
     }
+
+    private boolean validateActivateSprintConditions(Sprint sprint) {
+        return this.obtainTaskListSize(sprint.getSprintId()) > 0 && sprint.getStatus() == SprintStatus.ACTIVE;
+    }
+
 }

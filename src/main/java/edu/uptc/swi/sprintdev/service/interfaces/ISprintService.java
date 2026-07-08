@@ -12,4 +12,5 @@ public interface ISprintService {
     Boolean closeSprint(int sprintId);
     Boolean activateSprint(int sprintId);
     Boolean addReaderToSprint(int sprintId, User user);
+    Sprint findSprintById(int sprintId);
 }
