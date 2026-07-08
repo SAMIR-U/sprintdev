@@ -63,4 +63,19 @@ public class SprintController {
 
         return "redirect:/mainmenu";
     }
+    
+    @GetMapping("/sprint")
+    public String accestToSprint(@RequestParam int sprintId,
+                              HttpSession session) {
+        
+        User user = SessionUtlis.autenticatedUserIn(session);
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
+        session.setAttribute("sprint", sprint);
+
+        return "sprint";
+    }
 }
