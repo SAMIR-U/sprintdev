@@ -39,8 +39,12 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public List<User> findAllReadersSprint(int sprintId) {
-        return this.sprintRepo.findSprintReaders(sprintId);
+    public List<User> findAllReadersSprint(int sprintId, int userId) {
+        Sprint sprint = this.findSprintById(sprintId);
+        if (this.hasAccess(sprint, userId)) {
+            return this.sprintRepo.findSprintReaders(sprintId);
+        }
+        return null;
     }
 
     @Override
@@ -87,7 +91,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     private boolean validateReaderListSize(int sprintId) {
-        return this.findAllReadersSprint(sprintId).size() < 8;
+        return this.sprintRepo.findSprintReaders(sprintId).size() < 8;
     }
 
     private boolean isReader(int sprintId, int userId) {
