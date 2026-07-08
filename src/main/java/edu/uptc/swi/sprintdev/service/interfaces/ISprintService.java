@@ -9,8 +9,8 @@ public interface ISprintService {
     boolean createSprint(Sprint sprint);
     List<Sprint> obtainMySprints(int userId);
     List<User> findAllReadersSprint(int sprintId, int userId);
-    Boolean closeSprint(int sprintId, int creatorId);
-    Boolean activateSprint(int sprintId, int creatorId);
-    Boolean addReaderToSprint(int sprintId,int creatorId ,User user);
+    boolean closeSprint(int sprintId, int creatorId);
+    boolean activateSprint(int sprintId, int creatorId);
+    boolean addReaderToSprint(int sprintId,int creatorId ,User user);
     Sprint findSprintById(int sprintId, int userId);
 }

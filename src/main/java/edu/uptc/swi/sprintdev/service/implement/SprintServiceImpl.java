@@ -21,12 +21,7 @@ public class SprintServiceImpl implements ISprintService {
     public boolean createSprint(Sprint sprint) {
         sprint.setStatus(SprintStatus.CREATED);
         this.sprintRepo.save(sprint);
-        for (Sprint s : sprintRepo.findAll()) {
-            if (s.getSprintId() == sprint.getSprintId()) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
     @Override
@@ -48,7 +43,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean closeSprint(int sprintId, int creatorId) {
+    public boolean closeSprint(int sprintId, int creatorId) {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
         if (this.validateCloseSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.CLOSED);
@@ -58,7 +53,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean activateSprint(int sprintId, int creatorId) {
+    public boolean activateSprint(int sprintId, int creatorId) {
         Sprint sprint = this.findSprintById(sprintId, creatorId);
         if (this.validateActivateSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.ACTIVE);
@@ -68,13 +63,16 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Boolean addReaderToSprint(int sprintId, int creatorId, User user) {
-        if (this.validateAddReaderConditions(sprintId, user.getId())) {
-            Sprint sprint = this.findSprintById(sprintId, creatorId);
-            sprint.getReaders().add(user);
-            return true;
+    public boolean addReaderToSprint(int sprintId, int creatorId, User user) {
+        Sprint sprint = findSprintById(sprintId, creatorId);
+        if (sprint == null) {
+            return false;
         }
-        return false;
+        if (!validateAddReaderConditions(sprint, user.getId())) {
+            return false;
+        }
+        sprint.getReaders().add(user);
+        return true;
     }
 
     @Override
@@ -86,23 +84,14 @@ public class SprintServiceImpl implements ISprintService {
             return null;
     }
 
-    private boolean validateAddReaderConditions(int sprintId, int userId) {
-        return this.validateReaderListSize(sprintId) && !this.isReader(sprintId, userId);
+    private boolean validateAddReaderConditions(Sprint sprint, int userId) {
+        return this.validateReaderListSize(sprint) && !this.isReader( sprint, userId);
     }
 
-    private boolean validateReaderListSize(int sprintId) {
-        return this.sprintRepo.findSprintReaders(sprintId).size() < 8;
+    private boolean validateReaderListSize(Sprint sprint) {
+        return sprint.getReaders().size() < 8;
     }
 
-    private boolean isReader(int sprintId, int userId) {
-        Sprint sprint = this.findSprintById(sprintId);
-        for (User user : sprint.getReaders()) {
-            if (user.getId() == userId) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private int obtainTaskListSize(int sprintId) {
         return this.sprintRepo.findAllSprintTask(sprintId).size();
@@ -126,14 +115,21 @@ public class SprintServiceImpl implements ISprintService {
 
         return false;
     }
-
+    private boolean isReader(Sprint sprint, int userId) {
+        for (User user : sprint.getReaders()) {
+            if (user.getId() == userId) {
+                return true;
+            }
+        }
+        return false;
+    }
     private boolean isCreator(Sprint sprint, int userId) {
         User creator = sprint.getCreator();
         return creator.getId() == userId;
     }
 
     private boolean hasAccess(Sprint sprint, int userId) {
-        return this.isCreator(sprint, userId) || this.isReader(sprint.getSprintId(), userId);
+        return this.isCreator(sprint, userId) || this.isReader(sprint, userId);
     }
 
     private Sprint findSprintById(int sprintId) {
