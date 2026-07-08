@@ -70,10 +70,6 @@ public class Sprint {
         return sprintId;
     }
 
-    public void setSprintId(int sprintId) {
-        this.sprintId = sprintId;
-    }
-
     public String getName() {
         return name;
     }
@@ -126,15 +122,9 @@ public class Sprint {
         return readers;
     }
 
-    public void setReaders(Set<User> readers) {
-        this.readers = readers;
-    }
 
     public List<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
 }
