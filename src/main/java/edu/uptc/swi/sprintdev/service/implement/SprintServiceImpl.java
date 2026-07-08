@@ -92,28 +92,26 @@ public class SprintServiceImpl implements ISprintService {
         return sprint.getReaders().size() < 8;
     }
 
-
-    private int obtainTaskListSize(int sprintId) {
-        return this.sprintRepo.findAllSprintTask(sprintId).size();
-    }
-
     private boolean validateActivateSprintConditions(Sprint sprint, int creatorId) {
-        return this.obtainTaskListSize(sprint.getSprintId()) > 0 && sprint.getStatus() == SprintStatus.ACTIVE && this.isCreator(sprint, creatorId);
+        return !sprint.getTasks().isEmpty()
+                && sprint.getStatus() == SprintStatus.CREATED
+                && isCreator(sprint, creatorId);
     }
 
     private boolean validateCloseSprintConditions(Sprint sprint, int creatorId) {
-        if (this.isCreator(sprint, creatorId)) {
-            if (sprint.getStatus() == SprintStatus.ACTIVE) {
-                for (Task task : sprint.getTasks()) {
-                    if (task.getStatus() != TaskStatus.COMPLETED) {
-                        return false;
-                    }
-                }
-                return true;
+        if (!isCreator(sprint, creatorId)) {
+            return false;
+        }
+        if (sprint.getStatus() != SprintStatus.ACTIVE) {
+            return false;
+        }
+        for (Task task : sprint.getTasks()) {
+            if (task.getStatus() != TaskStatus.COMPLETED) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
     private boolean isReader(Sprint sprint, int userId) {
         for (User user : sprint.getReaders()) {
