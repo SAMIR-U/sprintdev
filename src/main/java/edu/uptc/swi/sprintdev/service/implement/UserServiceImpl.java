@@ -6,6 +6,7 @@ import edu.uptc.swi.sprintdev.repository.IUserRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +36,11 @@ public class UserServiceImpl implements IUserService {
     public User obtainUserByUsername(String username) {
         return this.userRepo.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado: " + username));
+    }
+
+    @Override
+    public List<User> findUserByKeyWord(String keyword) {
+        return this.userRepo.findUserByKeyWord(keyword);
     }
 
     private boolean userExist(User user) {
