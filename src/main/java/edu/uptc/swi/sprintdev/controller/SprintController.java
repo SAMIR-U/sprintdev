@@ -23,11 +23,11 @@ public class SprintController {
         this.sprintService = sprintService;
     }
 
-    @GetMapping("/mainmenu")
+    @GetMapping("/mainmenu")//workspace
     public String loadSprints(HttpSession session) {
         User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
-            return "redirect:/";
+            return "redirect:/login";
         }
 
         List<Sprint> sprints = sprintService.obtainMySprints(user.getId());
@@ -45,7 +45,7 @@ public class SprintController {
 
         User creator = SessionUtlis.autenticatedUserIn(session);
         if (creator == null) {
-            return "redirect:/";
+            return "redirect:/login";
         }
         
         Sprint sprint = new Sprint();
@@ -63,14 +63,14 @@ public class SprintController {
 
         return "redirect:/mainmenu";
     }
-    
+
     @GetMapping("/sprint")
     public String accestToSprint(@RequestParam int sprintId,
                               HttpSession session) {
         
         User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
-            return "redirect:/";
+            return "redirect:/login";
         }
 
         Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
