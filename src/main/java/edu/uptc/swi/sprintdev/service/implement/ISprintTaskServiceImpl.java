@@ -23,9 +23,10 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean updateTask(Task task) { //verificar que los campos esten completos para evitar campos nulos
+    public boolean updateTask(Task task) {
         if (this.existsTask(task)) {
             this.sprintTaskRepo.save(task);
+            return true;
         }
         return false;
     }
