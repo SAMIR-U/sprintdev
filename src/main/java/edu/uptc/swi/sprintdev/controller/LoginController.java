@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -28,11 +29,10 @@ public class LoginController {
                         HttpSession session) {
 
         if (userService.loginUser(user, password)) {
-            session.setAttribute("loginmessage", "success");
-            session.setAttribute("user", userService.obtainUserByUsername(user));
+            SessionUtlis.setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
             return "redirect:/mainmenu";
         }
-        session.setAttribute("loginmessage", "fail");
+        SessionUtlis.operfailMsg(session, "login");
         return "index";
     }
 }
