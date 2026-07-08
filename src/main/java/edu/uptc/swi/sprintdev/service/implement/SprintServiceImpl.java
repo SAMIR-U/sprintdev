@@ -47,6 +47,7 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public Boolean closeSprint(int sprintId) {
+        //verificar estado de todas las tareas
         return null;
     }
 
