@@ -36,8 +36,8 @@ public class TaskController {
         return "backlog";
     }
 
-    @PostMapping("/createtask")
-    public String createTask(@RequestParam int sprintId,
+    @PostMapping("/createtask")//dejar el no tienes permisos html
+    public String createTask(@RequestParam int sprintid,
                         @RequestParam String title,
                         @RequestParam String description,
                         HttpSession session) {
@@ -46,7 +46,7 @@ public class TaskController {
         if (user == null) {
             return "redirect:/login";
         }
-        Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
+        Sprint sprint = sprintService.findSprintById(sprintid, user.getId());
 
         Task task = new Task();
         task.setTitle(title);
@@ -55,10 +55,10 @@ public class TaskController {
 
         if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
-            return "redirect:/backlog";
+            return "redirect:/sprint/backlog";
         }
         SessionUtlis.operfailMsg(session, "createtask");
-        return "redirect:/backlog";
+        return "redirect:/sprint/backlog";
     }
 
     @PostMapping("/taskinfo")
@@ -99,10 +99,10 @@ public class TaskController {
 
         if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
-            return "redirect:/backlog";
+            return "redirect:/sprint/backlog";
         }
         SessionUtlis.operfailMsg(session, "edittask");
-        return "redirect:/backlog";
+        return "redirect:/sprint/backlog";
     }
 
     @PostMapping("/deletetaks")
@@ -119,9 +119,9 @@ public class TaskController {
 
         if (sprintTaskService.deleteTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "deletetask");
-            return "redirect:/backlog";
+            return "redirect:/sprint/backlog";
         }
         SessionUtlis.operfailMsg(session, "deletetask");
-        return "redirect:/backlog";
+        return "redirect:/sprint/backlog";
     }
 }
