@@ -20,9 +20,12 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public boolean createSprint(Sprint sprint) {
-        sprint.setStatus(SprintStatus.CREATED);
-        this.sprintRepo.save(sprint);
-        return true;
+        if (this.validateSprintDates(sprint)) {
+            sprint.setStatus(SprintStatus.CREATED);
+            this.sprintRepo.save(sprint);
+            return true;
+        }
+       return false;
     }
 
     @Override
@@ -136,5 +139,9 @@ public class SprintServiceImpl implements ISprintService {
 
     private Sprint findSprintById(int sprintId) {
         return this.sprintRepo.getReferenceById(sprintId);
+    }
+
+    private boolean validateSprintDates(Sprint sprint) {
+        return sprint.getStartDate().isBefore(sprint.getEndDate());
     }
 }
