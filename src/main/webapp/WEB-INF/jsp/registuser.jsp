@@ -109,7 +109,7 @@ String registMessage = (String) session.getAttribute("regist");
 
             ¿Ya tienes una cuenta?
 
-            <a href="${pageContext.request.contextPath}/">
+            <a href="${pageContext.request.contextPath}/login">
 
                 Iniciar sesión
 
