@@ -40,7 +40,6 @@ public class TaskController {
     public String createTask(@RequestParam int sprintId,
                         @RequestParam String title,
                         @RequestParam String description,
-                        @RequestParam TaskStatus status,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
@@ -53,7 +52,6 @@ public class TaskController {
         task.setTitle(title);
         task.setDescription(description);
         task.setSprint(sprint);
-        task.setStatus(status);
 
         if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
