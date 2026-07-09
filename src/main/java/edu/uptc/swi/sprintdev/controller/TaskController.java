@@ -46,10 +46,37 @@ public class TaskController {
         task.setStatus(status);
 
         if (sprintTaskService.createTask(task)) {
-            SessionUtlis.operSuccessMsg(session, "regist");
+            SessionUtlis.operSuccessMsg(session, "createtask");
             return "redirect:/backlog";
         }
-        SessionUtlis.operfailMsg(session, "regist");
+        SessionUtlis.operfailMsg(session, "createtask");
+        return "redirect:/backlog";
+    }
+
+    @PostMapping("/edittaks")
+    public String login(@RequestParam int sprintId,
+                        @RequestParam int taskId,
+                        @RequestParam String title,
+                        @RequestParam String description,
+                        @RequestParam TaskStatus status,
+                        HttpSession session) {
+
+        User user = SessionUtlis.autenticatedUserIn(session);
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Task task = new Task();
+        task.setId(sprintId);
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setStatus(status);
+
+        if (sprintTaskService.updateTask(task)) {
+            SessionUtlis.operSuccessMsg(session, "edittask");
+            return "redirect:/backlog";
+        }
+        SessionUtlis.operfailMsg(session, "edittask");
         return "redirect:/backlog";
     }
 }
