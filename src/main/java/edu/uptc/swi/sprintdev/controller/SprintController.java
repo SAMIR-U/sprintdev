@@ -23,7 +23,7 @@ public class SprintController {
         this.sprintService = sprintService;
     }
 
-    @GetMapping("/mainmenu")//workspace
+    @GetMapping("/workspace")
     public String loadSprints(HttpSession session) {
         User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
@@ -33,7 +33,7 @@ public class SprintController {
         List<Sprint> sprints = sprintService.obtainMySprints(user.getId());
         session.setAttribute("sprints", sprints);
 
-        return "mainmenu";
+        return "workspace";
     }
 
     @PostMapping("/createsprint")
@@ -61,7 +61,7 @@ public class SprintController {
             SessionUtlis.operfailMsg(session, "createsprint");
         }
 
-        return "redirect:/mainmenu";
+        return "redirect:/workspace";
     }
 
     @GetMapping("/sprint")

@@ -35,10 +35,9 @@ public class RegistUserController {
         if (userService.registerUser(userObj)) {
             SessionUtlis.operSuccessMsg(session, "regist");
             SessionUtlis.setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
-            return "redirect:/mainmenu";
+            return "redirect:/workspace";
         }
         SessionUtlis.operfailMsg(session, "regist");
-        session.setAttribute("registmessage", "fail");
         return "registuser";
     }
 }
