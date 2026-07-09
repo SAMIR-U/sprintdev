@@ -34,8 +34,33 @@
 </head>
 <body>
     <jsp:include page="topbar.jsp" />
+    <main class= "workspace">
+        <section class = "workspace-header">
+            <div class = "workspace-header-context">
+                  <p class="page-subtitle"> SprintDev </p>
+                  <h1 class= "page-title"> Mis sprints </h1>
+            </div>
+            <div class = "workspace-addSprint" >
+                <button class= "addSprintBtn" onclick = "document.getElementById('addSprintMenu').style.display='flex'"> + Nuevo Sprint </button>
+            </div>
+        </section>
+          <% if ("success".equals(sprintMessage)) { %>
+                    <div class="banner success">
+                        Sprint creado correctamente.
+                    </div>
+                <% } %>
+                <% if ("fail".equals(sprintMessage)) { %>
+                    <div class="banner error">
+                        No fue posible crear el Sprint.
+                    </div>
+          <% } %>
+        <section class = "sprint-grid">
 
+        </section>
+
+    </main>
 
     <script src="${pageContext.request.contextPath}/scripts/topbar.js"></script>
+    <script src="${pageContext.request.contextPath}/scripts/workspace.js"></script>
 </body>
 </html>

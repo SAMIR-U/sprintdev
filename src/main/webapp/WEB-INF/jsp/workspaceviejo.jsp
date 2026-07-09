@@ -68,25 +68,7 @@
 
         </header>
 
-        <% if ("success".equals(sprintMessage)) { %>
 
-            <div class="banner success">
-
-                Sprint creado correctamente.
-
-            </div>
-
-        <% } %>
-
-        <% if ("fail".equals(sprintMessage)) { %>
-
-            <div class="banner error">
-
-                No fue posible crear el Sprint.
-
-            </div>
-
-        <% } %>
 
         <section class="sprint-grid">
 
