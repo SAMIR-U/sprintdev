@@ -63,8 +63,7 @@ public class TaskController {
 
     @PostMapping("/taskinfo")
     @ResponseBody
-    public ResponseEntity<Task> obtainTaskInfo(@RequestParam int sprintId,
-                        @RequestParam int taskId,
+    public ResponseEntity<Task> obtainTaskInfo(@RequestParam int taskId,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
