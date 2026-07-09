@@ -12,7 +12,7 @@
         <div class="sidebar-logo">
 
             <img
-                src="${pageContext.request.contextPath}/image/logo_esprindev.jpeg"
+                src="${pageContext.request.contextPath}/image/logo_esprindev.png"
                 alt="SprintDev"
                 class="sidebar-logo-img">
 
