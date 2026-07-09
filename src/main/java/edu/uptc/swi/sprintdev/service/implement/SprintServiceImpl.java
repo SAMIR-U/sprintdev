@@ -88,6 +88,12 @@ public class SprintServiceImpl implements ISprintService {
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
+    @Override
+    public User obtainCreator(int sprintId) {
+        Sprint sprint = this.findSprintById(sprintId);
+        return sprint.getCreator();
+    }
+
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserDontHavePermissionException {
         if (this.isReader( sprint, userId)) {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");

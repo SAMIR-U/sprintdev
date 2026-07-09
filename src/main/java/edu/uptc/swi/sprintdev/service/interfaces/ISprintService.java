@@ -14,4 +14,5 @@ public interface ISprintService {
     boolean activateSprint(int sprintId, int creatorId) throws UserDontHavePermissionException;
     boolean addReaderToSprint(int sprintId,int creatorId ,User reader) throws UserDontHavePermissionException;
     Sprint findSprintById(int sprintId, int userId) throws UserDontHavePermissionException;
+    User obtainCreator(int sprintId);
 }
