@@ -187,3 +187,8 @@
     resize: none;
     min-height: 90px;
 }
+.sprint-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}

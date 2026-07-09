@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
@@ -15,6 +16,7 @@ import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/workspace")
 public class SprintController {
 
     private final ISprintService sprintService;
@@ -23,7 +25,7 @@ public class SprintController {
         this.sprintService = sprintService;
     }
 
-    @GetMapping("/workspace")
+    @GetMapping("/")
     public String loadSprints(HttpSession session) {
         User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {

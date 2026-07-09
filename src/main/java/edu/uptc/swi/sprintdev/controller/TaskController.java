@@ -20,7 +20,7 @@ import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/sprint")
+@RequestMapping("/workspace")
 public class TaskController {
     private final ISprintTaskService sprintTaskService;
     private final ISprintService sprintService;
