@@ -64,15 +64,15 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public boolean addReaderToSprint(int sprintId, int creatorId, User user) throws UserDontHavePermissionException  {
+    public boolean addReaderToSprint(int sprintId, int creatorId, User reader) throws UserDontHavePermissionException  {
         Sprint sprint = findSprintById(sprintId, creatorId);
         if (sprint == null) {
             return false;
         }
-        if (!validateAddReaderConditions(sprint, user.getId())) {
+        if (!validateAddReaderConditions(sprint, reader.getId())) {
             return false;
         }
-        sprint.getReaders().add(user);
+        sprint.getReaders().add(reader);
         return true;
     }
 
