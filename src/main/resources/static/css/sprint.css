@@ -4,7 +4,7 @@
     padding: 0 25px;
 }
 
-/* --- Migas de pan --- */
+
 
 .breadcrumb {
     display: flex;
@@ -33,7 +33,7 @@
     font-weight: 600;
 }
 
-/* --- Encabezado del sprint --- */
+
 
 .sprint-hero {
     display: flex;
@@ -104,7 +104,7 @@
     pointer-events: none;
 }
 
-/* --- Contenido: resumen + equipo --- */
+
 
 .sprint-content {
     display: grid;

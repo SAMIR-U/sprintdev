@@ -116,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- Barra de navegación / acciones del sprint -->
             <div class="sprint-actions">
                 <a class="sprint-nav-btn"
                    href="${pageContext.request.contextPath}/sprint/backlog">
