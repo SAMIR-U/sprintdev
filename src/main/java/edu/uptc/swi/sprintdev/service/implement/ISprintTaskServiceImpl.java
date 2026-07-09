@@ -6,6 +6,8 @@ import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class ISprintTaskServiceImpl implements ISprintTaskService {
     private final ISprintTaskRepo sprintTaskRepo;
@@ -18,6 +20,7 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     public boolean createTask(Task task) {
         if (!this.existsTask(task)) {
             task.setStatus(TaskStatus.PENDING);
+            task.setCreationDate(LocalDateTime.now());
             this.sprintTaskRepo.save(task);
             return true;
         }
