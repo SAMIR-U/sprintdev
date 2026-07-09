@@ -62,7 +62,6 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
         return List.of();
     }
 
-
     private boolean existsTask(Task task) {
         return this.sprintTaskRepo.existsById(task.getId());
     }
