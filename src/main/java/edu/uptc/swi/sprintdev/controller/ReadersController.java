@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/sprint")
+@RequestMapping("/workspace")
 public class ReadersController {
     private final ISprintService sprintService;
     private final IUserService userService;
@@ -41,18 +41,18 @@ public class ReadersController {
         return "readers";
     }
 
-        @GetMapping("/findreaders")
-        @ResponseBody
-        public ResponseEntity<List<User>> findReaders(@RequestParam String key,
-                                HttpSession session) {
-            User user = SessionUtlis.autenticatedUserIn(session);
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-            List<User> users = userService.findUserByKeyWord(key);
-            return ResponseEntity.ok(users);
+    @GetMapping("/findreaders")
+    @ResponseBody
+    public ResponseEntity<List<User>> findReaders(@RequestParam String key,
+                            HttpSession session) {
+        User user = SessionUtlis.autenticatedUserIn(session);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        List<User> users = userService.findUserByKeyWord(key);
+        return ResponseEntity.ok(users);
+    }
     
 
     @PostMapping("/addreader")
@@ -70,7 +70,7 @@ public class ReadersController {
         }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
         }
-        return "redirect:/sprint/readers";
+        return "redirect:/workspace/readers";
     }
     
 }

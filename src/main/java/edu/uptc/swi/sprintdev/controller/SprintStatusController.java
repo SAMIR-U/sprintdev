@@ -11,7 +11,7 @@ import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/sprint")
+@RequestMapping("/workspace")
 public class SprintStatusController {
     private final ISprintService sprintService;
 
@@ -19,7 +19,7 @@ public class SprintStatusController {
         this.sprintService = sprintService;
     }
 
-    @PostMapping("/active")
+    @PostMapping("/sprint/active")
     public String activeSprint(@RequestParam int sprintId,
                                HttpSession session) {
 
@@ -36,7 +36,7 @@ public class SprintStatusController {
         return "redirect:/workspace";
     }
 
-    @PostMapping("/close")
+    @PostMapping("/sprint/close")
     public String closeSprint(@RequestParam int sprintId,
                                HttpSession session) {
 

@@ -52,7 +52,7 @@
             <section class = "sprint-grid">
                 <% if (sprints != null && !sprints.isEmpty()) { %>
                     <% for (Sprint sprint : sprints) { %>
-                    <a href="${pageContext.request.contextPath}/workspace?sprintId=<%= sprint.getSprintId() %>"
+                    <a href="${pageContext.request.contextPath}/workspace/sprint?sprintId=<%= sprint.getSprintId() %>"
                     class = "sprint-card-link">
                     <article class="sprint-card">
                                             <h3>
@@ -88,7 +88,7 @@
            <div class="addSprintMenu" id="addSprintMenu">
                <div class="addSprintMenu-content">
                    <h2>Crear Sprint</h2>
-                   <form action="${pageContext.request.contextPath}/createsprint"
+                   <form action="${pageContext.request.contextPath}/workspace/createsprint"
                          method="post">
                        <div class="field">
                            <label for="name">
