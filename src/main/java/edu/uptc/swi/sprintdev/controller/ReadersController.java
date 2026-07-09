@@ -38,21 +38,21 @@ public class ReadersController {
 
         List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
         session.setAttribute("readers", readers);
-        return "/readers";
+        return "readers";
     }
 
-    @GetMapping("/findreaders")
-    @ResponseBody
-    public ResponseEntity<List<User>> findReaders(@RequestParam String key,
-                            HttpSession session) {
-        User user = SessionUtlis.autenticatedUserIn(session);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        @GetMapping("/findreaders")
+        @ResponseBody
+        public ResponseEntity<List<User>> findReaders(@RequestParam String key,
+                                HttpSession session) {
+            User user = SessionUtlis.autenticatedUserIn(session);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            List<User> users = userService.findUserByKeyWord(key);
+            return ResponseEntity.ok(users);
         }
-
-        List<User> users = userService.findUserByKeyWord(key);
-        return ResponseEntity.ok(users);
-    }
     
 
     @PostMapping("/addreader")
@@ -70,7 +70,7 @@ public class ReadersController {
         }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
         }
-        return "redirect:/readers";
+        return "redirect:/sprint/readers";
     }
     
 }
