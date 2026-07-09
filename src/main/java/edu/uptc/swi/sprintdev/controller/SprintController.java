@@ -25,7 +25,7 @@ public class SprintController {
         this.sprintService = sprintService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String loadSprints(HttpSession session) {
         User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
@@ -76,7 +76,10 @@ public class SprintController {
         }
 
         Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
+        List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
+
         session.setAttribute("sprint", sprint);
+        session.setAttribute("readers", readers);
 
         return "sprint";
     }
