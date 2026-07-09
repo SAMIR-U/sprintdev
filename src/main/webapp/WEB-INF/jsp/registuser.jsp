@@ -63,7 +63,7 @@ String registMessage = (String) session.getAttribute("regist");
 
         <% }
 
-        session.removeAttribute("registmessage");
+        session.removeAttribute("regist");
         %>
 
         <form action="${pageContext.request.contextPath}/registuser"
