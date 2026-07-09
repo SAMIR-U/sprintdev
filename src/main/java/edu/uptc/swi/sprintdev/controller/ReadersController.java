@@ -65,7 +65,7 @@ public class ReadersController {
         }
 
         User reader = userService.obtainUserByUsername(readerName);
-        if (reader == null) {
+        if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
             SessionUtlis.operfailMsg(session, "addreader");
         }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
