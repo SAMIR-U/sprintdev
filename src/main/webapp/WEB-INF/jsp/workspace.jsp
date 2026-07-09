@@ -50,8 +50,25 @@
           <% } %>
         <section class = "sprint-grid">
             <% if (sprints != null && !sprints.isEmpty()) { %>
-                <% for (Sprint sprint : sprints) { %>
-                    <article class="sprint-card">
+                <% for (Sprint sprint : sprints) {
+                        String cardStatusLabel = "En preparación";
+                        String cardStatusClass = "preparacion";
+                        switch (sprint.getStatus()) {
+                            case ACTIVE:
+                                cardStatusLabel = "Activo";
+                                cardStatusClass = "activo";
+                                break;
+                            case CLOSED:
+                                cardStatusLabel = "Cerrado";
+                                cardStatusClass = "cerrado";
+                                break;
+                            default:
+                                cardStatusLabel = "En preparación";
+                                cardStatusClass = "preparacion";
+                        }
+                   %>
+                    <article class="sprint-card"
+                             onclick="location.href='${pageContext.request.contextPath}/sprint?sprintId=<%= sprint.getSprintId() %>'">
                         <h3>
                             <%= sprint.getName() %>
                         </h3>
@@ -65,8 +82,8 @@
                             <strong>Fin:</strong>
                             <%= sprint.getEndDate() %>
                         </div>
-                        <span class="sprint-status preparacion">
-                            En preparación
+                        <span class="sprint-status <%= cardStatusClass %>">
+                            <%= cardStatusLabel %>
                         </span>
                     </article>
                 <% } %>
