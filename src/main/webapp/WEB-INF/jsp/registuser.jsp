@@ -38,7 +38,7 @@ String registMessage = (String) session.getAttribute("regist");
 
         <div class="auth-logo">
 
-        <img src="${pageContext.request.contextPath}/image/logo_esprindev.jpeg" alt="Logo SprintDev" class="logo">
+        <img src="${pageContext.request.contextPath}/image/logo_esprindev.png" alt="Logo SprintDev" class="logo">
 
 
         </div>

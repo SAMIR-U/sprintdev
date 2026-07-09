@@ -35,7 +35,7 @@ String loginMessage = (String) session.getAttribute("login");
 
         <div class="auth-logo">
 
-            <img src="${pageContext.request.contextPath}/image/logo_esprindev.jpeg" alt="Logo SprintDev" class="logo">
+            <img src="${pageContext.request.contextPath}/image/logo_esprindev.png" alt="Logo SprintDev" class="logo">
 
             <span>
                 Sprint<em>Dev</em>

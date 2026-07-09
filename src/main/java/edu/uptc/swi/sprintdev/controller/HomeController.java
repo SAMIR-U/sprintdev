@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HomeController {
     @GetMapping("/")
-    public String getMethodName(@RequestParam String param) {
+    public String getMethodName() {
         return "index";
     }
     
