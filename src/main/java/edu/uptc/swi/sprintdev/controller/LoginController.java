@@ -18,9 +18,9 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/login")//login
     public String loginPage() {
-        return "index";
+        return "login";
     }
 
     @PostMapping("/login")
@@ -30,9 +30,9 @@ public class LoginController {
 
         if (userService.loginUser(user, password)) {
             SessionUtlis.setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
-            return "redirect:/mainmenu";
+            return "redirect:/workspace";
         }
         SessionUtlis.operfailMsg(session, "login");
-        return "index";
+        return "login";
     }
 }

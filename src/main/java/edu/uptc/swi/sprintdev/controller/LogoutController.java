@@ -12,6 +12,6 @@ public class LogoutController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         SessionUtlis.logout(session);
-        return "redirect:/";
+        return "redirect:/login";
     }
 }
