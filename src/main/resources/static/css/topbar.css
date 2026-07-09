@@ -1,0 +1,186 @@
+
+header.topbar{
+    height:70px;
+    display:flex;
+    align-items:center;
+    background:var(--grafito);
+    color:var(--paper);
+    padding:0 32px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+
+nav {
+    margin-left: auto;
+}
+
+.app-logo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+}
+
+.app-logo-icon {
+    width: auto;
+    height: 42px;
+    transition: transform 0.2s ease;
+}
+
+.app-logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.name-app {
+    color: white;
+    font-weight: 600;              /* Poppins/Inter se ven mejor semi-bold que regular */
+}
+
+.name-app em {
+    color: #5B7C99;
+    font-style: normal;
+}
+
+/* --- bloque de usuario --- */
+
+.user-header {
+    position: relative;   /* necesario para que .user-dropdown se posicione respecto a este bloque */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 14px 6px 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.user-header:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #7393AF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    font-size: 15px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.user-text-header {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.user-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.user-text-header p {
+    color: #BFC8D1;
+    font-size: 11px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- dropdown de usuario (cerrar sesión, etc.) --- */
+
+.user-dropdown{
+    position:absolute;
+    top:calc(100% + 10px);
+    right:0;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+    min-width:170px;
+    padding:6px;
+
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(-8px);
+    transition:opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.user-dropdown.show{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+.dropdown-item{
+    display:block;
+    padding:10px 14px;
+    border-radius:7px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--grafito);
+    text-decoration:none;
+    transition:background 0.15s ease;
+}
+
+.dropdown-item:hover{
+    background:#eef1f4;
+}
+
+.dropdown-item.logout{
+    color:var(--danger);
+}
+
+.dropdown-item.logout:hover{
+    background:#fbeee9;
+}
+.user-dropdown form{
+    margin: 0;
+}
+
+.dropdown-item{
+    appearance: none;
+    -webkit-appearance: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 100%;
+    padding: 10px 14px;
+
+    background: transparent;
+    border: none;
+    outline: none;
+
+    border-radius: 7px;
+
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--grafito);
+
+    cursor: pointer;
+    text-align: left;
+
+    transition: background 0.15s ease;
+}
+
+.dropdown-item:hover{
+    background: #eef1f4;
+}
+
+.dropdown-item.logout{
+    color: var(--danger);
+}
+
+.dropdown-item.logout:hover{
+    background: #fbeee9;
+}
