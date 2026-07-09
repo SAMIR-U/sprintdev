@@ -50,7 +50,6 @@ public class TaskController {
         Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
 
         Task task = new Task();
-        task.setId(sprintId);
         task.setTitle(title);
         task.setDescription(description);
         task.setSprint(sprint);
@@ -83,8 +82,8 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @PostMapping("/edittaks")
-    public String editTask(@RequestParam int taskId,
+    @PostMapping("/updatetaks")
+    public String updateTask(@RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam TaskStatus status,
