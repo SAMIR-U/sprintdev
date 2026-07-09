@@ -28,19 +28,6 @@ public class ReadersController {
         this.userService = userService;
     }
 
-    @GetMapping("/readers")
-    public String loadReadersSprints(@RequestParam int sprintId,
-                              HttpSession session) {
-        User user = SessionUtlis.autenticatedUserIn(session);
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
-        session.setAttribute("readers", readers);
-        return "readers";
-    }
-
     @GetMapping("/findreaders")
     @ResponseBody
     public ResponseEntity<List<User>> findReaders(@RequestParam String key,
@@ -54,7 +41,6 @@ public class ReadersController {
         return ResponseEntity.ok(users);
     }
     
-
     @PostMapping("/addreader")
     public String addReaderToSprints(@RequestParam int sprintId,
                                 @RequestParam String readerName,
@@ -70,7 +56,7 @@ public class ReadersController {
         }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
         }
-        return "redirect:/workspace/readers";
+        return "redirect:/workspace/sprint";
     }
     
 }
