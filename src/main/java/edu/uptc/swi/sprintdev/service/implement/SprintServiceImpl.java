@@ -1,6 +1,7 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.*;
+import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import org.springframework.stereotype.Service;
@@ -34,26 +35,26 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public List<User> findAllReadersSprint(int sprintId, int userId) {
+    public List<User> findAllReadersSprint(int sprintId, int userId) throws UserDontHavePermissionException {
         Sprint sprint = this.findSprintById(sprintId);
         if (this.hasAccess(sprint, userId)) {
             return this.sprintRepo.findSprintReaders(sprintId);
         }
-        return null;
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
     @Override
-    public boolean closeSprint(int sprintId, int creatorId) {
+    public boolean closeSprint(int sprintId, int creatorId) throws UserDontHavePermissionException {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
         if (this.validateCloseSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.CLOSED);
             return true;
         }
-        return false;
+       return false;
     }
 
     @Override
-    public boolean activateSprint(int sprintId, int creatorId) {
+    public boolean activateSprint(int sprintId, int creatorId)  {
         Sprint sprint = this.findSprintById(sprintId, creatorId);
         if (this.validateActivateSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.ACTIVE);
@@ -63,7 +64,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public boolean addReaderToSprint(int sprintId, int creatorId, User user) {
+    public boolean addReaderToSprint(int sprintId, int creatorId, User user) throws UserDontHavePermissionException  {
         Sprint sprint = findSprintById(sprintId, creatorId);
         if (sprint == null) {
             return false;
@@ -76,16 +77,19 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public Sprint findSprintById(int sprintId, int userId) {
+    public Sprint findSprintById(int sprintId, int userId) throws UserDontHavePermissionException {
         Sprint sprint = this.findSprintById(sprintId);
         if (this.hasAccess(sprint, userId)) {
             return sprint;
         }
-            return null;
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
-    private boolean validateAddReaderConditions(Sprint sprint, int userId) {
-        return this.validateReaderListSize(sprint) && !this.isReader( sprint, userId);
+    private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserDontHavePermissionException {
+        if (this.isReader( sprint, userId)) {
+            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
+        }
+        return this.validateReaderListSize(sprint);
     }
 
     private boolean validateReaderListSize(Sprint sprint) {
@@ -98,9 +102,9 @@ public class SprintServiceImpl implements ISprintService {
                 && isCreator(sprint, creatorId);
     }
 
-    private boolean validateCloseSprintConditions(Sprint sprint, int creatorId) {
+    private boolean validateCloseSprintConditions(Sprint sprint, int creatorId) throws UserDontHavePermissionException {
         if (!isCreator(sprint, creatorId)) {
-            return false;
+            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
         }
         if (sprint.getStatus() != SprintStatus.ACTIVE) {
             return false;

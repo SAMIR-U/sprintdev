@@ -1,7 +1,10 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
+import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.TaskStatus;
+import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
@@ -17,7 +20,10 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean createTask(Task task) {
+    public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException {
+        if (this.hasPermission(task.getSprint(), creatorId)){
+            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
+        }
         if (!this.existsTask(task)) {
             task.setStatus(TaskStatus.PENDING);
             task.setCreationDate(LocalDateTime.now());
@@ -28,7 +34,10 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task, int creatorId) throws UserDontHavePermissionException {
+        if (this.hasPermission(task.getSprint(), creatorId)){
+            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
+        }
         if (this.existsTask(task)) {
             this.sprintTaskRepo.save(task);
             return true;
@@ -37,7 +46,10 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean deleteTask(Task task) {
+    public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException {
+        if (this.hasPermission(task.getSprint(), creatorId)){
+            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
+        }
         if (this.existsTask(task)) {
             this.sprintTaskRepo.deleteById(task.getId());
             return true;
@@ -52,6 +64,11 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
 
     private boolean existsTask(Task task) {
         return this.sprintTaskRepo.existsById(task.getId());
+    }
+
+    private boolean hasPermission(Sprint sprint, int creatorId) {
+        User creator = sprint.getCreator();
+        return creator != null && creator.getId() == creatorId;
     }
 
 }
