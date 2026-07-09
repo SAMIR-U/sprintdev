@@ -55,7 +55,7 @@ public class TaskController {
         task.setSprint(sprint);
         task.setStatus(status);
 
-        if (sprintTaskService.createTask(task)) {
+        if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
             return "redirect:/backlog";
         }
@@ -99,7 +99,7 @@ public class TaskController {
         task.setDescription(description);
         task.setStatus(status);
 
-        if (sprintTaskService.updateTask(task)) {
+        if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
             return "redirect:/backlog";
         }
@@ -119,7 +119,7 @@ public class TaskController {
         Task task = new Task();
         task.setId(taskId);
 
-        if (sprintTaskService.deleteTask(task)) {
+        if (sprintTaskService.deleteTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "deletetask");
             return "redirect:/backlog";
         }
