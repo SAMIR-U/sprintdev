@@ -22,7 +22,7 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
 
     @Override
     public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException {
-        if (this.hasPermission(task.getSprint(), creatorId)){
+        if (!this.hasPermission(task.getSprint(), creatorId) && !this.existsTask(task)) {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
         }
         if (!this.existsTask(task)) {
@@ -36,26 +36,20 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
 
     @Override
     public boolean updateTask(Task task, int creatorId) throws UserDontHavePermissionException {
-        if (this.hasPermission(task.getSprint(), creatorId)){
-            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
-        }
-        if (this.existsTask(task)) {
+        if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
             this.sprintTaskRepo.save(task);
             return true;
         }
-        return false;
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
     @Override
     public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException {
-        if (this.hasPermission(task.getSprint(), creatorId)){
-            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
-        }
-        if (this.existsTask(task)) {
+        if (this.hasPermission(task.getSprint(), creatorId) &&  this.existsTask(task)) {
             this.sprintTaskRepo.deleteById(task.getId());
             return true;
         }
-        return false;
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
     @Override
