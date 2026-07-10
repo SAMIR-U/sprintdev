@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
+import edu.uptc.swi.sprintdev.exceptions.UserAlreadyExistInListException;
+import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
 
@@ -26,12 +29,16 @@ public class SprintStatusController extends AbstractController{
         if (creator == null) {
             return "redirect:/login";
         }
-        if (sprintService.activateSprint(sprintId, creator.getId())) {
-            operSuccessMsg(session, "activesprint");
-        } else {
-            operfailMsg(session, "activesprint");
+        try {
+            if (sprintService.activateSprint(sprintId, creator.getId())) {
+                operSuccessMsg(session, "activesprint");
+            } else {
+                operfailMsg(session, "activesprint");
+            }
+        } catch (UserDontHavePermissionException| UserAlreadyExistInListException| TheListIsFullException e) {
+            operfailMsg(session, "activesprint", e.getMessage());
         }
-
+        
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
 
@@ -43,10 +50,15 @@ public class SprintStatusController extends AbstractController{
         if (creator == null) {
             return "redirect:/login";
         }
-        if (sprintService.closeSprint(sprintId, creator.getId())) {
-            operSuccessMsg(session, "activesprint");
-        } else {
-            operfailMsg(session, "activesprint");
+
+        try {
+            if (sprintService.closeSprint(sprintId, creator.getId())) {
+                operSuccessMsg(session, "closesprint");
+            } else {
+                operfailMsg(session, "closesprint");
+            }
+        } catch (UserDontHavePermissionException e) {
+            operfailMsg(session, "closesprint", e.getMessage());
         }
 
         return "redirect:/workspace/sprint?sprintId="+sprintId;

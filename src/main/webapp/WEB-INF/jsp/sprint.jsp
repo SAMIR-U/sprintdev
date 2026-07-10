@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="edu.uptc.swi.sprintdev.domain.Sprint" %>
+<%@ page import="edu.uptc.swi.sprintdev.domain.SprintStatus" %>
 <%@ page import="edu.uptc.swi.sprintdev.domain.User" %>
 <%@ page import="java.time.temporal.ChronoUnit" %>
 
@@ -10,6 +11,12 @@
 
     String addReaderMsg = (String) session.getAttribute("addreader");
     session.removeAttribute("addreader");
+
+    String activateMsg = (String) session.getAttribute("activesprint");
+    session.removeAttribute("activesprint");
+
+    String closeMsg = (String) session.getAttribute("closesprint");
+    session.removeAttribute("closesprint");
 
     String statusLabel = "En preparación";
     String statusClass = "preparacion";
@@ -37,6 +44,8 @@
 
     boolean isCreator = sprint != null && currentUser != null
             && sprint.getCreator().getId() == currentUser.getId();
+
+    boolean hasTasks = sprint != null && sprint.getTasks() != null && !sprint.getTasks().isEmpty();
 
 
     String existingReadersCsv = "";
@@ -94,6 +103,20 @@
             <div class="banner error">No fue posible agregar el lector.</div>
         <% } %>
 
+        <% if ("success".equals(activateMsg)) { %>
+            <div class="banner success">Sprint activado correctamente.</div>
+        <% } %>
+        <% if ("fail".equals(activateMsg)) { %>
+            <div class="banner error">No fue posible activar el Sprint. Verifica que tenga al menos una tarea.</div>
+        <% } %>
+
+        <% if ("success".equals(closeMsg)) { %>
+            <div class="banner success">Sprint cerrado correctamente.</div>
+        <% } %>
+        <% if ("fail".equals(closeMsg)) { %>
+            <div class="banner error">No fue posible cerrar el Sprint. Verifica que todas las tareas estén terminadas.</div>
+        <% } %>
+
 
         <section class="sprint-hero">
             <div class="sprint-hero-info">
@@ -112,6 +135,31 @@
                 <a class="sprint-nav-btn disabled" title="Próximamente">
                     Ver Dashboard
                 </a>
+
+                <% if (isCreator && sprint.getStatus() == SprintStatus.CREATED) { %>
+                    <form class="sprint-status-form"
+                          action="${pageContext.request.contextPath}/workspace/sprint/active"
+                          method="post"
+                          onsubmit="return confirm('¿Activar este Sprint? Una vez activo podrás mover tareas en el tablero.');">
+                        <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
+                        <button type="submit" class="sprint-nav-btn primary"
+                                <%= hasTasks ? "" : "disabled title=\"Agrega al menos una tarea al Sprint Backlog para poder activarlo\"" %>>
+                            Activar Sprint
+                        </button>
+                    </form>
+                <% } %>
+
+                <% if (isCreator && sprint.getStatus() == SprintStatus.ACTIVE) { %>
+                    <form class="sprint-status-form"
+                          action="${pageContext.request.contextPath}/workspace/sprint/close"
+                          method="post"
+                          onsubmit="return confirm('¿Cerrar este Sprint? Solo podrás hacerlo si todas las tareas están terminadas, y esta acción no se puede deshacer.');">
+                        <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
+                        <button type="submit" class="sprint-nav-btn danger">
+                            Cerrar Sprint
+                        </button>
+                    </form>
+                <% } %>
             </div>
         </section>
 
