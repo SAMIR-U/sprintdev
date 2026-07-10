@@ -36,7 +36,7 @@
 .sprint-section-title {
     font-size: 26px;
     font-weight: 700;
-    color: var(--grafito);
+    color:#5B7C99 ;
     margin: 0 0 22px;
 }
 
@@ -85,6 +85,46 @@
     color: #b7bfc6;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.sprint-status-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+button.sprint-nav-btn {
+    cursor: pointer;
+}
+
+.sprint-nav-btn.primary {
+    background: var(--sprint);
+    border-color: var(--sprint);
+    color: white;
+}
+
+.sprint-nav-btn.primary:hover {
+    background: var(--sprint-deep);
+    border-color: var(--sprint-deep);
+    color: white;
+}
+
+.sprint-nav-btn.primary:disabled {
+    background: #d8e0e6;
+    border-color: #d8e0e6;
+    color: #97a3ac;
+    cursor: not-allowed;
+}
+
+.sprint-nav-btn.danger {
+    background: white;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.sprint-nav-btn.danger:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: white;
 }
 
 
