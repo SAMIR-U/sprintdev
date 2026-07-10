@@ -121,9 +121,9 @@ public class TaskController {
 
         if (sprintTaskService.deleteTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "deletetask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "deletetask");
         }
-        SessionUtlis.operfailMsg(session, "deletetask");
-        return "redirect:/workspace/backlog";
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 }
