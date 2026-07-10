@@ -78,10 +78,8 @@ public class SprintController extends AbstractController{
         try {
             Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
             List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
-            User creator = sprintService.obtainCreator(sprintId);
             session.setAttribute("sprint", sprint);
             session.setAttribute("readers", readers);
-            session.setAttribute("creator", creator);
         }catch (UserNotFoundException e) {
             operfailMsg(session, "sprint", e.getMessage());
         }
