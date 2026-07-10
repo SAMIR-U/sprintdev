@@ -32,9 +32,7 @@ public class TaskController {
     }
 
     @GetMapping("/backlog")
-    public String loadbacklog(@RequestParam int sprintid
-
-    ) {
+    public String loadbacklog(@RequestParam int sprintId) {
 
         return "backlog";
     }
