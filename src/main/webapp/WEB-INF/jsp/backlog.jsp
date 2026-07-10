@@ -88,21 +88,24 @@
 
     <% if ("success".equals(createMessage)) { %>
         <div class="banner success">La tarea fue creada correctamente.</div>
-    <% } %>
-    <% if ("fail".equals(createMessage)) { %>
-        <div class="banner error">No fue posible crear la tarea.</div>
+    <% } else if (createMessage != null) { %>
+        <div class="banner error">
+            <%= "fail".equals(createMessage) ? "No fue posible crear la tarea." : createMessage %>
+        </div>
     <% } %>
     <% if ("success".equals(editMessage)) { %>
         <div class="banner success">La tarea fue actualizada correctamente.</div>
-    <% } %>
-    <% if ("fail".equals(editMessage)) { %>
-        <div class="banner error">No fue posible actualizar la tarea.</div>
+    <% } else if (editMessage != null) { %>
+        <div class="banner error">
+            <%= "fail".equals(editMessage) ? "No fue posible actualizar la tarea." : editMessage %>
+        </div>
     <% } %>
     <% if ("success".equals(deleteMessage)) { %>
         <div class="banner success">La tarea fue eliminada correctamente.</div>
-    <% } %>
-    <% if ("fail".equals(deleteMessage)) { %>
-        <div class="banner error">No fue posible eliminar la tarea.</div>
+    <% } else if (deleteMessage != null) { %>
+        <div class="banner error">
+            <%= "fail".equals(deleteMessage) ? "No fue posible eliminar la tarea." : deleteMessage %>
+        </div>
     <% } %>
 
     <section class="backlog-stats">
@@ -280,6 +283,16 @@
             <div class="field">
                 <label>Responsables</label>
                 <div class="assignee-picker">
+                    <% if (sprint != null && sprint.getCreator() != null) {
+                        User creatorUser = sprint.getCreator();
+                    %>
+                        <label class="assignee-option">
+                            <input type="checkbox" name="assignedUserNames" value="<%= creatorUser.getUserName() %>">
+                            <span class="assignee-option-avatar"><%= creatorUser.getUserName().substring(0, 1).toUpperCase() %></span>
+                            <span class="assignee-option-name"><%= creatorUser.getUserName() %> (Creador)</span>
+                        </label>
+                    <% } %>
+
                     <% if (readers != null && !readers.isEmpty()) { %>
                         <% for (User reader : readers) { %>
                             <label class="assignee-option">
@@ -288,8 +301,10 @@
                                 <span class="assignee-option-name"><%= reader.getUserName() %></span>
                             </label>
                         <% } %>
-                    <% } else { %>
-                        <p class="assignee-empty">Este Sprint todavía no tiene lectores para asignar.</p>
+                    <% } %>
+
+                    <% if (sprint == null && (readers == null || readers.isEmpty())) { %>
+                        <p class="assignee-empty">Este Sprint todavía no tiene usuarios para asignar.</p>
                     <% } %>
                 </div>
             </div>
