@@ -33,7 +33,7 @@ public class TaskController {
 
     @GetMapping("/backlog")
     public String loadbacklog(@RequestParam int sprintId) {
-
+        
         return "backlog";
     }
 
@@ -56,32 +56,15 @@ public class TaskController {
 
         if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "createtask");
         }
-        SessionUtlis.operfailMsg(session, "createtask");
-        return "redirect:/workspace/backlog";
-    }
-
-    @PostMapping("/taskinfo")
-    @ResponseBody
-    public ResponseEntity<Task> obtainTaskInfo(@RequestParam int taskId,
-                        HttpSession session) {
-
-        User user = SessionUtlis.autenticatedUserIn(session);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Task task = sprintTaskService.findTaskById(taskId);
-
-        if (task == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(task);
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
     @PostMapping("/updatetaks")
-    public String updateTask(@RequestParam int taskId,
+    public String updateTask(@RequestParam int sprintid,
+                        @RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam TaskStatus status,
@@ -99,14 +82,15 @@ public class TaskController {
 
         if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "edittask");
         }
-        SessionUtlis.operfailMsg(session, "edittask");
-        return "redirect:/workspace/backlog";
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
     @PostMapping("/deletetaks")
-    public String deleteTask(@RequestParam int taskId,
+    public String deleteTask(@RequestParam int sprintid,
+                        @RequestParam int taskId,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
@@ -119,9 +103,9 @@ public class TaskController {
 
         if (sprintTaskService.deleteTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "deletetask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "deletetask");
         }
-        SessionUtlis.operfailMsg(session, "deletetask");
-        return "redirect:/workspace/backlog";
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 }

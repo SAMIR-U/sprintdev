@@ -33,7 +33,7 @@ public class SprintStatusController {
             SessionUtlis.operfailMsg(session, "activesprint");
         }
 
-        return "redirect:/workspace";
+        return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
 
     @PostMapping("/sprint/close")
@@ -50,6 +50,6 @@ public class SprintStatusController {
             SessionUtlis.operfailMsg(session, "activesprint");
         }
 
-        return "redirect:/workspace";
+        return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
 }
