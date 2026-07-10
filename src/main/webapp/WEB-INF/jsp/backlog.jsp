@@ -131,7 +131,6 @@
 
         <div class="toolbar">
             <div class="search-field">
-                <span class="search-icon">&#128269;</span>
                 <input type="text" id="searchTask" placeholder="Buscar por título, descripción o responsable...">
             </div>
 
@@ -241,7 +240,6 @@
 
             <% if (tasks == null || tasks.isEmpty()) { %>
                 <div class="empty-state">
-                    <div class="empty-state-icon">&#128203;</div>
                     <h3>No existen tareas para este Sprint</h3>
                     <p>Crea la primera tarea para empezar a planear el Sprint Backlog.</p>
                     <button class="btn-new-task" onclick="openCreateModal()">
@@ -289,7 +287,7 @@
                         <label class="assignee-option">
                             <input type="checkbox" name="assignedUserNames" value="<%= creatorUser.getUserName() %>">
                             <span class="assignee-option-avatar"><%= creatorUser.getUserName().substring(0, 1).toUpperCase() %></span>
-                            <span class="assignee-option-name"><%= creatorUser.getUserName() %> (Creador)</span>
+                            <span class="assignee-option-name"><%= creatorUser.getUserName() %></span>
                         </label>
                     <% } %>
 

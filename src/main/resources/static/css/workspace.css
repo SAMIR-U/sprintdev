@@ -280,25 +280,32 @@
     color: #8a97a1;
 }
 
-.sprint-status {
+.preparacion {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 600;
-}
-
-.preparacion {
     background: #eef1f3;
     color: #5a6c78;
 }
 
 .activo {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
     background: #eef3ea;
     color: var(--verde);
 }
 
 .cerrado {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
     background: #ececec;
     color: #555;
 }

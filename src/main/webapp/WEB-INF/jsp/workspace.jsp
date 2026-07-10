@@ -68,9 +68,27 @@
                                                 <strong>Fin:</strong>
                                                 <%= sprint.getEndDate() %>
                                             </div>
-                                            <span class="sprint-status preparacion">
-                                                En preparación
-                                            </span>
+                                           <span class="sprint-status">
+                                             <%@ page import="edu.uptc.swi.sprintdev.domain.SprintStatus" %>
+
+                                            <%
+                                              SprintStatus status = sprint.getStatus();
+
+                                              if (status == SprintStatus.CREATED) {
+                                            %>
+                                                  <span class="preparacion">En preparación</span>
+                                            <%
+                                              } else if (status == SprintStatus.ACTIVE) {
+                                            %>
+                                                  <span class="activo">Activo</span>
+                                            <%
+                                              } else if (status == SprintStatus.CLOSED) {
+                                            %>
+                                                  <span class="cerrado">Cerrado</span>
+                                            <%
+                                                 }
+                                            %>
+                                           </span>
                                         </article>
                     </a>
                     <% } %>

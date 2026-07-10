@@ -16,7 +16,6 @@ import java.util.Set;
 @Service
 public class SprintTaskServiceImpl implements ISprintTaskService {
     private final ISprintTaskRepo sprintTaskRepo;
-
     public SprintTaskServiceImpl(ISprintTaskRepo sprintTaskRepo) {
         this.sprintTaskRepo = sprintTaskRepo;
     }
