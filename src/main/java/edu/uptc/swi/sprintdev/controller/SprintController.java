@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
@@ -17,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/workspace")
-public class SprintController {
+public class SprintController extends AbstractController{
 
     private final ISprintService sprintService;
 
@@ -27,7 +26,7 @@ public class SprintController {
 
     @GetMapping("")
     public String loadSprints(HttpSession session) {
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -45,7 +44,7 @@ public class SprintController {
                                @RequestParam LocalDate endDate,
                                HttpSession session) {
 
-        User creator = SessionUtlis.autenticatedUserIn(session);
+        User creator = autenticatedUserIn(session);
         if (creator == null) {
             return "redirect:/login";
         }
@@ -58,9 +57,9 @@ public class SprintController {
         sprint.setCreator(creator);
 
         if (sprintService.createSprint(sprint)) {
-            SessionUtlis.operSuccessMsg(session, "createsprint");
+            operSuccessMsg(session, "createsprint");
         } else {
-            SessionUtlis.operfailMsg(session, "createsprint");
+            operfailMsg(session, "createsprint");
         }
 
         return "redirect:/workspace";
@@ -70,7 +69,7 @@ public class SprintController {
     public String accestToSprint(@RequestParam int sprintId,
                               HttpSession session) {
         
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }

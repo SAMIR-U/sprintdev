@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/workspace")
-public class ReadersController {
+public class ReadersController extends AbstractController{
     private final ISprintService sprintService;
     private final IUserService userService;
 
@@ -32,7 +31,7 @@ public class ReadersController {
     @ResponseBody
     public ResponseEntity<List<User>> findReaders(@RequestParam String key,
                             HttpSession session) {
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -45,16 +44,16 @@ public class ReadersController {
     public String addReaderToSprints(@RequestParam int sprintId,
                                 @RequestParam String readerName,
                                 HttpSession session) {
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
 
         User reader = userService.obtainUserByUsername(readerName);
         if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
-            SessionUtlis.operSuccessMsg(session, "addreader");
+            operSuccessMsg(session, "addreader");
         }else{
-            SessionUtlis.operfailMsg(session, "addreader");
+            operfailMsg(session, "addreader");
         }
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }

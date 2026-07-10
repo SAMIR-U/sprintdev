@@ -5,12 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class LoginController {
+public class LoginController extends AbstractController{
 
     private final IUserService userService;
 
@@ -29,10 +28,10 @@ public class LoginController {
                         HttpSession session) {
 
         if (userService.loginUser(user, password)) {
-            SessionUtlis.setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
+            setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
             return "redirect:/workspace";
         }
-        SessionUtlis.operfailMsg(session, "login");
+        operfailMsg(session, "login");
         return "login";
     }
 }
