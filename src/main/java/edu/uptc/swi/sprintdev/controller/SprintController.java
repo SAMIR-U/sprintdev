@@ -13,6 +13,7 @@ import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
+import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 
 @Controller
 @RequestMapping("/workspace")
@@ -23,7 +24,7 @@ public class SprintController extends AbstractController{
     public SprintController(ISprintService sprintService) {
         this.sprintService = sprintService;
     }
-
+    
     @GetMapping("")
     public String loadSprints(HttpSession session) {
         User user = autenticatedUserIn(session);
@@ -74,14 +75,16 @@ public class SprintController extends AbstractController{
             return "redirect:/login";
         }
 
-        Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
-        List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
-        User creator = sprintService.obtainCreator(sprintId);
-
-        session.setAttribute("sprint", sprint);
-        session.setAttribute("readers", readers);
-        session.setAttribute("creator", creator);
-
+        try {
+            Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
+            List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
+            User creator = sprintService.obtainCreator(sprintId);
+            session.setAttribute("sprint", sprint);
+            session.setAttribute("readers", readers);
+            session.setAttribute("creator", creator);
+        }catch (UserNotFoundException e) {
+            operfailMsg(session, "sprint", e.getMessage());
+        }
         return "sprint";
     }
 }
