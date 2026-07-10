@@ -56,7 +56,7 @@ public class ReadersController {
         }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
         }
-        return "redirect:/workspace/sprint";
+        return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
     
 }
