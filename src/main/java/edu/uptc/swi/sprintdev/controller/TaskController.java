@@ -1,7 +1,5 @@
 package edu.uptc.swi.sprintdev.controller;
 
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
@@ -23,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/workspace")
-public class TaskController {
+public class TaskController extends AbstractController{
     private final ISprintTaskService sprintTaskService;
     private final ISprintService sprintService;
     private final IUserService userService;
@@ -38,26 +36,29 @@ public class TaskController {
     public String loadbacklog(@RequestParam int sprintId,
                             HttpSession session
     ) {
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
-
-        List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
-        List<Task> tasks = sprintService.findAllSprintTasks(sprintId, sprintId);
-        session.setAttribute("tasks", tasks);
-        session.setAttribute("readers", readers);
+        try {
+            List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
+            List<Task> tasks = sprintService.findAllSprintTasks(sprintId, user.getId());
+            session.setAttribute("tasks", tasks);
+            session.setAttribute("readers", readers);
+        } catch (UserDontHavePermissionException e) {
+            operfailMsg(session, "backlog", e.getMessage());
+        }
         return "backlog";
     }
 
-    @PostMapping("/createtask")//dejar el no tienes permisos html
+    @PostMapping("/createtask")
     public String createTask(@RequestParam int sprintid,
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam List<String> assignedUserNames,
                         HttpSession session) {
                             
-                            User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -69,11 +70,14 @@ public class TaskController {
         task.setDescription(description);
         task.setAssignedUsers(assignedUsers);
         task.setSprint(sprint);
-
-        if (sprintTaskService.createTask(task,user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "createtask");
-        }else{
-            SessionUtlis.operfailMsg(session, "createtask");
+        try {
+            if (sprintTaskService.createTask(task,user.getId())) {
+                operSuccessMsg(session, "createtask");
+            }else{
+                operfailMsg(session, "createtask");
+            }
+        } catch (UserDontHavePermissionException e) {
+            operfailMsg(session, "createtask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -85,7 +89,7 @@ public class TaskController {
                         @RequestParam String description,
                         HttpSession session) {
 
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -94,10 +98,14 @@ public class TaskController {
         task.setTitle(title);
         task.setDescription(description);
 
-        if (sprintTaskService.updateTask(task, user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "edittask");
-        }else{
-            SessionUtlis.operfailMsg(session, "edittask");
+        try {
+            if (sprintTaskService.updateTask(task, user.getId())) {
+                operSuccessMsg(session, "edittask");
+            }else{
+                operfailMsg(session, "edittask");
+            }
+        } catch (UserDontHavePermissionException e) {
+            operfailMsg(session, "edittask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -107,24 +115,27 @@ public class TaskController {
                         @RequestParam int taskId,
                         HttpSession session) {
 
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
 
         Task task = new Task();
         task.setId(taskId);
-
-        if (sprintTaskService.deleteTask(task, user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "deletetask");
-        }else{
-            SessionUtlis.operfailMsg(session, "deletetask");
+        try {
+            if (sprintTaskService.deleteTask(task, user.getId())) {
+                operSuccessMsg(session, "deletetask");
+            }else{
+                operfailMsg(session, "deletetask");
+            }
+        } catch (UserDontHavePermissionException e) {
+            operfailMsg(session, "deletetask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
     private Set<User> obtainUsers(List<String> userNames) {
-        Set<User> users = new HashSet<>();
+        Set<User> users = new HashSet<User>();
         for (String userName : userNames) {
             User user = userService.obtainUserByUsername(userName);
             if (user!=null) {
