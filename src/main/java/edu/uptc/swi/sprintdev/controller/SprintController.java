@@ -81,7 +81,7 @@ public class SprintController extends AbstractController{
             session.setAttribute("sprint", sprint);
             session.setAttribute("readers", readers);
         }catch (UserNotFoundException e) {
-            operfailMsg(session, "sprint", e.getMessage());
+            operfailMsg(session, "loadsprint", e.getMessage());
         }
         return "sprint";
     }
