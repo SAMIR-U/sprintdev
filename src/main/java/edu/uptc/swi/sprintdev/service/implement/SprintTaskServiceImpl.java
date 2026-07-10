@@ -22,7 +22,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException {
+    public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException{
         if (!this.hasPermission(task.getSprint(), creatorId) && !this.existsTask(task)) {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
         }
@@ -46,7 +46,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
 
     @Override
     public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException {
-        if (this.hasPermission(task.getSprint(), creatorId) &&  this.existsTask(task)) {
+        if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
             this.sprintTaskRepo.deleteById(task.getId());
             this.sprintTaskRepo.save(task);
             return true;
