@@ -85,6 +85,8 @@
             <span class="crumb-current"><%= sprint.getName() %></span>
         </nav>
 
+        <h1 class="sprint-section-title">Sprint</h1>
+
         <% if ("success".equals(addReaderMsg)) { %>
             <div class="banner success">Lector agregado correctamente.</div>
         <% } %>
