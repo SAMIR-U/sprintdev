@@ -61,7 +61,10 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
 
     @Override
     public List<User> findAssignedUserTask(Task task, int userId) throws UserDontHavePermissionException {
-        return List.of();
+        if (this.hasPermission(task.getSprint(), userId)) {
+            return task.getAssignedUsers();
+        }
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
     private boolean existsTask(Task task) {
