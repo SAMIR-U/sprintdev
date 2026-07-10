@@ -11,6 +11,32 @@ function closeCreateModal() {
 }
 
 /* ==========================================================
+   Validación: al menos un responsable en Nueva tarea
+   ========================================================== */
+
+(function initCreateTaskValidation() {
+
+    const createForm = document.querySelector("#createModal form");
+
+    if (!createForm) {
+        return;
+    }
+
+    createForm.addEventListener("submit", function (event) {
+
+        const checkedAssignees = createForm.querySelectorAll(
+            'input[name="assignedUserNames"]:checked'
+        );
+
+        if (checkedAssignees.length === 0) {
+            event.preventDefault();
+            alert("Selecciona al menos un responsable para la tarea.");
+        }
+    });
+
+})();
+
+/* ==========================================================
    Modal: Editar tarea
    ========================================================== */
 
