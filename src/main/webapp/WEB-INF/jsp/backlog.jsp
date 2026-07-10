@@ -3,7 +3,7 @@
 <%@ page import="edu.uptc.swi.sprintdev.domain.Task"%>
 <%@ page import="edu.uptc.swi.sprintdev.domain.User"%>
 <%@ page import="edu.uptc.swi.sprintdev.domain.Sprint"%>
-
+<%@ page import="edu.uptc.swi.sprintdev.domain.TaskStatus"%>
 
 <%
     List<Task> tasks = (List<Task>) session.getAttribute("tasks");
@@ -19,510 +19,337 @@
     session.removeAttribute("deletetask");
 
     int sprintId = Integer.parseInt(request.getParameter("sprintId"));
+
+    int totalTasks = tasks != null ? tasks.size() : 0;
+    int pendingCount = 0;
+    int progressCount = 0;
+    int completedCount = 0;
+
+    if (tasks != null) {
+        for (Task t : tasks) {
+            TaskStatus st = t.getStatus();
+            if (st == TaskStatus.COMPLETED) {
+                completedCount++;
+            } else if (st == TaskStatus.IN_PROGRESS || st == TaskStatus.IN_REVIEW) {
+                progressCount++;
+            } else {
+                pendingCount++;
+            }
+        }
+    }
 %>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backlog | SprintDev</title>
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/css/common.css">
-
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/css/topbar.css">
-
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/css/backlog.css">
-
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/topbar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/backlog.css">
 </head>
-
 <body>
 
 <jsp:include page="topbar.jsp"/>
 
-<main class="workspace">
+<main class="backlog-page">
 
-    <section class="workspace-content">
+    <nav class="breadcrumb">
+        <a href="${pageContext.request.contextPath}/workspace">Mis sprints</a>
+        <span class="crumb-separator">/</span>
+        <a href="${pageContext.request.contextPath}/workspace/sprint?sprintId=<%= sprintId %>">
+            <%= sprint != null ? sprint.getName() : "Sprint" %>
+        </a>
+        <span class="crumb-separator">/</span>
+        <span class="crumb-current">Backlog</span>
+    </nav>
 
-<nav class="breadcrumb">
+    <div class="page-header">
+        <div>
+            <p class="page-eyebrow">SprintDev</p>
+            <h1 class="page-title">Sprint Backlog</h1>
+            <p class="page-description">
+                Planifica, edita y da seguimiento a las tareas de
+                <strong><%= sprint != null ? sprint.getName() : "este Sprint" %></strong>.
+            </p>
+        </div>
 
-    <a href="${pageContext.request.contextPath}/workspace">
-        Mis sprints
-    </a>
-
-    <span>/</span>
-
-<span><%= sprint != null ? sprint.getName() : "Sprint" %></span>
-    <span>/</span>
-
-    <strong>Backlog</strong>
-
-</nav>
-
-<div class="page-header">
-
-    <div>
-
-        <h2 class="workspace-title">
-
-            Backlog
-
-        </h2>
-
-        <p class="page-subtitle">
-
-            SprintDev
-
-        </p>
-
-        <h1 class="page-title">
-
-            Backlog
-
-        </h1>
-
+        <button class="btn-new-task" onclick="openCreateModal()">
+            <span class="btn-new-task-icon">+</span>
+            Nueva tarea
+        </button>
     </div>
 
-    <button class="btn-primary"
-            onclick="openCreateModal()">
+    <% if ("success".equals(createMessage)) { %>
+        <div class="banner success">La tarea fue creada correctamente.</div>
+    <% } %>
+    <% if ("fail".equals(createMessage)) { %>
+        <div class="banner error">No fue posible crear la tarea.</div>
+    <% } %>
+    <% if ("success".equals(editMessage)) { %>
+        <div class="banner success">La tarea fue actualizada correctamente.</div>
+    <% } %>
+    <% if ("fail".equals(editMessage)) { %>
+        <div class="banner error">No fue posible actualizar la tarea.</div>
+    <% } %>
+    <% if ("success".equals(deleteMessage)) { %>
+        <div class="banner success">La tarea fue eliminada correctamente.</div>
+    <% } %>
+    <% if ("fail".equals(deleteMessage)) { %>
+        <div class="banner error">No fue posible eliminar la tarea.</div>
+    <% } %>
 
-        + Nueva tarea
+    <section class="backlog-stats">
+        <div class="stat-card">
+            <span class="stat-label">Total de tareas</span>
+            <span class="stat-value"><%= totalTasks %></span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Pendientes</span>
+            <span class="stat-value stat-pending"><%= pendingCount %></span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">En progreso</span>
+            <span class="stat-value stat-progress"><%= progressCount %></span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Completadas</span>
+            <span class="stat-value stat-completed"><%= completedCount %></span>
+        </div>
+    </section>
 
-    </button>
-
-</div>
-
-        <% if ("success".equals(createMessage)) { %>
-
-            <div class="banner success">
-
-                La tarea fue creada correctamente.
-
-            </div>
-
-        <% } %>
-
-        <% if ("fail".equals(createMessage)) { %>
-
-            <div class="banner error">
-
-                No fue posible crear la tarea.
-
-            </div>
-
-        <% } %>
-
-        <% if ("success".equals(editMessage)) { %>
-
-            <div class="banner success">
-
-                La tarea fue actualizada correctamente.
-
-            </div>
-
-        <% } %>
-
-        <% if ("fail".equals(editMessage)) { %>
-
-            <div class="banner error">
-
-                No fue posible actualizar la tarea.
-
-            </div>
-
-        <% } %>
-
-        <% if ("success".equals(deleteMessage)) { %>
-
-            <div class="banner success">
-
-                La tarea fue eliminada correctamente.
-
-            </div>
-
-        <% } %>
-
-        <% if ("fail".equals(deleteMessage)) { %>
-
-            <div class="banner error">
-
-                No fue posible eliminar la tarea.
-
-            </div>
-
-        <% } %>
+    <section class="backlog-panel">
 
         <div class="toolbar">
+            <div class="search-field">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="searchTask" placeholder="Buscar por título, descripción o responsable...">
+            </div>
 
-            <input type="text"
-                   id="searchTask"
-                   placeholder="Buscar tarea...">
-
+            <div class="status-filter">
+                <button type="button" class="filter-chip active" data-status="all">Todas</button>
+                <button type="button" class="filter-chip" data-status="PENDING">Pendiente</button>
+                <button type="button" class="filter-chip" data-status="IN_PROGRESS">En progreso</button>
+                <button type="button" class="filter-chip" data-status="IN_REVIEW">En revisión</button>
+                <button type="button" class="filter-chip" data-status="COMPLETED">Completada</button>
+            </div>
         </div>
 
         <div class="table-container">
-
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>ID</th>
-
-                        <th>Título</th>
-
-                        <th>Descripción</th>
-
-                        <th>Responsables</th>
-
-                        <th>Acciones</th>
-
+                        <th class="col-id">ID</th>
+                        <th class="col-task">Tarea</th>
+                        <th class="col-status">Estado</th>
+                        <th class="col-assignees">Responsables</th>
+                        <th class="col-actions">Acciones</th>
                     </tr>
-
                 </thead>
+                <tbody id="taskTableBody">
+                <%
+                    if (tasks != null && !tasks.isEmpty()) {
+                        for (Task task : tasks) {
 
-                <tbody>
-                    <%
-    if (tasks != null && !tasks.isEmpty()) {
+                            TaskStatus status = task.getStatus();
+                            String statusClass = "pending";
+                            String statusLabel = "Pendiente";
+                            String statusValue = "PENDING";
 
-        for (Task task : tasks) {
-%>
+                            if (status == TaskStatus.IN_PROGRESS) {
+                                statusClass = "progress";
+                                statusLabel = "En progreso";
+                                statusValue = "IN_PROGRESS";
+                            } else if (status == TaskStatus.IN_REVIEW) {
+                                statusClass = "review";
+                                statusLabel = "En revisión";
+                                statusValue = "IN_REVIEW";
+                            } else if (status == TaskStatus.COMPLETED) {
+                                statusClass = "completed";
+                                statusLabel = "Completada";
+                                statusValue = "COMPLETED";
+                            }
 
-<tr>
+                            StringBuilder searchBlob = new StringBuilder();
+                            searchBlob.append(task.getTitle()).append(" ").append(task.getDescription());
+                            if (task.getAssignedUsers() != null) {
+                                for (User u : task.getAssignedUsers()) {
+                                    searchBlob.append(" ").append(u.getUserName());
+                                }
+                            }
+                %>
 
-    <td>
-        <%= task.getId() %>
-    </td>
+                <tr class="task-row" data-status="<%= statusValue %>" data-search="<%= searchBlob.toString().toLowerCase().replace("\"", "") %>">
 
-    <td>
-        <%= task.getTitle() %>
-    </td>
+                    <td class="col-id"><span class="task-id">#<%= task.getId() %></span></td>
 
-    <td>
-        <%= task.getDescription() %>
-    </td>
+                    <td class="col-task">
+                        <div class="task-title"><%= task.getTitle() %></div>
+                        <div class="task-description"><%= task.getDescription() %></div>
+                    </td>
 
-    <td>
+                    <td class="col-status">
+                        <span class="status <%= statusClass %>"><%= statusLabel %></span>
+                    </td>
 
-        <%
-            if (task.getAssignedUsers() != null &&
-                !task.getAssignedUsers().isEmpty()) {
+                    <td class="col-assignees">
+                        <% if (task.getAssignedUsers() != null && !task.getAssignedUsers().isEmpty()) { %>
+                            <div class="assignee-list">
+                                <% for (User assigned : task.getAssignedUsers()) { %>
+                                    <span class="assignee-chip" title="<%= assigned.getUserName() %>">
+                                        <span class="assignee-avatar"><%= assigned.getUserName().substring(0, 1).toUpperCase() %></span>
+                                        <%= assigned.getUserName() %>
+                                    </span>
+                                <% } %>
+                            </div>
+                        <% } else { %>
+                            <span class="unassigned">Sin asignar</span>
+                        <% } %>
+                    </td>
 
-                for (User assigned : task.getAssignedUsers()) {
-        %>
+                    <td class="col-actions">
+                        <button class="icon-btn edit"
+                                title="Editar tarea"
+                                onclick="openEditModal(
+                                    '<%= task.getId() %>',
+                                    '<%= task.getTitle().replace("'", "\\'") %>',
+                                    '<%= task.getDescription().replace("'", "\\'") %>'
+                                )">
+                            Editar
+                        </button>
+                        <button class="icon-btn delete"
+                                title="Eliminar tarea"
+                                onclick="openDeleteModal('<%= task.getId() %>')">
+                            Eliminar
+                        </button>
+                    </td>
 
-            <div>
+                </tr>
 
-                <%= assigned.getUserName() %>
-
-            </div>
-
-        <%
-                }
-
-            } else {
-        %>
-
-            <span>
-
-                Sin asignar
-
-            </span>
-
-        <%
-            }
-        %>
-
-    </td>
-
-    <td>
-
-        <button
-            class="btn-table"
-            onclick="openEditModal(
-                '<%= task.getId() %>',
-                '<%= task.getTitle().replace("'", "\\'") %>',
-                '<%= task.getDescription().replace("'", "\\'") %>'
-            )">
-
-            Editar
-
-        </button>
-
-        <button
-            class="btn-table delete"
-            onclick="openDeleteModal('<%= task.getId() %>')">
-
-            Eliminar
-
-        </button>
-
-    </td>
-
-</tr>
-
-<%
-        }
-
-    } else {
-%>
-
-<tr>
-
-    <td colspan="5"
-        style="text-align:center;padding:35px;">
-
-        No existen tareas para este Sprint.
-
-    </td>
-
-</tr>
-
-<%
-    }
-%>
-
+                <% } } %>
                 </tbody>
-
             </table>
 
-        </div>
+            <% if (tasks == null || tasks.isEmpty()) { %>
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#128203;</div>
+                    <h3>No existen tareas para este Sprint</h3>
+                    <p>Crea la primera tarea para empezar a planear el Sprint Backlog.</p>
+                    <button class="btn-new-task" onclick="openCreateModal()">
+                        <span class="btn-new-task-icon">+</span>
+                        Nueva tarea
+                    </button>
+                </div>
+            <% } %>
 
-        <div class="modal" id="createModal">
-
-            <div class="modal-content">
-
-                <h2>Nueva tarea</h2>
-
-                <form action="${pageContext.request.contextPath}/workspace/createtask"
-                      method="post">
-
-                    <input type="hidden"
-                           name="sprintid"
-                           value="<%= sprintId %>">
-
-                    <div class="field">
-
-                        <label for="title">
-
-                            Título
-
-                        </label>
-
-                        <input type="text"
-                               id="title"
-                               name="title"
-                               required>
-
-                    </div>
-
-                    <div class="field">
-
-                        <label for="description">
-
-                            Descripción
-
-                        </label>
-
-                        <textarea id="description"
-                                  name="description"
-                                  required></textarea>
-
-                    </div>
-
-                    <div class="field">
-
-                        <label>
-
-                            Responsables
-
-                        </label>
-
-                        <select name="assignedUserNames"
-                                multiple
-                                size="6">
-
-                            <% if(readers != null){ %>
-
-                                <% for(User reader : readers){ %>
-
-                                    <option value="<%= reader.getUserName() %>">
-
-                                        <%= reader.getUserName() %>
-
-                                    </option>
-
-                                <% } %>
-
-                            <% } %>
-
-                        </select>
-
-                    </div>
-
-                    <div class="modal-buttons">
-
-                        <button type="button"
-                                class="btn-cancel"
-                                onclick="closeCreateModal()">
-
-                            Cancelar
-
-                        </button>
-
-                        <button type="submit"
-                                class="btn-save">
-
-                            Crear tarea
-
-                        </button>
-
-                    </div>
-
-                </form>
-
+            <div class="no-results" id="noResults">
+                <p>No se encontraron tareas que coincidan con la búsqueda.</p>
             </div>
-
-        </div>
-
-
-        <div class="modal" id="editModal">
-
-            <div class="modal-content">
-
-                <h2>Editar tarea</h2>
-
-                <form action="${pageContext.request.contextPath}/workspace/updatetaks"
-                      method="post">
-
-                    <input type="hidden"
-                           name="sprintid"
-                           value="<%= sprintId %>">
-
-                    <input type="hidden"
-                           id="editTaskId"
-                           name="taskId">
-
-                    <div class="field">
-
-                        <label for="editTitle">
-
-                            Título
-
-                        </label>
-
-                        <input type="text"
-                               id="editTitle"
-                               name="title"
-                               required>
-
-                    </div>
-
-                    <div class="field">
-
-                        <label for="editDescription">
-
-                            Descripción
-
-                        </label>
-
-                        <textarea id="editDescription"
-                                  name="description"
-                                  required></textarea>
-
-                    </div>
-
-                    <div class="modal-buttons">
-
-                        <button type="button"
-                                class="btn-cancel"
-                                onclick="closeEditModal()">
-
-                            Cancelar
-
-                        </button>
-
-                        <button type="submit"
-                                class="btn-save">
-
-                            Guardar cambios
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-        <div class="modal" id="deleteModal">
-
-            <div class="modal-content">
-
-                <h2>Eliminar tarea</h2>
-
-                <p>
-
-                    ¿Está seguro de eliminar esta tarea?
-
-                </p>
-
-                <form action="${pageContext.request.contextPath}/workspace/deletetaks"
-                      method="post">
-
-                    <input type="hidden"
-                           name="sprintid"
-                           value="<%= sprintId %>">
-
-                    <input type="hidden"
-                           id="deleteTaskId"
-                           name="taskId">
-
-                    <div class="modal-buttons">
-
-                        <button type="button"
-                                class="btn-cancel"
-                                onclick="closeDeleteModal()">
-
-                            Cancelar
-
-                        </button>
-
-                        <button type="submit"
-                                class="btn-save">
-
-                            Eliminar
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
         </div>
 
     </section>
 
 </main>
+
+<div class="modal" id="createModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Nueva tarea</h2>
+            <p class="modal-subtitle">Añade una tarea al Sprint Backlog de <%= sprint != null ? sprint.getName() : "este Sprint" %>.</p>
+        </div>
+
+        <form action="${pageContext.request.contextPath}/workspace/createtask" method="post">
+            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+
+            <div class="field">
+                <label for="title">Título</label>
+                <input type="text" id="title" name="title" placeholder="Ej. Diseñar la vista de login" required>
+            </div>
+
+            <div class="field">
+                <label for="description">Descripción</label>
+                <textarea id="description" name="description" placeholder="Describe el trabajo a realizar..." required></textarea>
+            </div>
+
+            <div class="field">
+                <label>Responsables</label>
+                <div class="assignee-picker">
+                    <% if (readers != null && !readers.isEmpty()) { %>
+                        <% for (User reader : readers) { %>
+                            <label class="assignee-option">
+                                <input type="checkbox" name="assignedUserNames" value="<%= reader.getUserName() %>">
+                                <span class="assignee-option-avatar"><%= reader.getUserName().substring(0, 1).toUpperCase() %></span>
+                                <span class="assignee-option-name"><%= reader.getUserName() %></span>
+                            </label>
+                        <% } %>
+                    <% } else { %>
+                        <p class="assignee-empty">Este Sprint todavía no tiene lectores para asignar.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeCreateModal()">Cancelar</button>
+                <button type="submit" class="btn-save">Crear tarea</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar tarea</h2>
+            <p class="modal-subtitle">Actualiza el título y la descripción de la tarea.</p>
+        </div>
+
+        <form action="${pageContext.request.contextPath}/workspace/updatetaks" method="post">
+            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+            <input type="hidden" id="editTaskId" name="taskId">
+
+            <div class="field">
+                <label for="editTitle">Título</label>
+                <input type="text" id="editTitle" name="title" required>
+            </div>
+
+            <div class="field">
+                <label for="editDescription">Descripción</label>
+                <textarea id="editDescription" name="description" required></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+                <button type="submit" class="btn-save">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal">
+    <div class="modal-content modal-content-small">
+        <div class="modal-header">
+            <h2>Eliminar tarea</h2>
+        </div>
+
+        <p class="modal-warning">¿Está seguro de eliminar esta tarea? Esta acción no se puede deshacer.</p>
+
+        <form action="${pageContext.request.contextPath}/workspace/deletetaks" method="post">
+            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+            <input type="hidden" id="deleteTaskId" name="taskId">
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="btn-save btn-danger">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script src="${pageContext.request.contextPath}/scripts/topbar.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/backlog.js"></script>
