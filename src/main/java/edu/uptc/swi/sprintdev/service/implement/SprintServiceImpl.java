@@ -51,6 +51,7 @@ public class SprintServiceImpl implements ISprintService {
         Sprint sprint = this.sprintRepo.getReferenceById(sprintId);
         if (this.validateCloseSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.CLOSED);
+            this.sprintRepo.save(sprint);
             return true;
         }
        return false;
@@ -61,8 +62,10 @@ public class SprintServiceImpl implements ISprintService {
         Sprint sprint = this.findSprintById(sprintId, creatorId);
         if (this.validateActivateSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.ACTIVE);
+            this.sprintRepo.save(sprint);
             return true;
         }
+
         return false;
     }
 
