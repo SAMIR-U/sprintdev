@@ -1,6 +1,7 @@
 package edu.uptc.swi.sprintdev.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
-import edu.uptc.swi.sprintdev.domain.TaskStatus;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
+import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -23,11 +24,12 @@ import jakarta.servlet.http.HttpSession;
 public class TaskController {
     private final ISprintTaskService sprintTaskService;
     private final ISprintService sprintService;
-    
+    private final IUserService userService;
 
-    public TaskController(ISprintTaskService sprintTaskService, ISprintService sprintService) {
+    public TaskController(ISprintTaskService sprintTaskService, ISprintService sprintService, IUserService userService) {
         this.sprintTaskService = sprintTaskService;
         this.sprintService = sprintService;
+        this.userService = userService;
     }
 
     @GetMapping("/backlog")
@@ -60,9 +62,10 @@ public class TaskController {
         Sprint sprint = sprintService.findSprintById(sprintid, user.getId());
 
         Task task = new Task();
-        //task assignedUsers
+        List<User> assignedUsers = obtainUsers(assignedUserNames);
         task.setTitle(title);
         task.setDescription(description);
+        task.setAssignedUsers(assignedUsers);
         task.setSprint(sprint);
 
         if (sprintTaskService.createTask(task,user.getId())) {
@@ -72,7 +75,7 @@ public class TaskController {
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
-    
+
     @PostMapping("/updatetaks")
     public String updateTask(@RequestParam int sprintid,
                         @RequestParam int taskId,
@@ -116,5 +119,16 @@ public class TaskController {
             SessionUtlis.operfailMsg(session, "deletetask");
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
+    }
+
+    private List<User> obtainUsers(List<String> userNames) {
+        List<User> users = new ArrayList<User>();
+        for (String userName : userNames) {
+            User user = userService.obtainUserByUsername(userName);
+            if (user!=null) {
+                users.add(user);
+            }
+        }
+        return users;
     }
 }
