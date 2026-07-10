@@ -13,6 +13,7 @@ import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
+import edu.uptc.swi.sprintdev.exceptions.InvalidDateException;
 import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 
 @Controller
@@ -57,10 +58,14 @@ public class SprintController extends AbstractController{
         sprint.setEndDate(endDate);
         sprint.setCreator(creator);
 
-        if (sprintService.createSprint(sprint)) {
-            operSuccessMsg(session, "createsprint");
-        } else {
-            operfailMsg(session, "createsprint");
+        try {
+            if (sprintService.createSprint(sprint)) {
+                operSuccessMsg(session, "createsprint");
+            } else {
+                operfailMsg(session, "createsprint");
+            }
+        } catch (InvalidDateException e) {
+            operfailMsg(session, "createsprint", e.getMessage());
         }
 
         return "redirect:/workspace";
