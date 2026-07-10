@@ -1,6 +1,5 @@
 package edu.uptc.swi.sprintdev.controller;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -123,7 +122,7 @@ public class TaskController {
     }
 
     private Set<User> obtainUsers(List<String> userNames) {
-        Set<User> users = new HashSet<>();
+        Set<User> users = new HashSet<User>();
         for (String userName : userNames) {
             User user = userService.obtainUserByUsername(userName);
             if (user!=null) {
