@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class ISprintTaskServiceImpl implements ISprintTaskService {
+public class SprintTaskServiceImpl implements ISprintTaskService {
     private final ISprintTaskRepo sprintTaskRepo;
 
-    public ISprintTaskServiceImpl(ISprintTaskRepo sprintTaskRepo) {
+    public SprintTaskServiceImpl(ISprintTaskRepo sprintTaskRepo) {
         this.sprintTaskRepo = sprintTaskRepo;
     }
 

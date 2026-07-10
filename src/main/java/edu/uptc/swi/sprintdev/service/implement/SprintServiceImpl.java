@@ -69,14 +69,18 @@ public class SprintServiceImpl implements ISprintService {
     @Override
     public boolean addReaderToSprint(int sprintId, int creatorId, User reader) throws UserDontHavePermissionException  {
         Sprint sprint = findSprintById(sprintId, creatorId);
+
         if (sprint == null) {
             return false;
         }
         if (!validateAddReaderConditions(sprint, reader.getId())) {
             return false;
         }
-        sprint.getReaders().add(reader);
-        return true;
+        if (this.isCreator(sprint,creatorId)) {
+            sprint.getReaders().add(reader);
+            return true;
+        }
+       return false;
     }
 
     @Override
@@ -95,10 +99,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserDontHavePermissionException {
-        if (this.isReader( sprint, userId)) {
-            throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
-        }
-        return this.validateReaderListSize(sprint);
+        return this.validateReaderListSize(sprint) && !this.isReader(sprint, userId) ;
     }
 
     private boolean validateReaderListSize(Sprint sprint) {
