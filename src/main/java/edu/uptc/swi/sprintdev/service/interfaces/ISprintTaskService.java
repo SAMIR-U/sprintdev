@@ -3,8 +3,6 @@ package edu.uptc.swi.sprintdev.service.interfaces;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
-
-import java.util.List;
 import java.util.Set;
 
 
