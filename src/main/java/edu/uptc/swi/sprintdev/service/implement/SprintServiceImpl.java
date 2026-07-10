@@ -2,6 +2,7 @@ package edu.uptc.swi.sprintdev.service.implement;
 
 
 import edu.uptc.swi.sprintdev.domain.*;
+import edu.uptc.swi.sprintdev.exceptions.InvalidDateException;
 import edu.uptc.swi.sprintdev.exceptions.UserAlreadyExistInListException;
 import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
@@ -22,13 +23,13 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public boolean createSprint(Sprint sprint) {
+    public boolean createSprint(Sprint sprint) throws InvalidDateException {
         if (this.validateSprintDates(sprint)) {
             sprint.setStatus(SprintStatus.CREATED);
             this.sprintRepo.save(sprint);
             return true;
         }
-        return false;
+        throw new InvalidDateException("La fecha de fin no puede ser anterior a la fecha de inicio");
     }
 
     @Override
