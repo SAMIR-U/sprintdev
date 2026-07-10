@@ -39,8 +39,10 @@ public class TaskController {
             return "redirect:/login";
         }
         
+        List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
         List<Task> tasks = sprintService.findAllSprintTasks(sprintId, sprintId);
         session.setAttribute("tasks", tasks);
+        session.setAttribute("readers", readers);
         return "backlog";
     }
 
