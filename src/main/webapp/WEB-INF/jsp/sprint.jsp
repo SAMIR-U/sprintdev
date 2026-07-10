@@ -94,7 +94,7 @@
 
             <div class="sprint-actions">
                 <a class="sprint-nav-btn"
-                   href="${pageContext.request.contextPath}/sprint/backlog">
+                   href="${pageContext.request.contextPath}/workspace/backlog">
                     Ver Backlog
                 </a>
                 <a class="sprint-nav-btn disabled" title="Próximamente">
