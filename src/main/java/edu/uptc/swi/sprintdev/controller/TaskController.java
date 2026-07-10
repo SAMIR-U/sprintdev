@@ -33,7 +33,7 @@ public class TaskController {
 
     @GetMapping("/backlog")
     public String loadbacklog(@RequestParam int sprintId) {
-
+        
         return "backlog";
     }
 
@@ -60,24 +60,6 @@ public class TaskController {
             SessionUtlis.operfailMsg(session, "createtask");
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
-    }
-
-    @PostMapping("/taskinfo")
-    @ResponseBody
-    public ResponseEntity<Task> obtainTaskInfo(@RequestParam int taskId,
-                        HttpSession session) {
-
-        User user = SessionUtlis.autenticatedUserIn(session);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Task task = sprintTaskService.findTaskById(taskId);
-
-        if (task == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(task);
     }
 
     @PostMapping("/updatetaks")
