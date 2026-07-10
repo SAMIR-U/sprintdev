@@ -37,6 +37,16 @@
 
     boolean isCreator = sprint != null && currentUser != null
             && sprint.getCreator().getId() == currentUser.getId();
+
+
+    String existingReadersCsv = "";
+    if (sprint != null) {
+        StringBuilder csv = new StringBuilder(sprint.getCreator().getUserName());
+        for (User reader : sprint.getReaders()) {
+            csv.append(",").append(reader.getUserName());
+        }
+        existingReadersCsv = csv.toString();
+    }
 %>
 
 <!DOCTYPE html>
@@ -68,7 +78,7 @@
 
     <main class="sprint-page">
 
-        <!-- Migas de pan -->
+
         <nav class="breadcrumb">
             <a href="${pageContext.request.contextPath}/workspace">Mis sprints</a>
             <span class="crumb-separator">/</span>
@@ -134,6 +144,7 @@
                 </div>
             </div>
 
+
             <aside class="sprint-team">
                 <div class="sprint-team-header">
                     <h2 class="section-title">Equipo</h2>
@@ -177,7 +188,9 @@
 
     <% if (isCreator) { %>
 
-    <div class="addSprintMenu" id="addReaderMenu">
+    <div class="addSprintMenu" id="addReaderMenu"
+         data-context-path="${pageContext.request.contextPath}"
+         data-existing-readers="<%= existingReadersCsv %>">
         <div class="addSprintMenu-content">
             <h2>Agregar lector</h2>
             <form id="addReaderForm" action="${pageContext.request.contextPath}/workspace/addreader" method="post">
@@ -200,19 +213,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Datos que sprint.js necesita para el buscador de lectores -->
-    <script>
-        const contextPath = "${pageContext.request.contextPath}";
-
-        const currentSprintUsernames = [
-            "<%= sprint.getCreator().getUserName() %>"<%
-                for (User reader : sprint.getReaders()) {
-            %>, "<%= reader.getUserName() %>"<%
-                }
-            %>
-        ];
-    </script>
     <% } %>
 
     <% } %>

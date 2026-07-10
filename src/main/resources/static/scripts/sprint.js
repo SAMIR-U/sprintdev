@@ -1,5 +1,11 @@
 const addReaderMenu = document.getElementById("addReaderMenu");
 
+
+const contextPath = addReaderMenu ? addReaderMenu.dataset.contextPath : "";
+const currentSprintUsernames = addReaderMenu && addReaderMenu.dataset.existingReaders
+    ? addReaderMenu.dataset.existingReaders.split(",")
+    : [];
+
 function openAddReaderForm() {
     if (addReaderMenu) addReaderMenu.style.display = "flex";
 }
@@ -10,6 +16,7 @@ function closeAddReaderForm() {
         resetReaderSearch();
     }
 }
+
 
 window.onclick = function (event) {
     if (event.target === addReaderMenu) {
@@ -53,11 +60,7 @@ function searchReaders(key) {
             return response.json();
         })
         .then(users => {
-            const alreadyInSprint = typeof currentSprintUsernames !== "undefined"
-                ? currentSprintUsernames
-                : [];
-
-            const available = users.filter(u => !alreadyInSprint.includes(u.userName));
+            const available = users.filter(u => !currentSprintUsernames.includes(u.userName));
             renderReaderResults(available);
         })
         .catch(() => renderReaderResults([]));
