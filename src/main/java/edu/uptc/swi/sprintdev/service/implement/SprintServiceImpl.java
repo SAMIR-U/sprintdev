@@ -69,7 +69,6 @@ public class SprintServiceImpl implements ISprintService {
     @Override
     public boolean addReaderToSprint(int sprintId, int creatorId, User reader) throws UserDontHavePermissionException  {
         Sprint sprint = findSprintById(sprintId, creatorId);
-
         if (sprint == null) {
             return false;
         }
@@ -78,6 +77,7 @@ public class SprintServiceImpl implements ISprintService {
         }
         if (this.isCreator(sprint,creatorId)) {
             sprint.getReaders().add(reader);
+            this.sprintRepo.save(sprint);
             return true;
         }
        return false;
