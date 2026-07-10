@@ -41,8 +41,11 @@ public class TaskController extends AbstractController{
             return "redirect:/login";
         }
         try {
+            Sprint sprint = sprintService.findSprintById(sprintId, user.getId());
             List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
             List<Task> tasks = sprintService.findAllSprintTasks(sprintId, user.getId());
+
+            session.setAttribute("sprint", sprint);
             session.setAttribute("tasks", tasks);
             session.setAttribute("readers", readers);
         } catch (UserDontHavePermissionException e) {

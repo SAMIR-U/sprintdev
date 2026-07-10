@@ -8,8 +8,4 @@ public class SprintdevApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SprintdevApplication.class, args);
 	}
-//prueba de commit
-//prueba de commit 2
-//prueba de commit 3
-//prueba de commit 4
 }
