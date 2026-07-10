@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.User;
@@ -21,7 +20,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/workspace")
-public class TaskController {
+public class TaskController extends AbstractController{
     private final ISprintTaskService sprintTaskService;
     private final ISprintService sprintService;
     private final IUserService userService;
@@ -36,7 +35,7 @@ public class TaskController {
     public String loadbacklog(@RequestParam int sprintId,
                             HttpSession session
     ) {
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -55,7 +54,7 @@ public class TaskController {
                         @RequestParam List<String> assignedUserNames,
                         HttpSession session) {
                             
-                            User user = SessionUtlis.autenticatedUserIn(session);
+                            User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -69,9 +68,9 @@ public class TaskController {
         task.setSprint(sprint);
 
         if (sprintTaskService.createTask(task,user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "createtask");
+            operSuccessMsg(session, "createtask");
         }else{
-            SessionUtlis.operfailMsg(session, "createtask");
+            operfailMsg(session, "createtask");
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -83,7 +82,7 @@ public class TaskController {
                         @RequestParam String description,
                         HttpSession session) {
 
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -93,9 +92,9 @@ public class TaskController {
         task.setDescription(description);
 
         if (sprintTaskService.updateTask(task, user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "edittask");
+            operSuccessMsg(session, "edittask");
         }else{
-            SessionUtlis.operfailMsg(session, "edittask");
+            operfailMsg(session, "edittask");
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -105,7 +104,7 @@ public class TaskController {
                         @RequestParam int taskId,
                         HttpSession session) {
 
-        User user = SessionUtlis.autenticatedUserIn(session);
+        User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
@@ -114,9 +113,9 @@ public class TaskController {
         task.setId(taskId);
 
         if (sprintTaskService.deleteTask(task, user.getId())) {
-            SessionUtlis.operSuccessMsg(session, "deletetask");
+            operSuccessMsg(session, "deletetask");
         }else{
-            SessionUtlis.operfailMsg(session, "deletetask");
+            operfailMsg(session, "deletetask");
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }

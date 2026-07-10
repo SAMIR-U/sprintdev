@@ -5,13 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.uptc.swi.sprintdev.controller.utils.SessionUtlis;
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class RegistUserController {
+public class RegistUserController extends AbstractController{
     private final IUserService userService;
 
     public RegistUserController(IUserService userService) {
@@ -33,11 +32,11 @@ public class RegistUserController {
         userObj.setPassword(password);
 
         if (userService.registerUser(userObj)) {
-            SessionUtlis.operSuccessMsg(session, "regist");
-            SessionUtlis.setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
+            operSuccessMsg(session, "regist");
+            setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
             return "redirect:/workspace";
         }
-        SessionUtlis.operfailMsg(session, "regist");
+        operfailMsg(session, "regist");
         return "registuser";
     }
 }
