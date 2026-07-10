@@ -53,6 +53,7 @@
     transition: .25s;
     cursor: pointer;
     box-shadow: 0 12px 30px -20px rgba(0, 0, 0, .2);
+    overflow: hidden;
 }
 
 .sprint-card:hover {
@@ -63,12 +64,214 @@
 .sprint-card h3 {
     font-size: 18px;
     margin-bottom: 10px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .sprint-card p {
     color: #66717d;
     font-size: 14px;
     line-height: 1.5;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.sprint-dates {
+    margin: 15px 0;
+    font-size: 13px;
+    color: #8a97a1;
+}
+
+.sprint-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.preparacion {
+    background: #eef1f3;
+    color: #5a6c78;
+}
+
+.activo {
+    background: #eef3ea;
+    color: var(--verde);
+}
+
+.cerrado {
+    background: #ececec;
+    color: #555;
+}
+
+/* --- modal de "Nuevo Sprint" --- */
+
+.addSprintMenu {
+    display: none; /* el JS/onclick lo cambia a flex */
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.addSprintMenu-content {
+    width: 450px;
+    max-width: 95%;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .25);
+}
+
+.addSprintMenu-content h2 {
+    margin-bottom: 20px;
+}
+
+.addSprint-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel {
+    background: white;
+    border: 1px solid var(--line);
+    color: var(--grafito);
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.btn-save {
+    background: var(--sprint);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.btn-save:hover {
+    background: var(--sprint-deep);
+}
+
+.empty {
+    background: white;
+    border: 2px dashed var(--line);
+    border-radius: 18px;
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.empty h2 {
+    margin-bottom: 10px;
+}
+
+.empty p {
+    color: #8a97a1;
+}
+
+@media (max-width: 768px) {
+    .workspace-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .addSprintMenu-content {
+        width: 95%;
+    }
+
+    .sprint-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.addSprintMenu-content textarea {
+    resize: none;
+    min-height: 90px;
+}
+.sprint-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}.workspace {
+     max-width: 1200px;
+     margin: 40px auto;
+     padding: 0 25px;
+ }
+
+.workspace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--grafito);
+}
+
+.page-subtitle {
+    color: #8a97a1;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.addSprintBtn {
+    background: var(--sprint);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.addSprintBtn:hover {
+    background: var(--sprint-deep);
+}
+
+.sprint-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.sprint-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    transition: .25s;
+    cursor: pointer;
+    box-shadow: 0 12px 30px -20px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+.sprint-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--sprint-pale);
+}
+
+.sprint-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.sprint-card p {
+    color: #66717d;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .sprint-dates {

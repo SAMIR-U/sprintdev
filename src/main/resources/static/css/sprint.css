@@ -124,6 +124,7 @@
     padding: 22px 20px;
     margin-bottom: 28px;
     min-height: 90px;
+    overflow: hidden;
 }
 
 .sprint-objective-label {
@@ -140,6 +141,8 @@
     font-size: 14.5px;
     color: var(--grafito);
     line-height: 1.55;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .sprint-stats-grid {
