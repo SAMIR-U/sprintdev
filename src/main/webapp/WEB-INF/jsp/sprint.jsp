@@ -180,7 +180,7 @@
     <div class="addSprintMenu" id="addReaderMenu">
         <div class="addSprintMenu-content">
             <h2>Agregar lector</h2>
-            <form id="addReaderForm" action="${pageContext.request.contextPath}/sprint/addreader" method="post">
+            <form id="addReaderForm" action="${pageContext.request.contextPath}/workspace/addreader" method="post">
                 <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
                 <input type="hidden" id="readerName" name="readerName" required>
                 <div class="field reader-search-field">
