@@ -105,10 +105,10 @@
     color: #555;
 }
 
-/* --- modal de "Nuevo Sprint" --- */
+
 
 .addSprintMenu {
-    display: none; /* el JS/onclick lo cambia a flex */
+    display: none;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, .45);
@@ -303,10 +303,10 @@
     color: #555;
 }
 
-/* --- modal de "Nuevo Sprint" --- */
+
 
 .addSprintMenu {
-    display: none; /* el JS/onclick lo cambia a flex */
+    display: none;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, .45);
