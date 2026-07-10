@@ -27,7 +27,7 @@ public class SprintServiceImpl implements ISprintService {
             this.sprintRepo.save(sprint);
             return true;
         }
-       return false;
+        return false;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class SprintServiceImpl implements ISprintService {
             this.sprintRepo.save(sprint);
             return true;
         }
-       return false;
+        return false;
     }
 
     @Override
-    public boolean activateSprint(int sprintId, int creatorId)  {
+    public boolean activateSprint(int sprintId, int creatorId) {
         Sprint sprint = this.findSprintById(sprintId, creatorId);
         if (this.validateActivateSprintConditions(sprint, creatorId)) {
             sprint.setStatus(SprintStatus.ACTIVE);
@@ -80,12 +80,12 @@ public class SprintServiceImpl implements ISprintService {
         if (!validateAddReaderConditions(sprint, reader.getId())) {
             return false;
         }
-        if (this.isCreator(sprint,creatorId)) {
+        if (this.isCreator(sprint, creatorId)) {
             sprint.getReaders().add(reader);
             this.sprintRepo.save(sprint);
             return true;
         }
-       throw new UserDontHavePermissionException("El usuario no tiene los permisos requeridos para esta acción");
+        throw new UserDontHavePermissionException("El usuario no tiene los permisos requeridos para esta acción");
     }
 
     @Override
@@ -105,17 +105,21 @@ public class SprintServiceImpl implements ISprintService {
 
     @Override
     public List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException {
-        return List.of();
+        Sprint sprint = this.findSprintById(sprintId);
+        if (this.hasAccess(sprint, userId)) {
+            return sprint.getTasks();
+        }
+        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para realizar esta acción");
     }
 
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserAlreadyExistInListException, TheListIsFullException {
-        if ( this.validateReaderListSize(sprint)) {
+        if (this.validateReaderListSize(sprint)) {
             throw new TheListIsFullException("La lista esta llena");
         }
         if (this.isReader(sprint, userId) || this.isCreator(sprint, userId)) {
             throw new UserAlreadyExistInListException("El usuario ya se encuentra en la lista");
         }
-        return true ;
+        return true;
     }
 
     private boolean validateReaderListSize(Sprint sprint) {
@@ -143,6 +147,7 @@ public class SprintServiceImpl implements ISprintService {
 
         return true;
     }
+
     private boolean isReader(Sprint sprint, int userId) {
         for (User user : sprint.getReaders()) {
             if (user.getId() == userId) {
@@ -151,6 +156,7 @@ public class SprintServiceImpl implements ISprintService {
         }
         return false;
     }
+
     private boolean isCreator(Sprint sprint, int userId) {
         User creator = sprint.getCreator();
         return creator.getId() == userId;
