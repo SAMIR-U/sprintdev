@@ -1,6 +1,8 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.*;
+import edu.uptc.swi.sprintdev.exceptions.UserAlreadyExistInListException;
+import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
@@ -70,7 +72,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     @Override
-    public boolean addReaderToSprint(int sprintId, int creatorId, User reader) throws UserDontHavePermissionException  {
+    public boolean addReaderToSprint(int sprintId, int creatorId, User reader) throws UserDontHavePermissionException, UserAlreadyExistInListException, TheListIsFullException {
         Sprint sprint = findSprintById(sprintId, creatorId);
         if (sprint == null) {
             return false;
@@ -83,7 +85,7 @@ public class SprintServiceImpl implements ISprintService {
             this.sprintRepo.save(sprint);
             return true;
         }
-       return false;
+       throw new UserDontHavePermissionException("El usuario no tiene los permisos requeridos para esta acción");
     }
 
     @Override
@@ -101,8 +103,19 @@ public class SprintServiceImpl implements ISprintService {
         return sprint.getCreator();
     }
 
-    private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserDontHavePermissionException {
-        return this.validateReaderListSize(sprint) && !this.isReader(sprint, userId) ;
+    @Override
+    public List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException {
+        return List.of();
+    }
+
+    private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserAlreadyExistInListException, TheListIsFullException {
+        if ( this.validateReaderListSize(sprint)) {
+            throw new TheListIsFullException("La lista esta llena");
+        }
+        if (this.isReader(sprint, userId) || this.isCreator(sprint, userId)) {
+            throw new UserAlreadyExistInListException("El usuario ya se encuentra en la lista");
+        }
+        return true ;
     }
 
     private boolean validateReaderListSize(Sprint sprint) {
