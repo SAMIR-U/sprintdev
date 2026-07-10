@@ -5,14 +5,17 @@
  User user = (User) session.getAttribute("user");
 %>
 <header class= "topbar">
- <div class= "app-logo-header">
-            <img src = "${pageContext.request.contextPath}/image/logo_esprindev.png"
-            alt = "SprintDevIcon"
-            class = "app-logo-icon">
-            <span class = "name-app">
-            Sprint<em>Dev</em>
-            </span>
+        <a href = "${pageContext.request.contextPath}/workspace"
+        class = "home-link">
+             <div class= "app-logo-header">
+                <img src = "${pageContext.request.contextPath}/image/logo_esprindev.png"
+                 alt = "SprintDevIcon"
+                class = "app-logo-icon">
+                <span class = "name-app">
+                    Sprint<em>Dev</em>
+                </span>
         </div>
+        </a>
         <nav>
             <div class= "user-header" id= "userMenuToggle">
                 <div class= "avatar">

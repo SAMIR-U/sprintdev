@@ -10,5 +10,4 @@ public interface ISprintTaskService {
     boolean updateTask(Task task, int creatorId) throws UserDontHavePermissionException;
     boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException;
     Task findTaskById(int id) throws UserDontHavePermissionException;
-    List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException;
 }

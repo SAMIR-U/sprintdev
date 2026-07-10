@@ -184,3 +184,8 @@ nav {
 .dropdown-item.logout:hover{
     background: #fbeee9;
 }
+.home-link{
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}

@@ -10,7 +10,7 @@ import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Service
 public class ISprintTaskServiceImpl implements ISprintTaskService {
@@ -55,11 +55,6 @@ public class ISprintTaskServiceImpl implements ISprintTaskService {
     @Override
     public Task findTaskById(int id) {
         return this.sprintTaskRepo.getReferenceById(id);
-    }
-
-    @Override
-    public List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException {
-        return List.of();
     }
 
     private boolean existsTask(Task task) {
