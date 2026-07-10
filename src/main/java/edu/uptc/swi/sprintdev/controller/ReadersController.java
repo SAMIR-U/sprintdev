@@ -52,9 +52,9 @@ public class ReadersController {
 
         User reader = userService.obtainUserByUsername(readerName);
         if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
-            SessionUtlis.operfailMsg(session, "addreader");
-        }else{
             SessionUtlis.operSuccessMsg(session, "addreader");
+        }else{
+            SessionUtlis.operfailMsg(session, "addreader");
         }
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
