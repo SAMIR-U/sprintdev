@@ -1,18 +1,12 @@
 package edu.uptc.swi.sprintdev.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Entidad JPA de Task. Es una estructura de datos simple: solo
@@ -43,6 +37,14 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sprint_id", nullable = false)
     private Sprint sprint;
+
+    //crea una tabla intermedia que solo contiene los id:D
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "task_assigned_users",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> assignedUsers = new ArrayList<>();
 
     public int getId() {
         return id;
