@@ -123,8 +123,7 @@ public class TaskController extends AbstractController{
             return "redirect:/login";
         }
 
-        Task task = new Task();
-        task.setId(taskId);
+        Task task = sprintTaskService.findTaskById(taskId);
         try {
             if (sprintTaskService.deleteTask(task, user.getId())) {
                 operSuccessMsg(session, "deletetask");
