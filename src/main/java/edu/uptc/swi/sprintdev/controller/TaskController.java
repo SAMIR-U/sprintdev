@@ -38,7 +38,7 @@ public class TaskController {
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         List<User> readers = sprintService.findAllReadersSprint(sprintId, user.getId());
         List<Task> tasks = sprintService.findAllSprintTasks(sprintId, sprintId);
         session.setAttribute("tasks", tasks);
@@ -78,8 +78,6 @@ public class TaskController {
                         @RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
-                        @RequestParam TaskStatus status,
-                        @RequestParam List<String> assignedUserNames,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
@@ -88,10 +86,8 @@ public class TaskController {
         }
 
         Task task = sprintTaskService.findTaskById(taskId);
-        //task assignedUsers
         task.setTitle(title);
         task.setDescription(description);
-        task.setStatus(status);
 
         if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
