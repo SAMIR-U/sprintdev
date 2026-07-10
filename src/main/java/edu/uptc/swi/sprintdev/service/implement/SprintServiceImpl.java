@@ -113,7 +113,7 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserAlreadyExistInListException, TheListIsFullException {
-        if (this.validateReaderListSize(sprint)) {
+        if (!this.validateReaderListSize(sprint)) {
             throw new TheListIsFullException("La lista esta llena");
         }
         if (this.isReader(sprint, userId) || this.isCreator(sprint, userId)) {
