@@ -1,9 +1,8 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
-import edu.uptc.swi.sprintdev.domain.Sprint;
-import edu.uptc.swi.sprintdev.domain.Task;
-import edu.uptc.swi.sprintdev.domain.TaskStatus;
-import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.domain.*;
+import edu.uptc.swi.sprintdev.exceptions.SprintIsClosedException;
+import edu.uptc.swi.sprintdev.exceptions.TheListNeedAtleastOneTaskException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
@@ -21,7 +20,11 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException{
+    public boolean createTask(Task task, int creatorId) throws UserDontHavePermissionException, SprintIsClosedException {
+        Sprint sprint = task.getSprint();
+        if(sprint.getStatus() == SprintStatus.CLOSED){
+            throw new SprintIsClosedException("No es posible añadir tareas a un sprint ya cerrado");
+        }
         if (!this.hasPermission(task.getSprint(), creatorId) && !this.existsTask(task)) {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
         }
@@ -44,7 +47,11 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException {
+    public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException, TheListNeedAtleastOneTaskException {
+        Sprint sprint = task.getSprint();
+        if(this.taskListSize(sprint) == 1 && sprint.getStatus() == SprintStatus.ACTIVE) {
+            throw new TheListNeedAtleastOneTaskException("Los sprints activos necesitan de almenos una tarea");
+        }
         if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
             this.sprintTaskRepo.deleteById(task.getId());
             return true;
@@ -72,6 +79,9 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     private boolean hasPermission(Sprint sprint, int creatorId) {
         User creator = sprint.getCreator();
         return creator != null && creator.getId() == creatorId;
+    }
+    private int taskListSize(Sprint sprint) {
+        return sprint.getTasks().size();
     }
 
 }
