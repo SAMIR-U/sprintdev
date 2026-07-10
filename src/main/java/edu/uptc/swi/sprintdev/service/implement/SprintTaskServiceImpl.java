@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -60,7 +61,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     }
 
     @Override
-    public List<User> findAssignedUserTask(Task task, int userId) throws UserDontHavePermissionException {
+    public Set<User> findAssignedUserTask(Task task, int userId) throws UserDontHavePermissionException {
         if (this.hasPermission(task.getSprint(), userId)) {
             return task.getAssignedUsers();
         }

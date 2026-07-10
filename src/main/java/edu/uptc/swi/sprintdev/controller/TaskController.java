@@ -2,7 +2,9 @@ package edu.uptc.swi.sprintdev.controller;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +64,7 @@ public class TaskController {
         Sprint sprint = sprintService.findSprintById(sprintid, user.getId());
 
         Task task = new Task();
-        List<User> assignedUsers = obtainUsers(assignedUserNames);
+        Set<User> assignedUsers = obtainUsers(assignedUserNames);
         task.setTitle(title);
         task.setDescription(description);
         task.setAssignedUsers(assignedUsers);
@@ -121,8 +123,8 @@ public class TaskController {
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
-    private List<User> obtainUsers(List<String> userNames) {
-        List<User> users = new ArrayList<User>();
+    private Set<User> obtainUsers(List<String> userNames) {
+        Set<User> users = new HashSet<>();
         for (String userName : userNames) {
             User user = userService.obtainUserByUsername(userName);
             if (user!=null) {

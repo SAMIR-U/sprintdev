@@ -44,13 +44,13 @@ public class Task {
             name = "task_assigned_users",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> assignedUsers = new ArrayList<>();
+    private Set<User> assignedUsers = new HashSet<>();
 
-    public List<User> getAssignedUsers() {
+    public Set<User> getAssignedUsers() {
         return assignedUsers;
     }
 
-    public void setAssignedUsers(List<User> assignedUsers) {
+    public void setAssignedUsers(Set<User> assignedUsers) {
         this.assignedUsers = assignedUsers;
     }
 

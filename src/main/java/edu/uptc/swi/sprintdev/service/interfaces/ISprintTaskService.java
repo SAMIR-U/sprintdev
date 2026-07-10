@@ -5,6 +5,7 @@ import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface ISprintTaskService {
@@ -12,5 +13,5 @@ public interface ISprintTaskService {
     boolean updateTask(Task task, int creatorId) throws UserDontHavePermissionException;
     boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException;
     Task findTaskById(int id) throws UserDontHavePermissionException;
-    List<User> findAssignedUserTask(Task task, int userId)throws UserDontHavePermissionException;
+    Set<User> findAssignedUserTask(Task task, int userId)throws UserDontHavePermissionException;
 }
