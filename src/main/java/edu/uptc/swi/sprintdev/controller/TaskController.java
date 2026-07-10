@@ -1,6 +1,8 @@
 package edu.uptc.swi.sprintdev.controller;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +31,16 @@ public class TaskController {
     }
 
     @GetMapping("/backlog")
-    public String loadbacklog(@RequestParam int sprintId) {
+    public String loadbacklog(@RequestParam int sprintId,
+                            HttpSession session
+    ) {
+        User user = SessionUtlis.autenticatedUserIn(session);
+        if (user == null) {
+            return "redirect:/login";
+        }
         
+        List<Task> tasks = sprintService.findAllSprintTasks(sprintId, sprintId);
+        session.setAttribute("tasks", tasks);
         return "backlog";
     }
 
@@ -38,15 +48,17 @@ public class TaskController {
     public String createTask(@RequestParam int sprintid,
                         @RequestParam String title,
                         @RequestParam String description,
+                        @RequestParam List<String> assignedUserNames,
                         HttpSession session) {
-
-        User user = SessionUtlis.autenticatedUserIn(session);
+                            
+                            User user = SessionUtlis.autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
         Sprint sprint = sprintService.findSprintById(sprintid, user.getId());
 
         Task task = new Task();
+        //task assignedUsers
         task.setTitle(title);
         task.setDescription(description);
         task.setSprint(sprint);
@@ -58,13 +70,14 @@ public class TaskController {
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
-
+    
     @PostMapping("/updatetaks")
     public String updateTask(@RequestParam int sprintid,
                         @RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam TaskStatus status,
+                        @RequestParam List<String> assignedUserNames,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
@@ -73,6 +86,7 @@ public class TaskController {
         }
 
         Task task = sprintTaskService.findTaskById(taskId);
+        //task assignedUsers
         task.setTitle(title);
         task.setDescription(description);
         task.setStatus(status);
