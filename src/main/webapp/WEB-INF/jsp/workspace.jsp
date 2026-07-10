@@ -39,16 +39,21 @@
                     <button class="addSprintBtn" onclick="openAddSprintForm()"> + Nuevo Sprint </button>
                 </div>
             </section>
-              <% if ("success".equals(sprintMessage)) { %>
+             <% if (sprintMessage != null) {
+                    if ("success".equals(sprintMessage)) { %>
                         <div class="banner success">
                             Sprint creado correctamente.
                         </div>
-                    <% } %>
-                    <% if ("fail".equals(sprintMessage)) { %>
+                    <% } else if ("fail".equals(sprintMessage)) { %>
                         <div class="banner error">
                             No fue posible crear el Sprint.
                         </div>
-              <% } %>
+                    <% } else { %>
+                        <div class="banner error">
+                            <%= sprintMessage %>
+                        </div>
+                    <% }
+                } %>
             <section class = "sprint-grid">
                 <% if (sprints != null && !sprints.isEmpty()) { %>
                     <% for (Sprint sprint : sprints) { %>
