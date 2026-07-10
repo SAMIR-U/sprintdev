@@ -32,7 +32,10 @@ public class TaskController {
     }
 
     @GetMapping("/backlog")
-    public String loadbacklog() {
+    public String loadbacklog(@RequestParam int sprintid
+
+    ) {
+
         return "backlog";
     }
 
@@ -55,10 +58,10 @@ public class TaskController {
 
         if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
-            return "redirect:/sprint/backlog";
+            return "redirect:/workspace/backlog";
         }
         SessionUtlis.operfailMsg(session, "createtask");
-        return "redirect:/sprint/backlog";
+        return "redirect:/workspace/backlog";
     }
 
     @PostMapping("/taskinfo")
@@ -98,10 +101,10 @@ public class TaskController {
 
         if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
-            return "redirect:/sprint/backlog";
+            return "redirect:/workspace/backlog";
         }
         SessionUtlis.operfailMsg(session, "edittask");
-        return "redirect:/sprint/backlog";
+        return "redirect:/workspace/backlog";
     }
 
     @PostMapping("/deletetaks")
@@ -118,9 +121,9 @@ public class TaskController {
 
         if (sprintTaskService.deleteTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "deletetask");
-            return "redirect:/sprint/backlog";
+            return "redirect:/workspace/backlog";
         }
         SessionUtlis.operfailMsg(session, "deletetask");
-        return "redirect:/sprint/backlog";
+        return "redirect:/workspace/backlog";
     }
 }
