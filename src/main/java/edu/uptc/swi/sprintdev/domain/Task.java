@@ -46,6 +46,14 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> assignedUsers = new ArrayList<>();
 
+    public List<User> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(List<User> assignedUsers) {
+        this.assignedUsers = assignedUsers;
+    }
+
     public int getId() {
         return id;
     }
