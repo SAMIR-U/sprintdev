@@ -56,10 +56,10 @@ public class TaskController {
 
         if (sprintTaskService.createTask(task,user.getId())) {
             SessionUtlis.operSuccessMsg(session, "createtask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "createtask");
         }
-        SessionUtlis.operfailMsg(session, "createtask");
-        return "redirect:/workspace/backlog";
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
     @PostMapping("/taskinfo")
@@ -81,7 +81,8 @@ public class TaskController {
     }
 
     @PostMapping("/updatetaks")
-    public String updateTask(@RequestParam int taskId,
+    public String updateTask(@RequestParam int sprintid,
+                        @RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam TaskStatus status,
@@ -99,14 +100,15 @@ public class TaskController {
 
         if (sprintTaskService.updateTask(task, user.getId())) {
             SessionUtlis.operSuccessMsg(session, "edittask");
-            return "redirect:/workspace/backlog";
+        }else{
+            SessionUtlis.operfailMsg(session, "edittask");
         }
-        SessionUtlis.operfailMsg(session, "edittask");
-        return "redirect:/workspace/backlog";
+        return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
 
     @PostMapping("/deletetaks")
-    public String deleteTask(@RequestParam int taskId,
+    public String deleteTask(@RequestParam int sprintid,
+                        @RequestParam int taskId,
                         HttpSession session) {
 
         User user = SessionUtlis.autenticatedUserIn(session);
