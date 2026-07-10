@@ -48,7 +48,6 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     public boolean deleteTask(Task task, int creatorId) throws UserDontHavePermissionException {
         if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
             this.sprintTaskRepo.deleteById(task.getId());
-            this.sprintTaskRepo.save(task);
             return true;
         }
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
