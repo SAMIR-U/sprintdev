@@ -1,20 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
 <%@ page import="edu.uptc.swi.sprintdev.domain.Sprint" %>
-<%@ page import="edu.uptc.swi.sprintdev.domain.Task" %>
 <%@ page import="edu.uptc.swi.sprintdev.domain.User" %>
+<%@ page import="java.time.temporal.ChronoUnit" %>
 
 <%
 
     Sprint sprint = (Sprint) session.getAttribute("sprint");
     User currentUser = (User) session.getAttribute("user");
 
-
     String addReaderMsg = (String) session.getAttribute("addreader");
     session.removeAttribute("addreader");
-    String createTaskMsg = (String) session.getAttribute("createtask");
-    session.removeAttribute("createtask");
-
 
     String statusLabel = "En preparación";
     String statusClass = "preparacion";
@@ -34,19 +29,11 @@
         }
     }
 
-
-    int pending = 0, inProgress = 0, inReview = 0, completed = 0;
-    if (sprint != null && sprint.getTasks() != null) {
-        for (Task task : sprint.getTasks()) {
-            switch (task.getStatus()) {
-                case PENDING: pending++; break;
-                case IN_PROGRESS: inProgress++; break;
-                case IN_REVIEW: inReview++; break;
-                case COMPLETED: completed++; break;
-            }
-        }
+    long durationDays = 0;
+    if (sprint != null) {
+        durationDays = ChronoUnit.DAYS.between(sprint.getStartDate(), sprint.getEndDate());
     }
-    int totalTasks = pending + inProgress + inReview + completed;
+
 
     boolean isCreator = sprint != null && currentUser != null
             && sprint.getCreator().getId() == currentUser.getId();
@@ -81,7 +68,7 @@
 
     <main class="sprint-page">
 
-
+        <!-- Migas de pan -->
         <nav class="breadcrumb">
             <a href="${pageContext.request.contextPath}/workspace">Mis sprints</a>
             <span class="crumb-separator">/</span>
@@ -94,12 +81,6 @@
         <% if ("fail".equals(addReaderMsg)) { %>
             <div class="banner error">No fue posible agregar el lector.</div>
         <% } %>
-        <% if ("success".equals(createTaskMsg)) { %>
-            <div class="banner success">Tarea creada correctamente.</div>
-        <% } %>
-        <% if ("fail".equals(createTaskMsg)) { %>
-            <div class="banner error">No fue posible crear la tarea.</div>
-        <% } %>
 
 
         <section class="sprint-hero">
@@ -108,13 +89,8 @@
                     <h1 class="page-title"><%= sprint.getName() %></h1>
                     <span class="sprint-status <%= statusClass %>"><%= statusLabel %></span>
                 </div>
-                <p class="sprint-goal"><%= sprint.getGoal() %></p>
-                <div class="sprint-dates">
-                    <strong>Inicio:</strong> <%= sprint.getStartDate() %>
-                    &nbsp;&nbsp;
-                    <strong>Fin:</strong> <%= sprint.getEndDate() %>
-                </div>
             </div>
+
 
             <div class="sprint-actions">
                 <a class="sprint-nav-btn"
@@ -124,9 +100,6 @@
                 <a class="sprint-nav-btn disabled" title="Próximamente">
                     Ver Dashboard
                 </a>
-                <button class="sprint-nav-btn primary" onclick="openAddTaskForm()">
-                    + Añadir tarea
-                </button>
             </div>
         </section>
 
@@ -134,41 +107,41 @@
         <section class="sprint-content">
 
             <div class="sprint-summary">
-                <h2 class="section-title">Resumen de tareas</h2>
-                <% if (totalTasks == 0) { %>
-                    <div class="empty small">
-                        <h3>Aún no hay tareas</h3>
-                        <p>Usa "+ Añadir tarea" o ve al Backlog para crear la primera.</p>
-                    </div>
-                <% } else { %>
-                    <div class="summary-grid">
-                        <div class="summary-card">
-                            <span class="summary-number"><%= pending %></span>
-                            <span class="summary-label">Pendientes</span>
-                        </div>
-                        <div class="summary-card">
-                            <span class="summary-number"><%= inProgress %></span>
-                            <span class="summary-label">En progreso</span>
-                        </div>
-                        <div class="summary-card">
-                            <span class="summary-number"><%= inReview %></span>
-                            <span class="summary-label">En revisión</span>
-                        </div>
-                        <div class="summary-card">
-                            <span class="summary-number"><%= completed %></span>
-                            <span class="summary-label">Completadas</span>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
+                <h2 class="section-title">Detalles del Sprint</h2>
 
+                <div class="sprint-objective">
+                    <span class="sprint-objective-label">Objetivo</span>
+                    <p><%= sprint.getGoal() %></p>
+                </div>
+
+                <div class="sprint-stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Inicio</span>
+                        <span class="stat-value"><%= sprint.getStartDate() %></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Fin</span>
+                        <span class="stat-value"><%= sprint.getEndDate() %></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Duración</span>
+                        <span class="stat-value"><%= durationDays %> días</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Estado</span>
+                        <span class="stat-value"><%= statusLabel %></span>
+                    </div>
+                </div>
+            </div>
 
             <aside class="sprint-team">
                 <div class="sprint-team-header">
                     <h2 class="section-title">Equipo</h2>
-                    <button class="team-add-btn" onclick="openAddReaderForm()" title="Agregar lector">
-                        +
-                    </button>
+                    <% if (isCreator) { %>
+                        <button class="team-add-btn" onclick="openAddReaderForm()" title="Agregar lector">
+                            +
+                        </button>
+                    <% } %>
                 </div>
 
                 <p class="team-subtitle">Creador</p>
@@ -182,13 +155,7 @@
                     </div>
                 </div>
 
-                <p class="team-subtitle">
-                    Lectores
-                    <a class="team-link"
-                       href="${pageContext.request.contextPath}/sprint/readers?sprintId=<%= sprint.getSprintId() %>">
-                        Ver todos
-                    </a>
-                </p>
+                <p class="team-subtitle">Lectores</p>
                 <% if (sprint.getReaders() == null || sprint.getReaders().isEmpty()) { %>
                     <p class="team-empty">Todavía no hay lectores en este Sprint.</p>
                 <% } else { %>
@@ -208,54 +175,45 @@
         </section>
     </main>
 
-
-    <div class="addSprintMenu" id="addTaskMenu">
-        <div class="addSprintMenu-content">
-            <h2>Añadir tarea</h2>
-            <form action="${pageContext.request.contextPath}/sprint/createtask" method="post">
-                <input type="hidden" name="sprintid" value="<%= sprint.getSprintId() %>">
-                <div class="field">
-                    <label for="title">Título</label>
-                    <input id="title" type="text" name="title" required>
-                </div>
-                <div class="field">
-                    <label for="description">Descripción</label>
-                    <textarea id="description" name="description" required></textarea>
-                </div>
-                <div class="addSprint-buttons">
-                    <button type="button" class="btn-cancel" onclick="closeAddTaskForm()">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn-save">
-                        Guardar tarea
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <% if (isCreator) { %>
 
     <div class="addSprintMenu" id="addReaderMenu">
         <div class="addSprintMenu-content">
             <h2>Agregar lector</h2>
-            <form action="${pageContext.request.contextPath}/sprint/addreader" method="post">
+            <form id="addReaderForm" action="${pageContext.request.contextPath}/sprint/addreader" method="post">
                 <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
-                <div class="field">
-                    <label for="readerName">Nombre de usuario</label>
-                    <input id="readerName" type="text" name="readerName"
-                           placeholder="Escribe el usuario a agregar" required>
+                <input type="hidden" id="readerName" name="readerName" required>
+                <div class="field reader-search-field">
+                    <label for="readerSearch">Nombre de usuario</label>
+                    <input id="readerSearch" type="text" autocomplete="off"
+                           placeholder="Escribe para buscar un usuario...">
+                    <div id="readerResults" class="reader-results"></div>
                 </div>
                 <div class="addSprint-buttons">
                     <button type="button" class="btn-cancel" onclick="closeAddReaderForm()">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn-save">
+                    <button type="submit" id="addReaderSubmit" class="btn-save" disabled>
                         Agregar lector
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- Datos que sprint.js necesita para el buscador de lectores -->
+    <script>
+        const contextPath = "${pageContext.request.contextPath}";
+
+        const currentSprintUsernames = [
+            "<%= sprint.getCreator().getUserName() %>"<%
+                for (User reader : sprint.getReaders()) {
+            %>, "<%= reader.getUserName() %>"<%
+                }
+            %>
+        ];
+    </script>
+    <% } %>
 
     <% } %>
 
