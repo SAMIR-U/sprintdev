@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
+import edu.uptc.swi.sprintdev.exceptions.UserAlreadyExistInListException;
+import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpSession;
@@ -50,10 +53,14 @@ public class ReadersController extends AbstractController{
         }
 
         User reader = userService.obtainUserByUsername(readerName);
-        if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
-            operSuccessMsg(session, "addreader");
-        }else{
-            operfailMsg(session, "addreader");
+        try {
+            if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
+                operSuccessMsg(session, "addreader");
+            }else{
+                operfailMsg(session, "addreader");
+            }
+        } catch (UserDontHavePermissionException|UserAlreadyExistInListException|TheListIsFullException e) {
+            operfailMsg(session, "addreader", e.getMessage());
         }
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
