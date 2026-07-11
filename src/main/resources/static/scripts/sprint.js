@@ -1,10 +1,6 @@
 const addReaderMenu = document.getElementById("addReaderMenu");
 
-
 const contextPath = addReaderMenu ? addReaderMenu.dataset.contextPath : "";
-const currentSprintUsernames = addReaderMenu && addReaderMenu.dataset.existingReaders
-    ? addReaderMenu.dataset.existingReaders.split(",")
-    : [];
 
 function openAddReaderForm() {
     if (addReaderMenu) addReaderMenu.style.display = "flex";
@@ -60,8 +56,7 @@ function searchReaders(key) {
             return response.json();
         })
         .then(users => {
-            const available = users.filter(u => !currentSprintUsernames.includes(u.userName));
-            renderReaderResults(available);
+            renderReaderResults(users);
         })
         .catch(() => renderReaderResults([]));
 }

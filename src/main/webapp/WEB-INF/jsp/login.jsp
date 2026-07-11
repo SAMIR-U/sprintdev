@@ -124,7 +124,7 @@ String loginMessage = (String) session.getAttribute("login");
     </div>
 
 </div>
-
+  <script src="${pageContext.request.contextPath}/scripts/bannerMessage.js"></script>
 </body>
 
 </html>

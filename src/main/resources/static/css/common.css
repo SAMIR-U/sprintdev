@@ -97,10 +97,33 @@ a {
 }
 
 .banner {
-    padding: 10px 12px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 380px;
+    padding: 14px 18px;
     border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 12.5px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    animation: bannerSlideIn 0.3s ease-out;
+}
+
+.banner {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 380px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    animation: bannerSlideIn 0.3s ease-out;
 }
 
 .banner.error {
@@ -113,6 +136,16 @@ a {
     color: var(--verde);
 }
 
+@keyframes bannerSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 .auth-logo {
     display: flex;
     align-items: center;

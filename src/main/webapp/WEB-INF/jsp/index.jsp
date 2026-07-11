@@ -66,5 +66,6 @@
            </button>
 
        </div>
+         <script src="${pageContext.request.contextPath}/scripts/bannerMessage.js"></script>
        </body>
        </html>

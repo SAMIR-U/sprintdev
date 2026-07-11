@@ -120,7 +120,7 @@ String registMessage = (String) session.getAttribute("regist");
     </div>
 
 </div>
-
+  <script src="${pageContext.request.contextPath}/scripts/bannerMessage.js"></script>
 </body>
 
 </html>

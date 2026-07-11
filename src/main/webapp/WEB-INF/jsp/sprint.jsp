@@ -269,7 +269,7 @@
     <% } %>
 
     <% } %>
-
+    <script src="${pageContext.request.contextPath}/scripts/bannerMessage.js"></script>
     <script src="${pageContext.request.contextPath}/scripts/topbar.js"></script>
     <script src="${pageContext.request.contextPath}/scripts/sprint.js"></script>
 </body>
