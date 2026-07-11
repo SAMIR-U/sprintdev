@@ -99,19 +99,19 @@
         <%if(addReaderMsg!=null) {
             if ("success".equals(addReaderMsg)) { %>
                 <div class="banner success">Lector agregado correctamente.</div>
-            <% } %>
-            <% if ("fail".equals(addReaderMsg)) { %>
+            <% }else if ("fail".equals(addReaderMsg)) { %>
                 <div class="banner error">No fue posible agregar el lector.</div>
-            <% } else{
+            <% } else{%>
                 <div class="banner error"><%=addReaderMsg%></div>
-            }%>
+            <%}
         }%>
-            <% if ("success".equals(activateMsg)) { %>
-                <div class="banner success">Sprint activado correctamente.</div>
-            <% } %>
-            <% if ("fail".equals(activateMsg)) { %>
-                <div class="banner error">No fue posible activar el Sprint. Verifica que tenga al menos una tarea.</div>
-            <% } 
+        
+        <% if ("success".equals(activateMsg)) { %>
+            <div class="banner success">Sprint activado correctamente.</div>
+        <% } %>
+        <% if ("fail".equals(activateMsg)) { %>
+            <div class="banner error">No fue posible activar el Sprint. Verifica que tenga al menos una tarea.</div>
+        <% } %>
 
         <% if ("success".equals(closeMsg)) { %>
             <div class="banner success">Sprint cerrado correctamente.</div>
