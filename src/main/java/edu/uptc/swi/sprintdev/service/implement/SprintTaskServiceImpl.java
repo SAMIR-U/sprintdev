@@ -7,12 +7,14 @@ import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 
 @Service
+@Transactional
 public class SprintTaskServiceImpl implements ISprintTaskService {
     private final ISprintTaskRepo sprintTaskRepo;
     public SprintTaskServiceImpl(ISprintTaskRepo sprintTaskRepo) {
@@ -52,8 +54,8 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         if(this.taskListSize(sprint) == 1 && sprint.getStatus() == SprintStatus.ACTIVE) {
             throw new TheListNeedAtleastOneTaskException("Los sprints activos necesitan de almenos una tarea");
         }
-        if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
-            this.sprintTaskRepo.deleteById(task.getId());
+        if (this.hasPermission(sprint, creatorId) && this.existsTask(task)) {
+            sprint.getTasks().removeIf(t -> t.getId()==task.getId());
             return true;
         }
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");

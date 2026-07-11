@@ -5,11 +5,13 @@ import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 import edu.uptc.swi.sprintdev.repository.IUserRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements IUserService {
     private final IUserRepo userRepo;
 

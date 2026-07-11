@@ -9,12 +9,14 @@ import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.repository.ISprintRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class SprintServiceImpl implements ISprintService {
     private final ISprintRepo sprintRepo;
 
