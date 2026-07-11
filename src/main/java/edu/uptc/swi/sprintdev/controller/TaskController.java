@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.TheListNeedAtleastOneTaskException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
@@ -130,7 +131,7 @@ public class TaskController extends AbstractController{
             }else{
                 operfailMsg(session, "deletetask");
             }
-        } catch (UserDontHavePermissionException e) {
+        } catch (UserDontHavePermissionException|TheListNeedAtleastOneTaskException e) {
             operfailMsg(session, "deletetask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
