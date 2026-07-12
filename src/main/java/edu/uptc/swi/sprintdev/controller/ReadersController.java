@@ -1,13 +1,7 @@
 package edu.uptc.swi.sprintdev.controller;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
@@ -28,19 +22,6 @@ public class ReadersController extends AbstractController{
     public ReadersController(ISprintService sprintService, IUserService userService) {
         this.sprintService = sprintService;
         this.userService = userService;
-    }
-
-    @GetMapping("/findreaders")
-    @ResponseBody
-    public ResponseEntity<List<User>> findReaders(@RequestParam String key,
-                            HttpSession session) {
-        User user = autenticatedUserIn(session);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        List<User> users = userService.findUserByKeyWord(key);
-        return ResponseEntity.ok(users);
     }
     
     @PostMapping("/addreader")
