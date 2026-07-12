@@ -14,9 +14,13 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller responsible for managing readers associated with a sprint.
+ * It handles adding readers and redirecting the user after the operation.
+ */
 @Controller
 @RequestMapping("/workspace")
-public class ReadersController extends AbstractController{
+public class ReadersController extends AbstractController {
     private final ISprintService sprintService;
     private final IUserService userService;
 
@@ -25,6 +29,15 @@ public class ReadersController extends AbstractController{
         this.userService = userService;
     }
     
+    /**
+     * Adds a reader to a sprint if the current user is authenticated and authorized.
+     *
+     * @param sprintId the ID of the sprint to which the reader will be added
+     * @param readerName the username of the user that will be added as a reader
+     * @param session the current HTTP session used to verify authentication
+     * @param redirect object used to send flash messages to the next request
+     * @return a redirect to the sprint page after the operation is completed
+     */
     @PostMapping("/addreader")
     public String addReaderToSprints(@RequestParam int sprintId,
                                 @RequestParam String readerName,
@@ -39,13 +52,13 @@ public class ReadersController extends AbstractController{
         try {
             if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
                 operSuccessMsg(redirect, "addreader");
-            }else{
+            } else {
                 operfailMsg(redirect, "addreader");
             }
-        } catch (UserDontHavePermissionException|UserAlreadyExistInListException|TheListIsFullException e) {
+        } catch (UserDontHavePermissionException | UserAlreadyExistInListException | TheListIsFullException e) {
             operfailMsg(redirect, "addreader", e.getMessage());
         }
-        return "redirect:/workspace/sprint?sprintId="+sprintId;
+        return "redirect:/workspace/sprint?sprintId=" + sprintId;
     }
     
 }
