@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="edu.uptc.swi.sprintdev.domain.User" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<%
- User user = (User) session.getAttribute("user");
-%>
+<c:set var="user" value="${sessionScope.user}" />
+
 <header class= "topbar">
         <a href = "${pageContext.request.contextPath}/workspace"
         class = "home-link">
@@ -19,15 +19,11 @@
         <nav>
             <div class= "user-header" id= "userMenuToggle">
                 <div class= "avatar">
-                    <%
-                        if(user != null){
-                             out.print(user.getUserName().substring(0,1).toUpperCase());
-                        }
-                    %>
+                    <c:if test="${not empty user}">${fn:toUpperCase(fn:substring(user.userName, 0, 1))}</c:if>
                 </div>
                 <div class = "user-text-header">
                      <strong class = "user-text">
-                        <%= user != null ? user.getUserName() : "" %>
+                        <c:out value="${not empty user ? user.userName : ''}" />
                      </strong>
                      <p>member</p>
                 </div>

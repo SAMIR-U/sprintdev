@@ -1,43 +1,34 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ page import="java.util.List"%>
-<%@ page import="edu.uptc.swi.sprintdev.domain.Task"%>
-<%@ page import="edu.uptc.swi.sprintdev.domain.User"%>
-<%@ page import="edu.uptc.swi.sprintdev.domain.Sprint"%>
-<%@ page import="edu.uptc.swi.sprintdev.domain.TaskStatus"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<%
-    List<Task> tasks = (List<Task>) session.getAttribute("tasks");
-    List<User> readers = (List<User>) session.getAttribute("readers");
+<c:set var="tasks" value="${tasks}" />
+<c:set var="readers" value="${readers}" />
+<c:set var="sprint" value="${sprint}" />
+<c:set var="createMessage" value="${createtask}" />
+<c:set var="editMessage" value="${edittask}" />
+<c:set var="deleteMessage" value="${deletetask}" />
 
-    String createMessage = (String) session.getAttribute("createtask");
-    String editMessage = (String) session.getAttribute("edittask");
-    String deleteMessage = (String) session.getAttribute("deletetask");
-    Sprint sprint = (Sprint) session.getAttribute("sprint");
+<c:set var="sprintId" value="${param.sprintId}" />
 
-    session.removeAttribute("createtask");
-    session.removeAttribute("edittask");
-    session.removeAttribute("deletetask");
+<c:set var="totalTasks" value="${empty tasks ? 0 : fn:length(tasks)}" />
+<c:set var="pendingCount" value="0" />
+<c:set var="progressCount" value="0" />
+<c:set var="completedCount" value="0" />
 
-    int sprintId = Integer.parseInt(request.getParameter("sprintId"));
-
-    int totalTasks = tasks != null ? tasks.size() : 0;
-    int pendingCount = 0;
-    int progressCount = 0;
-    int completedCount = 0;
-
-    if (tasks != null) {
-        for (Task t : tasks) {
-            TaskStatus st = t.getStatus();
-            if (st == TaskStatus.COMPLETED) {
-                completedCount++;
-            } else if (st == TaskStatus.IN_PROGRESS || st == TaskStatus.IN_REVIEW) {
-                progressCount++;
-            } else {
-                pendingCount++;
-            }
-        }
-    }
-%>
+<c:forEach var="t" items="${tasks}">
+    <c:choose>
+        <c:when test="${t.status == 'COMPLETED'}">
+            <c:set var="completedCount" value="${completedCount + 1}" />
+        </c:when>
+        <c:when test="${t.status == 'IN_PROGRESS' || t.status == 'IN_REVIEW'}">
+            <c:set var="progressCount" value="${progressCount + 1}" />
+        </c:when>
+        <c:otherwise>
+            <c:set var="pendingCount" value="${pendingCount + 1}" />
+        </c:otherwise>
+    </c:choose>
+</c:forEach>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -63,8 +54,8 @@
     <nav class="breadcrumb">
         <a href="${pageContext.request.contextPath}/workspace">Mis sprints</a>
         <span class="crumb-separator">/</span>
-        <a href="${pageContext.request.contextPath}/workspace/sprint?sprintId=<%= sprintId %>">
-            <%= sprint != null ? sprint.getName() : "Sprint" %>
+        <a href="${pageContext.request.contextPath}/workspace/sprint?sprintId=${sprintId}">
+            <c:out value="${not empty sprint ? sprint.name : 'Sprint'}" />
         </a>
         <span class="crumb-separator">/</span>
         <span class="crumb-current">Backlog</span>
@@ -76,7 +67,7 @@
             <h1 class="page-title">Sprint Backlog</h1>
             <p class="page-description">
                 Planifica, edita y da seguimiento a las tareas de
-                <strong><%= sprint != null ? sprint.getName() : "este Sprint" %></strong>.
+                <strong><c:out value="${not empty sprint ? sprint.name : 'este Sprint'}" /></strong>.
             </p>
         </div>
 
@@ -86,44 +77,64 @@
         </button>
     </div>
 
-    <% if ("success".equals(createMessage)) { %>
-        <div class="banner success">La tarea fue creada correctamente.</div>
-    <% } else if (createMessage != null) { %>
-        <div class="banner error">
-            <%= "fail".equals(createMessage) ? "No fue posible crear la tarea." : createMessage %>
-        </div>
-    <% } %>
-    <% if ("success".equals(editMessage)) { %>
-        <div class="banner success">La tarea fue actualizada correctamente.</div>
-    <% } else if (editMessage != null) { %>
-        <div class="banner error">
-            <%= "fail".equals(editMessage) ? "No fue posible actualizar la tarea." : editMessage %>
-        </div>
-    <% } %>
-    <% if ("success".equals(deleteMessage)) { %>
-        <div class="banner success">La tarea fue eliminada correctamente.</div>
-    <% } else if (deleteMessage != null) { %>
-        <div class="banner error">
-            <%= "fail".equals(deleteMessage) ? "No fue posible eliminar la tarea." : deleteMessage %>
-        </div>
-    <% } %>
+    <c:if test="${not empty createMessage}">
+        <c:choose>
+            <c:when test="${createMessage == 'success'}">
+                <div class="banner success">La tarea fue creada correctamente.</div>
+            </c:when>
+            <c:when test="${createMessage == 'fail'}">
+                <div class="banner error">No fue posible crear la tarea.</div>
+            </c:when>
+            <c:otherwise>
+                <div class="banner error">${createMessage}</div>
+            </c:otherwise>
+        </c:choose>
+    </c:if>
+
+    <c:if test="${not empty editMessage}">
+        <c:choose>
+            <c:when test="${editMessage == 'success'}">
+                <div class="banner success">La tarea fue actualizada correctamente.</div>
+            </c:when>
+            <c:when test="${editMessage == 'fail'}">
+                <div class="banner error">No fue posible actualizar la tarea.</div>
+            </c:when>
+            <c:otherwise>
+                <div class="banner error">${editMessage}</div>
+            </c:otherwise>
+        </c:choose>
+    </c:if>
+
+    <c:if test="${not empty deleteMessage}">
+        <c:choose>
+            <c:when test="${deleteMessage == 'success'}">
+                <div class="banner success">La tarea fue eliminada correctamente.</div>
+            </c:when>
+            <c:when test="${deleteMessage == 'fail'}">
+                <div class="banner error">No fue posible eliminar la tarea.</div>
+            </c:when>
+            <c:otherwise>
+                <div class="banner error">${deleteMessage}</div>
+            </c:otherwise>
+        </c:choose>
+    </c:if>
 
     <section class="backlog-stats">
         <div class="stat-card">
             <span class="stat-label">Total de tareas</span>
-            <span class="stat-value"><%= totalTasks %></span>
+            <span class="stat-value">${totalTasks}</span>
         </div>
         <div class="stat-card">
             <span class="stat-label">Pendientes</span>
-            <span class="stat-value stat-pending"><%= pendingCount %></span>
+            <span class="stat-value stat-pending">${pendingCount}</span>
         </div>
         <div class="stat-card">
             <span class="stat-label">En progreso</span>
-            <span class="stat-value stat-progress"><%= progressCount %></span>
+            <span class="stat-value stat-progress">${progressCount}</span>
         </div>
         <div class="stat-card">
             <span class="stat-label">Completadas</span>
-            <span class="stat-value stat-completed"><%= completedCount %></span>
+            <span class="stat-value stat-completed">${completedCount}</span>
         </div>
     </section>
 
@@ -155,90 +166,94 @@
                     </tr>
                 </thead>
                 <tbody id="taskTableBody">
-                <%
-                    if (tasks != null && !tasks.isEmpty()) {
-                        for (Task task : tasks) {
 
-                            TaskStatus status = task.getStatus();
-                            String statusClass = "pending";
-                            String statusLabel = "Pendiente";
-                            String statusValue = "PENDING";
+                <c:forEach var="task" items="${tasks}">
 
-                            if (status == TaskStatus.IN_PROGRESS) {
-                                statusClass = "progress";
-                                statusLabel = "En progreso";
-                                statusValue = "IN_PROGRESS";
-                            } else if (status == TaskStatus.IN_REVIEW) {
-                                statusClass = "review";
-                                statusLabel = "En revisión";
-                                statusValue = "IN_REVIEW";
-                            } else if (status == TaskStatus.COMPLETED) {
-                                statusClass = "completed";
-                                statusLabel = "Completada";
-                                statusValue = "COMPLETED";
-                            }
+                    <c:choose>
+                        <c:when test="${task.status == 'IN_PROGRESS'}">
+                            <c:set var="statusClass" value="progress" />
+                            <c:set var="statusLabel" value="En progreso" />
+                            <c:set var="statusValue" value="IN_PROGRESS" />
+                        </c:when>
+                        <c:when test="${task.status == 'IN_REVIEW'}">
+                            <c:set var="statusClass" value="review" />
+                            <c:set var="statusLabel" value="En revisión" />
+                            <c:set var="statusValue" value="IN_REVIEW" />
+                        </c:when>
+                        <c:when test="${task.status == 'COMPLETED'}">
+                            <c:set var="statusClass" value="completed" />
+                            <c:set var="statusLabel" value="Completada" />
+                            <c:set var="statusValue" value="COMPLETED" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="statusClass" value="pending" />
+                            <c:set var="statusLabel" value="Pendiente" />
+                            <c:set var="statusValue" value="PENDING" />
+                        </c:otherwise>
+                    </c:choose>
 
-                            StringBuilder searchBlob = new StringBuilder();
-                            searchBlob.append(task.getTitle()).append(" ").append(task.getDescription());
-                            if (task.getAssignedUsers() != null) {
-                                for (User u : task.getAssignedUsers()) {
-                                    searchBlob.append(" ").append(u.getUserName());
-                                }
-                            }
-                %>
+                    <c:set var="searchBlob" value="${fn:toLowerCase(task.title)} ${fn:toLowerCase(task.description)}" />
+                    <c:forEach var="su" items="${task.assignedUsers}">
+                        <c:set var="searchBlob" value="${searchBlob} ${fn:toLowerCase(su.userName)}" />
+                    </c:forEach>
+                    <c:set var="searchBlob" value="${fn:replace(searchBlob, '\"', '')}" />
 
-                <tr class="task-row" data-status="<%= statusValue %>" data-search="<%= searchBlob.toString().toLowerCase().replace("\"", "") %>">
+                    <tr class="task-row" data-status="${statusValue}" data-search="${searchBlob}">
 
-                    <td class="col-id"><span class="task-id">#<%= task.getId() %></span></td>
+                        <td class="col-id"><span class="task-id">#${task.id}</span></td>
 
-                    <td class="col-task">
-                        <div class="task-title"><%= task.getTitle() %></div>
-                        <div class="task-description"><%= task.getDescription() %></div>
-                    </td>
+                        <td class="col-task">
+                            <div class="task-title"><c:out value="${task.title}" /></div>
+                            <div class="task-description"><c:out value="${task.description}" /></div>
+                        </td>
 
-                    <td class="col-status">
-                        <span class="status <%= statusClass %>"><%= statusLabel %></span>
-                    </td>
+                        <td class="col-status">
+                            <span class="status ${statusClass}">${statusLabel}</span>
+                        </td>
 
-                    <td class="col-assignees">
-                        <% if (task.getAssignedUsers() != null && !task.getAssignedUsers().isEmpty()) { %>
-                            <div class="assignee-list">
-                                <% for (User assigned : task.getAssignedUsers()) { %>
-                                    <span class="assignee-chip" title="<%= assigned.getUserName() %>">
-                                        <span class="assignee-avatar"><%= assigned.getUserName().substring(0, 1).toUpperCase() %></span>
-                                        <%= assigned.getUserName() %>
-                                    </span>
-                                <% } %>
-                            </div>
-                        <% } else { %>
-                            <span class="unassigned">Sin asignar</span>
-                        <% } %>
-                    </td>
+                        <td class="col-assignees">
+                            <c:choose>
+                                <c:when test="${not empty task.assignedUsers}">
+                                    <div class="assignee-list">
+                                        <c:forEach var="assigned" items="${task.assignedUsers}">
+                                            <span class="assignee-chip" title="${fn:escapeXml(assigned.userName)}">
+                                                <span class="assignee-avatar">${fn:toUpperCase(fn:substring(assigned.userName, 0, 1))}</span>
+                                                <c:out value="${assigned.userName}" />
+                                            </span>
+                                        </c:forEach>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="unassigned">Sin asignar</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
 
-                    <td class="col-actions">
-                        <button class="icon-btn edit"
-                                title="Editar tarea"
-                                onclick="openEditModal(
-                                    '<%= task.getId() %>',
-                                    '<%= task.getTitle().replace("'", "\\'") %>',
-                                    '<%= task.getDescription().replace("'", "\\'") %>'
-                                )">
-                            Editar
-                        </button>
-                        <button class="icon-btn delete"
-                                title="Eliminar tarea"
-                                onclick="openDeleteModal('<%= task.getId() %>')">
-                            Eliminar
-                        </button>
-                    </td>
+                        <td class="col-actions">
+                            <button class="icon-btn edit"
+                                    title="Editar tarea"
+                                    onclick="openEditModal(
+                                        '${task.id}',
+                                        '${fn:replace(task.title, "'", "\\'")}',
+                                        '${fn:replace(task.description, "'", "\\'")}'
+                                    )">
+                                Editar
+                            </button>
+                            <button class="icon-btn delete"
+                                    title="Eliminar tarea"
+                                    onclick="openDeleteModal('${task.id}')">
+                                Eliminar
+                            </button>
+                        </td>
 
-                </tr>
+                    </tr>
 
-                <% } } %>
+                </c:forEach>
+
                 </tbody>
             </table>
 
-            <% if (tasks == null || tasks.isEmpty()) { %>
+            <c:if test="${empty tasks}">
                 <div class="empty-state">
                     <h3>No existen tareas para este Sprint</h3>
                     <p>Crea la primera tarea para empezar a planear el Sprint Backlog.</p>
@@ -247,7 +262,7 @@
                         Nueva tarea
                     </button>
                 </div>
-            <% } %>
+            </c:if>
 
             <div class="no-results" id="noResults">
                 <p>No se encontraron tareas que coincidan con la búsqueda.</p>
@@ -262,11 +277,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>Nueva tarea</h2>
-            <p class="modal-subtitle">Añade una tarea al Sprint Backlog de <%= sprint != null ? sprint.getName() : "este Sprint" %>.</p>
+            <p class="modal-subtitle">Añade una tarea al Sprint Backlog de <c:out value="${not empty sprint ? sprint.name : 'este Sprint'}" />.</p>
         </div>
 
         <form action="${pageContext.request.contextPath}/workspace/createtask" method="post">
-            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+            <input type="hidden" name="sprintid" value="${sprintId}">
 
             <div class="field">
                 <label for="title">Título</label>
@@ -281,29 +296,28 @@
             <div class="field">
                 <label>Responsables</label>
                 <div class="assignee-picker">
-                    <% if (sprint != null && sprint.getCreator() != null) {
-                        User creatorUser = sprint.getCreator();
-                    %>
+                    <c:if test="${not empty sprint and not empty sprint.creator}">
+                        <c:set var="creatorUser" value="${sprint.creator}" />
                         <label class="assignee-option">
-                            <input type="checkbox" name="assignedUserNames" value="<%= creatorUser.getUserName() %>">
-                            <span class="assignee-option-avatar"><%= creatorUser.getUserName().substring(0, 1).toUpperCase() %></span>
-                            <span class="assignee-option-name"><%= creatorUser.getUserName() %></span>
+                            <input type="checkbox" name="assignedUserNames" value="${creatorUser.userName}">
+                            <span class="assignee-option-avatar">${fn:toUpperCase(fn:substring(creatorUser.userName, 0, 1))}</span>
+                            <span class="assignee-option-name"><c:out value="${creatorUser.userName}" /></span>
                         </label>
-                    <% } %>
+                    </c:if>
 
-                    <% if (readers != null && !readers.isEmpty()) { %>
-                        <% for (User reader : readers) { %>
+                    <c:if test="${not empty readers}">
+                        <c:forEach var="reader" items="${readers}">
                             <label class="assignee-option">
-                                <input type="checkbox" name="assignedUserNames" value="<%= reader.getUserName() %>">
-                                <span class="assignee-option-avatar"><%= reader.getUserName().substring(0, 1).toUpperCase() %></span>
-                                <span class="assignee-option-name"><%= reader.getUserName() %></span>
+                                <input type="checkbox" name="assignedUserNames" value="${reader.userName}">
+                                <span class="assignee-option-avatar">${fn:toUpperCase(fn:substring(reader.userName, 0, 1))}</span>
+                                <span class="assignee-option-name"><c:out value="${reader.userName}" /></span>
                             </label>
-                        <% } %>
-                    <% } %>
+                        </c:forEach>
+                    </c:if>
 
-                    <% if (sprint == null && (readers == null || readers.isEmpty())) { %>
+                    <c:if test="${empty sprint and empty readers}">
                         <p class="assignee-empty">Este Sprint todavía no tiene usuarios para asignar.</p>
-                    <% } %>
+                    </c:if>
                 </div>
             </div>
 
@@ -323,7 +337,7 @@
         </div>
 
         <form action="${pageContext.request.contextPath}/workspace/updatetaks" method="post">
-            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+            <input type="hidden" name="sprintid" value="${sprintId}">
             <input type="hidden" id="editTaskId" name="taskId">
 
             <div class="field">
@@ -353,7 +367,7 @@
         <p class="modal-warning">¿Está seguro de eliminar esta tarea? Esta acción no se puede deshacer.</p>
 
         <form action="${pageContext.request.contextPath}/workspace/deletetaks" method="post">
-            <input type="hidden" name="sprintid" value="<%= sprintId %>">
+            <input type="hidden" name="sprintid" value="${sprintId}">
             <input type="hidden" id="deleteTaskId" name="taskId">
 
             <div class="modal-buttons">

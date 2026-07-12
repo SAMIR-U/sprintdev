@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%
-String loginMessage = (String) session.getAttribute("login");
-%>
+<c:set var="loginMessage" value="${login}" />
+<c:remove var="login" scope="session" />
 
 <!DOCTYPE html>
 <html lang="es">
@@ -49,22 +49,18 @@ String loginMessage = (String) session.getAttribute("login");
             Accede a tu cuenta
         </p>
 
-        <% if ("fail".equals(loginMessage)) { %>
-
-            <div class="banner error">
-                Usuario o contraseña incorrectos.
-            </div>
-
-        <% } else if ("success".equals(loginMessage)) { %>
-
-            <div class="banner success">
-                Inicio de sesión exitoso.
-            </div>
-
-        <% }
-
-        session.removeAttribute("login");
-        %>
+        <c:choose>
+            <c:when test="${loginMessage == 'fail'}">
+                <div class="banner error">
+                    Usuario o contraseña incorrectos.
+                </div>
+            </c:when>
+            <c:when test="${loginMessage == 'success'}">
+                <div class="banner success">
+                    Inicio de sesión exitoso.
+                </div>
+            </c:when>
+        </c:choose>
 
         <form action="${pageContext.request.contextPath}/login"
               method="post">

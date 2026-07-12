@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%
-String registMessage = (String) session.getAttribute("regist");
-%>
+<c:set var="registMessage" value="${regist}" />
+<c:remove var="regist" scope="session" />
 
 <!DOCTYPE html>
 <html lang="es">
@@ -49,22 +49,18 @@ String registMessage = (String) session.getAttribute("regist");
             Registra un nuevo usuario para acceder a SprintDev.
         </p>
 
-        <% if ("fail".equals(registMessage)) { %>
-
-            <div class="banner error">
-                No fue posible registrar el usuario.
-            </div>
-
-        <% } else if ("success".equals(registMessage)) { %>
-
-            <div class="banner success">
-                Usuario registrado correctamente.
-            </div>
-
-        <% }
-
-        session.removeAttribute("regist");
-        %>
+        <c:choose>
+            <c:when test="${registMessage == 'fail'}">
+                <div class="banner error">
+                    No fue posible registrar el usuario.
+                </div>
+            </c:when>
+            <c:when test="${registMessage == 'success'}">
+                <div class="banner success">
+                    Usuario registrado correctamente.
+                </div>
+            </c:when>
+        </c:choose>
 
         <form action="${pageContext.request.contextPath}/registuser"
               method="post">

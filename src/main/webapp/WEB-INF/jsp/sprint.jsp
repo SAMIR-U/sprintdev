@@ -1,69 +1,59 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="edu.uptc.swi.sprintdev.domain.Sprint" %>
-<%@ page import="edu.uptc.swi.sprintdev.domain.SprintStatus" %>
-<%@ page import="edu.uptc.swi.sprintdev.domain.User" %>
 <%@ page import="java.time.temporal.ChronoUnit" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<%
+<c:set var="sprint" value="${sessionScope.sprint}" />
+<c:set var="currentUser" value="${sessionScope.user}" />
 
-    Sprint sprint = (Sprint) session.getAttribute("sprint");
-    User currentUser = (User) session.getAttribute("user");
+<c:set var="addReaderMsg" value="${addreader}" />
+<c:remove var="addreader" scope="session" />
 
-    String addReaderMsg = (String) session.getAttribute("addreader");
-    session.removeAttribute("addreader");
+<c:set var="activateMsg" value="${activesprint}" />
+<c:remove var="activesprint" scope="session" />
 
-    String activateMsg = (String) session.getAttribute("activesprint");
-    session.removeAttribute("activesprint");
+<c:set var="closeMsg" value="${closesprint}" />
+<c:remove var="closesprint" scope="session" />
 
-    String closeMsg = (String) session.getAttribute("closesprint");
-    session.removeAttribute("closesprint");
+<c:choose>
+    <c:when test="${not empty sprint and sprint.status == 'ACTIVE'}">
+        <c:set var="statusLabel" value="Activo" />
+        <c:set var="statusClass" value="activo" />
+    </c:when>
+    <c:when test="${not empty sprint and sprint.status == 'CLOSED'}">
+        <c:set var="statusLabel" value="Cerrado" />
+        <c:set var="statusClass" value="cerrado" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="statusLabel" value="En preparación" />
+        <c:set var="statusClass" value="preparacion" />
+    </c:otherwise>
+</c:choose>
 
-    String statusLabel = "En preparación";
-    String statusClass = "preparacion";
-    if (sprint != null) {
-        switch (sprint.getStatus()) {
-            case ACTIVE:
-                statusLabel = "Activo";
-                statusClass = "activo";
-                break;
-            case CLOSED:
-                statusLabel = "Cerrado";
-                statusClass = "cerrado";
-                break;
-            default:
-                statusLabel = "En preparación";
-                statusClass = "preparacion";
-        }
-    }
+<%-- El calculo de dias entre fechas requiere ChronoUnit, EL no tiene aritmetica de fechas nativa --%>
+<c:set var="durationDays" value="0" />
+<% if (session.getAttribute("sprint") != null) {
+    edu.uptc.swi.sprintdev.domain.Sprint s = (edu.uptc.swi.sprintdev.domain.Sprint) session.getAttribute("sprint");
+    pageContext.setAttribute("durationDays", ChronoUnit.DAYS.between(s.getStartDate(), s.getEndDate()));
+} %>
 
-    long durationDays = 0;
-    if (sprint != null) {
-        durationDays = ChronoUnit.DAYS.between(sprint.getStartDate(), sprint.getEndDate());
-    }
+<c:set var="isCreator" value="${not empty sprint and not empty currentUser and sprint.creator.id == currentUser.id}" />
+<c:set var="hasTasks" value="${not empty sprint and not empty sprint.tasks}" />
 
-
-    boolean isCreator = sprint != null && currentUser != null
-            && sprint.getCreator().getId() == currentUser.getId();
-
-    boolean hasTasks = sprint != null && sprint.getTasks() != null && !sprint.getTasks().isEmpty();
-
-
-    String existingReadersCsv = "";
-    if (sprint != null) {
-        StringBuilder csv = new StringBuilder(sprint.getCreator().getUserName());
-        for (User reader : sprint.getReaders()) {
-            csv.append(",").append(reader.getUserName());
-        }
-        existingReadersCsv = csv.toString();
-    }
-%>
+<c:set var="existingReadersCsv" value="" />
+<c:if test="${not empty sprint}">
+    <c:set var="existingReadersCsv" value="${sprint.creator.userName}" />
+    <c:forEach var="reader" items="${sprint.readers}">
+        <c:set var="existingReadersCsv" value="${existingReadersCsv},${reader.userName}" />
+    </c:forEach>
+</c:if>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= sprint != null ? sprint.getName() : "Sprint" %> | SprintDev</title>
+    <title><c:out value="${not empty sprint ? sprint.name : 'Sprint'}" /> | SprintDev</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
@@ -76,14 +66,16 @@
 <body>
     <jsp:include page="topbar.jsp" />
 
-    <% if (sprint == null) { %>
+    <c:choose>
+    <c:when test="${empty sprint}">
         <main class="workspace">
             <div class="empty">
                 <h2>No se encontró el Sprint</h2>
                 <p>Vuelve a Mis Sprints e inténtalo de nuevo.</p>
             </div>
         </main>
-    <% } else { %>
+    </c:when>
+    <c:otherwise>
 
     <main class="sprint-page">
 
@@ -91,78 +83,82 @@
         <nav class="breadcrumb">
             <a href="${pageContext.request.contextPath}/workspace">Mis sprints</a>
             <span class="crumb-separator">/</span>
-            <span class="crumb-current"><%= sprint.getName() %></span>
+            <span class="crumb-current"><c:out value="${sprint.name}" /></span>
         </nav>
 
         <h1 class="sprint-section-title">Sprint</h1>
 
-        <%if(addReaderMsg!=null) {
-            if ("success".equals(addReaderMsg)) { %>
-                <div class="banner success">Lector agregado correctamente.</div>
-            <% }else if ("fail".equals(addReaderMsg)) { %>
-                <div class="banner error">No fue posible agregar el lector.</div>
-            <% } else{%>
-                <div class="banner error"><%=addReaderMsg%></div>
-            <%}
-        }%>
-        
-        <% if ("success".equals(activateMsg)) { %>
-            <div class="banner success">Sprint activado correctamente.</div>
-        <% } %>
-        <% if ("fail".equals(activateMsg)) { %>
-            <div class="banner error">No fue posible activar el Sprint. Verifica que tenga al menos una tarea.</div>
-        <% } %>
+        <c:if test="${not empty addReaderMsg}">
+            <c:choose>
+                <c:when test="${addReaderMsg == 'success'}">
+                    <div class="banner success">Lector agregado correctamente.</div>
+                </c:when>
+                <c:when test="${addReaderMsg == 'fail'}">
+                    <div class="banner error">No fue posible agregar el lector.</div>
+                </c:when>
+                <c:otherwise>
+                    <div class="banner error">${addReaderMsg}</div>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
 
-        <% if ("success".equals(closeMsg)) { %>
+        <c:if test="${activateMsg == 'success'}">
+            <div class="banner success">Sprint activado correctamente.</div>
+        </c:if>
+        <c:if test="${activateMsg == 'fail'}">
+            <div class="banner error">No fue posible activar el Sprint. Verifica que tenga al menos una tarea.</div>
+        </c:if>
+
+        <c:if test="${closeMsg == 'success'}">
             <div class="banner success">Sprint cerrado correctamente.</div>
-        <% } %>
-        <% if ("fail".equals(closeMsg)) { %>
+        </c:if>
+        <c:if test="${closeMsg == 'fail'}">
             <div class="banner error">No fue posible cerrar el Sprint. Verifica que todas las tareas estén terminadas.</div>
-        <% } %>
+        </c:if>
 
 
         <section class="sprint-hero">
             <div class="sprint-hero-info">
                 <div class="sprint-hero-title-row">
-                    <h1 class="page-title"><%= sprint.getName() %></h1>
-                    <span class="sprint-status <%= statusClass %>"><%= statusLabel %></span>
+                    <h1 class="page-title"><c:out value="${sprint.name}" /></h1>
+                    <span class="sprint-status ${statusClass}">${statusLabel}</span>
                 </div>
             </div>
 
 
             <div class="sprint-actions">
                 <a class="sprint-nav-btn"
-                   href="${pageContext.request.contextPath}/workspace/backlog?sprintId=<%= sprint.getSprintId() %>">
+                   href="${pageContext.request.contextPath}/workspace/backlog?sprintId=${sprint.sprintId}">
                     Ver Backlog
                 </a>
-                <a class="sprint-nav-btn" href="${pageContext.request.contextPath}/workspace/dashboard?sprintId=<%= sprint.getSprintId() %>">
+                <a class="sprint-nav-btn" href="${pageContext.request.contextPath}/workspace/dashboard?sprintId=${sprint.sprintId}">
                     Ver Dashboard
                 </a>
 
-                <% if (isCreator && sprint.getStatus() == SprintStatus.CREATED) { %>
+                <c:if test="${isCreator and sprint.status == 'CREATED'}">
                     <form class="sprint-status-form"
                           action="${pageContext.request.contextPath}/workspace/sprint/active"
                           method="post"
                           onsubmit="return confirm('¿Activar este Sprint? Una vez activo podrás mover tareas en el tablero.');">
-                        <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
+                        <input type="hidden" name="sprintId" value="${sprint.sprintId}">
                         <button type="submit" class="sprint-nav-btn primary"
-                                <%= hasTasks ? "" : "disabled title=\"Agrega al menos una tarea al Sprint Backlog para poder activarlo\"" %>>
+                                <c:if test="${not hasTasks}">disabled title="Agrega al menos una tarea al Sprint Backlog para poder activarlo"</c:if>>
                             Activar Sprint
                         </button>
                     </form>
-                <% } %>
+                </c:if>
 
-                <% if (isCreator && sprint.getStatus() == SprintStatus.ACTIVE) { %>
+                <c:if test="${isCreator and sprint.status == 'ACTIVE'}">
                     <form class="sprint-status-form"
                           action="${pageContext.request.contextPath}/workspace/sprint/close"
                           method="post"
                           onsubmit="return confirm('¿Cerrar este Sprint? Solo podrás hacerlo si todas las tareas están terminadas, y esta acción no se puede deshacer.');">
-                        <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
+                        <input type="hidden" name="sprintId" value="${sprint.sprintId}">
                         <button type="submit" class="sprint-nav-btn danger">
                             Cerrar Sprint
                         </button>
                     </form>
-                <% } %>
+                </c:if>
             </div>
         </section>
 
@@ -174,25 +170,25 @@
 
                 <div class="sprint-objective">
                     <span class="sprint-objective-label">Objetivo</span>
-                    <p><%= sprint.getGoal() %></p>
+                    <p><c:out value="${sprint.goal}" /></p>
                 </div>
 
                 <div class="sprint-stats-grid">
                     <div class="stat-card">
                         <span class="stat-label">Inicio</span>
-                        <span class="stat-value"><%= sprint.getStartDate() %></span>
+                        <span class="stat-value">${sprint.startDate}</span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">Fin</span>
-                        <span class="stat-value"><%= sprint.getEndDate() %></span>
+                        <span class="stat-value">${sprint.endDate}</span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">Duración</span>
-                        <span class="stat-value"><%= durationDays %> días</span>
+                        <span class="stat-value">${durationDays} días</span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">Estado</span>
-                        <span class="stat-value"><%= statusLabel %></span>
+                        <span class="stat-value">${statusLabel}</span>
                     </div>
                 </div>
             </div>
@@ -201,53 +197,56 @@
             <aside class="sprint-team">
                 <div class="sprint-team-header">
                     <h2 class="section-title">Equipo</h2>
-                    <% if (isCreator) { %>
+                    <c:if test="${isCreator}">
                         <button class="team-add-btn" onclick="openAddReaderForm()" title="Agregar lector">
                             +
                         </button>
-                    <% } %>
+                    </c:if>
                 </div>
 
                 <p class="team-subtitle">Creador</p>
                 <div class="team-member creator">
                     <div class="team-avatar">
-                        <%= sprint.getCreator().getUserName().substring(0, 1).toUpperCase() %>
+                        ${fn:toUpperCase(fn:substring(sprint.creator.userName, 0, 1))}
                     </div>
                     <div class="team-member-info">
-                        <strong><%= sprint.getCreator().getUserName() %></strong>
+                        <strong><c:out value="${sprint.creator.userName}" /></strong>
                         <span>Creador</span>
                     </div>
                 </div>
 
                 <p class="team-subtitle">Lectores</p>
-                <% if (sprint.getReaders() == null || sprint.getReaders().isEmpty()) { %>
-                    <p class="team-empty">Todavía no hay lectores en este Sprint.</p>
-                <% } else { %>
-                    <% for (User reader : sprint.getReaders()) { %>
-                        <div class="team-member">
-                            <div class="team-avatar reader">
-                                <%= reader.getUserName().substring(0, 1).toUpperCase() %>
+                <c:choose>
+                    <c:when test="${empty sprint.readers}">
+                        <p class="team-empty">Todavía no hay lectores en este Sprint.</p>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="reader" items="${sprint.readers}">
+                            <div class="team-member">
+                                <div class="team-avatar reader">
+                                    ${fn:toUpperCase(fn:substring(reader.userName, 0, 1))}
+                                </div>
+                                <div class="team-member-info">
+                                    <strong><c:out value="${reader.userName}" /></strong>
+                                    <span>Lector</span>
+                                </div>
                             </div>
-                            <div class="team-member-info">
-                                <strong><%= reader.getUserName() %></strong>
-                                <span>Lector</span>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } %>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             </aside>
         </section>
     </main>
 
-    <% if (isCreator) { %>
+    <c:if test="${isCreator}">
 
     <div class="addSprintMenu" id="addReaderMenu"
          data-context-path="${pageContext.request.contextPath}"
-         data-existing-readers="<%= existingReadersCsv %>">
+         data-existing-readers="${existingReadersCsv}">
         <div class="addSprintMenu-content">
             <h2>Agregar lector</h2>
             <form id="addReaderForm" action="${pageContext.request.contextPath}/workspace/addreader" method="post">
-                <input type="hidden" name="sprintId" value="<%= sprint.getSprintId() %>">
+                <input type="hidden" name="sprintId" value="${sprint.sprintId}">
                 <input type="hidden" id="readerName" name="readerName" required>
                 <div class="field reader-search-field">
                     <label for="readerSearch">Nombre de usuario</label>
@@ -266,9 +265,10 @@
             </form>
         </div>
     </div>
-    <% } %>
+    </c:if>
 
-    <% } %>
+    </c:otherwise>
+    </c:choose>
     <script src="${pageContext.request.contextPath}/scripts/bannerMessage.js"></script>
     <script src="${pageContext.request.contextPath}/scripts/topbar.js"></script>
     <script src="${pageContext.request.contextPath}/scripts/sprint.js"></script>
