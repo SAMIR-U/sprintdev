@@ -135,7 +135,7 @@
                    href="${pageContext.request.contextPath}/workspace/backlog?sprintId=<%= sprint.getSprintId() %>">
                     Ver Backlog
                 </a>
-                <a class="sprint-nav-btn disabled" title="Próximamente">
+                <a class="sprint-nav-btn" href="${pageContext.request.contextPath}/workspace/dashboard=<%= sprint.getSprintId() %>">
                     Ver Dashboard
                 </a>
 

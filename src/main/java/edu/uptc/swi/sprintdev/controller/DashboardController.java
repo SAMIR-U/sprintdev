@@ -14,14 +14,14 @@ import jakarta.servlet.http.HttpSession;
 public class DashboardController extends AbstractController{
 
     @GetMapping("/dashboard")
-    public String getMethodName(@RequestParam int sprintId,
+    public String loadDashboardPage(@RequestParam int sprintId,
                                 HttpSession session
     ) {
         User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         return "dashboard";
     }
     
