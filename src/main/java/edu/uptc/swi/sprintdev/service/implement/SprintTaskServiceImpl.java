@@ -33,9 +33,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
         }
         if (!this.existsTask(task)) {
-            task.setStatus(TaskStatus.PENDING);
-            task.setCreationDate(LocalDateTime.now());
-            sprint.setVersion(sprint.getVersion()+1);
+            this.configCreateTask(task, sprint);
             this.sprintTaskRepo.save(task);
             return true;
         }
@@ -45,6 +43,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     @Override
     public boolean updateTask(Task task, int creatorId) throws UserDontHavePermissionException {
         if (this.hasPermission(task.getSprint(), creatorId) && this.existsTask(task)) {
+            this.updateSprintVersion(task.getSprint());
             this.sprintTaskRepo.save(task);
             return true;
         }
@@ -60,6 +59,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         }
         if (this.hasPermission(sprint, creatorId) && this.existsTask(task)) {
             sprint.getTasks().removeIf(t -> t.getId() == task.getId());
+            this.updateSprintVersion(sprint);
             return true;
         }
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
@@ -85,10 +85,10 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         this.validatePermission(existingTask, creatorId);
         this.validateStatusTransition(existingTask.getStatus(), task.getStatus());
         existingTask.setStatus(task.getStatus());
+        this.updateSprintVersion(existingTask.getSprint());
         this.sprintTaskRepo.save(existingTask);
         return true;
     }
-
 
     private boolean existsTask(Task task) {
         return this.sprintTaskRepo.existsById(task.getId());
@@ -113,6 +113,14 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         if (!previous.mayAllowedTransition(next)) {
             throw new StatusTaskIsNotPossibleToChangeException("El cambio de estado no es posible: " + previous + " -> " + next);
         }
+    }
+    private void configCreateTask(Task task, Sprint sprint) {
+        task.setStatus(TaskStatus.PENDING);
+        task.setCreationDate(LocalDateTime.now());
+        this.updateSprintVersion(sprint);
+    }
+    private void updateSprintVersion(Sprint sprint){
+        sprint.setVersion(sprint.getVersion()+1);
     }
 
 }
