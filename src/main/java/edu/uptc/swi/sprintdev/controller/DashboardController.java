@@ -15,8 +15,7 @@ public class DashboardController extends AbstractController{
 
     @GetMapping("/dashboard")
     public String loadDashboardPage(@RequestParam int sprintId,
-                                HttpSession session
-    ) {
+                                HttpSession session) {
         User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";

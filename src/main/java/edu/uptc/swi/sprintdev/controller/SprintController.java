@@ -44,7 +44,7 @@ public class SprintController extends AbstractController{
     @PostMapping("/createsprint")
     public String createSprint(@ModelAttribute SprintForm sprintForm,
                                HttpSession session,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirect) {
 
         User creator = autenticatedUserIn(session);
         if (creator == null) {
@@ -60,21 +60,22 @@ public class SprintController extends AbstractController{
 
         try {
             if (sprintService.createSprint(sprint)) {
-                operSuccessMsg(session, "createsprint");
+                operSuccessMsg(redirect, "createsprint");
             } else {
-                redirectAttributes.addFlashAttribute("sprintForm", sprintForm);                
-                operfailMsg(session, "createsprint");
+                redirect.addFlashAttribute("sprintForm", sprintForm);                
+                operfailMsg(redirect, "createsprint");
             }
         } catch (InvalidDateException e) {
-            operfailMsg(session, "createsprint", e.getMessage());
-            redirectAttributes.addFlashAttribute("sprintForm", sprintForm);                
+            operfailMsg(redirect, "createsprint", e.getMessage());
+            redirect.addFlashAttribute("sprintForm", sprintForm);                
         }
         return "redirect:/workspace";
     }
 
     @GetMapping("/sprint")
     public String accestToSprint(@RequestParam int sprintId,
-                              HttpSession session) {
+                              HttpSession session,
+                              RedirectAttributes redirect) {
         
         User user = autenticatedUserIn(session);
         if (user == null) {
@@ -87,7 +88,7 @@ public class SprintController extends AbstractController{
             session.setAttribute("sprint", sprint);
             session.setAttribute("readers", readers);
         }catch (UserNotFoundException e) {
-            operfailMsg(session, "loadsprint", e.getMessage());
+            operfailMsg(redirect, "loadsprint", e.getMessage());
         }
         return "sprint";
     }

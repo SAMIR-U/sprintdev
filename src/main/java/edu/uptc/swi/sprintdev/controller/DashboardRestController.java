@@ -34,8 +34,7 @@ public class DashboardRestController extends AbstractController{
     @GetMapping("/sprint/version")
     public ResponseEntity<Sprint> isLastVersion(@RequestParam int sprintId,
                             @RequestParam int version,
-                            HttpSession session
-    ) {
+                            HttpSession session) {
         User user = autenticatedUserIn(session);
         if (user==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -57,8 +56,7 @@ public class DashboardRestController extends AbstractController{
     @PostMapping("task/editstatus")
     public ResponseEntity<Boolean> editStatus(@RequestParam int taskId,
                                 @RequestParam TaskStatus taskStatus,
-                                HttpSession session
-    ) {
+                                HttpSession session) {
         User user = autenticatedUserIn(session);
         if (user==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

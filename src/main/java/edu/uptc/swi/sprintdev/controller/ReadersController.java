@@ -2,6 +2,7 @@ package edu.uptc.swi.sprintdev.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
@@ -27,7 +28,8 @@ public class ReadersController extends AbstractController{
     @PostMapping("/addreader")
     public String addReaderToSprints(@RequestParam int sprintId,
                                 @RequestParam String readerName,
-                                HttpSession session) {
+                                HttpSession session,
+                                RedirectAttributes redirect) {
         User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
@@ -36,12 +38,12 @@ public class ReadersController extends AbstractController{
         User reader = userService.obtainUserByUsername(readerName);
         try {
             if (sprintService.addReaderToSprint(sprintId, user.getId(), reader)) {
-                operSuccessMsg(session, "addreader");
+                operSuccessMsg(redirect, "addreader");
             }else{
-                operfailMsg(session, "addreader");
+                operfailMsg(redirect, "addreader");
             }
         } catch (UserDontHavePermissionException|UserAlreadyExistInListException|TheListIsFullException e) {
-            operfailMsg(session, "addreader", e.getMessage());
+            operfailMsg(redirect, "addreader", e.getMessage());
         }
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }

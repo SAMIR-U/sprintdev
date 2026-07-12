@@ -1,5 +1,7 @@
 package edu.uptc.swi.sprintdev.controller;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import edu.uptc.swi.sprintdev.domain.User;
 import jakarta.servlet.http.HttpSession;
 
@@ -9,18 +11,18 @@ public abstract class AbstractController {
         User user = (User) session.getAttribute("user");
         return user;
     }
-    protected void setAutenticatedUserIn(HttpSession session, User user){
-        operSuccessMsg(session, "login");
+    protected void setAutenticatedUserIn(HttpSession session, RedirectAttributes redirect, User user){
+        operSuccessMsg(redirect, "login");
         session.setAttribute("user", user);
     }
-    protected void operSuccessMsg(HttpSession session, String title){
-        session.setAttribute(title, "success");      
+    protected void operSuccessMsg(RedirectAttributes redirect, String title){
+        redirect.addFlashAttribute(title, "success");              
     }
-    protected void operfailMsg(HttpSession session, String title){
-        session.setAttribute(title, "fail");
+    protected void operfailMsg(RedirectAttributes redirect, String title){
+        redirect.addFlashAttribute(title, "fail");              
     }
-    protected void operfailMsg(HttpSession session, String title, String exceptionMessage){
-        session.setAttribute(title, exceptionMessage);
+    protected void operfailMsg(RedirectAttributes redirect, String title, String exceptionMessage){
+        redirect.addFlashAttribute(title, exceptionMessage);
     }
 
 
