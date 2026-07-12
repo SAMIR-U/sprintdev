@@ -1,0 +1,53 @@
+.dashboard-page{
+    max-width: 1200px;
+    margin: 40px auto 80px;
+    padding: 0 25px;
+}
+.page-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+.page-eyebrow{
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--sprint-deep);
+    margin-bottom: 6px;
+}
+.page-title{
+    font-size: 34px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--grafito);
+    line-height: 1.15;
+    margin-bottom: 8px;
+}
+
+.page-description{
+    font-size: 14.5px;
+    color: #737f89;
+    max-width: 520px;
+}
+
+.page-description strong{
+    color: var(--grafito-soft);
+}
+.a-go-to-backlog{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: var(--sprint);
+    color: white;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: .2s;
+    box-shadow: 0 12px 24px -12px rgba(91, 124, 153, .6);
+}
