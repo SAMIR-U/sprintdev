@@ -71,10 +71,13 @@
             </p>
         </div>
 
-        <button class="btn-new-task" onclick="openCreateModal()">
-            <span class="btn-new-task-icon">+</span>
-            Nueva tarea
-        </button>
+        <div class="header-actions">
+            <a class="btn-dashboard" href="${pageContext.request.contextPath}/workspace/dashboard?sprintId=${sprintId}">Ver dashboard</a>
+            <button class="btn-new-task" onclick="openCreateModal()">
+                <span class="btn-new-task-icon">+</span>
+                Nueva tarea
+            </button>
+        </div>
     </div>
 
     <c:if test="${not empty createMessage}">
@@ -158,7 +161,6 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="col-id">ID</th>
                         <th class="col-task">Tarea</th>
                         <th class="col-status">Estado</th>
                         <th class="col-assignees">Responsables</th>
@@ -199,8 +201,6 @@
                     <c:set var="searchBlob" value="${fn:replace(searchBlob, '\"', '')}" />
 
                     <tr class="task-row" data-status="${statusValue}" data-search="${searchBlob}">
-
-                        <td class="col-id"><span class="task-id">#${task.id}</span></td>
 
                         <td class="col-task">
                             <div class="task-title"><c:out value="${task.title}" /></div>

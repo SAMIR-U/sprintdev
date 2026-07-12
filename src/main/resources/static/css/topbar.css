@@ -189,3 +189,13 @@ nav {
     text-decoration: none;
     color: inherit;
 }
+
+@media (max-width: 600px){
+    header.topbar{height:auto;min-height:64px;padding:10px 16px;gap:10px;}
+    .app-logo-header{gap:8px;font-size:18px;min-width:0;}
+    .app-logo-icon{height:34px;max-width:44px;}
+    .user-header{padding:4px;gap:0;}
+    .user-text-header{display:none;}
+    .avatar{width:34px;height:34px;font-size:13px;}
+    .user-dropdown{right:0;min-width:150px;}
+}

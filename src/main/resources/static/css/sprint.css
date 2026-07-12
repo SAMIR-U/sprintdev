@@ -336,3 +336,14 @@ button.sprint-nav-btn {
         align-items: flex-start;
     }
 }
+
+@media (max-width: 600px) {
+    .sprint-page{margin:24px auto 48px;padding:0 16px;}
+    .sprint-hero h1{font-size:27px;}
+    .sprint-actions{width:100%;flex-direction:column;}
+    .sprint-actions a,.sprint-actions button{width:100%;justify-content:center;}
+    .sprint-content{gap:16px;}
+    .sprint-team-header{align-items:flex-start;}
+    .team-member{gap:9px;}
+    .reader-results{max-width:100%;}
+}

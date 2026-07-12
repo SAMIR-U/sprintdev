@@ -54,3 +54,8 @@
     color:var(--sprint-deep);
     font-weight:600;
 }
+
+@media (max-width: 480px){
+    .auth-screen{align-items:flex-start;padding:16px;padding-top:40px;}
+    .auth-box{width:100%;padding:28px 20px;border-radius:14px;}
+}

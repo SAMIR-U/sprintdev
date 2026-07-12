@@ -12,3 +12,7 @@
     color:var(--sprint);
     font-weight:600;
 }
+
+@media (max-width: 480px){
+    .auth-box{width:100%;}
+}

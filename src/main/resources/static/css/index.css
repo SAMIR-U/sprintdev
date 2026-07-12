@@ -282,3 +282,10 @@ body.landing{
     .hero{padding:44px 20px 4px;}
     .logo-big-wrap{width:170px;height:170px;}
 }
+
+@media (max-width: 340px){
+    .hero{padding-left:14px;padding-right:14px;}
+    .about-section{padding-left:18px;padding-right:18px;}
+    .auth-actions{padding-left:16px;padding-right:16px;}
+    .brand-name{font-size:24px;}
+}
