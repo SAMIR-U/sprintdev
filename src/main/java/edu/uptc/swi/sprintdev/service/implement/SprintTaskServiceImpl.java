@@ -79,13 +79,15 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     public boolean updateTaskStatus(Task task, int creatorId)
             throws UserDontHavePermissionException, StatusTaskIsNotPossibleToChangeException, SprintIsNotActiveException {
         Task existingTask = this.findTaskById(task.getId());
-        this.validateSprintIsActive(existingTask.getSprint());
-        this.validatePermission(existingTask, creatorId);
-        this.validateStatusTransition(existingTask.getStatus(), task.getStatus());
-        existingTask.setStatus(task.getStatus());
-        this.updateSprintVersion(existingTask.getSprint());
-        this.sprintTaskRepo.save(existingTask);
-        return true;
+        if ( this.validateSprintIsActive(existingTask.getSprint())) {
+            this.validatePermission(existingTask, creatorId);
+            this.validateStatusTransition(existingTask.getStatus(), task.getStatus());
+            existingTask.setStatus(task.getStatus());
+            this.updateSprintVersion(existingTask.getSprint());
+            this.sprintTaskRepo.save(existingTask);
+            return true;
+        }
+        return false;
     }
 
     private boolean existsTask(Task task) {
