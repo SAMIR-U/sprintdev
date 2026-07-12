@@ -48,7 +48,7 @@ if (readerSearchInput) {
 }
 
 function searchReaders(key) {
-    fetch(`${contextPath}/workspace/findreaders?key=${encodeURIComponent(key)}`)
+    fetch(`${contextPath}/api/findreaders?key=${encodeURIComponent(key)}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("No se pudo buscar usuarios");
