@@ -1,13 +1,37 @@
 package edu.uptc.swi.sprintdev.domain;
 
-/**
- * Columnas del tablero Scrum. Solo enumera los valores posibles; la
- * regla de qué transición entre columnas es válida está en
- * {@code service.rules.TaskBoardRules}, no aquí.
- */
+import java.util.EnumSet;
+import java.util.Set;
+
 public enum TaskStatus {
-    PENDING,
-    IN_PROGRESS,
-    IN_REVIEW,
-    COMPLETED
-}
+    PENDING {
+        @Override
+        public Set<TaskStatus> allowedTransition() {
+            return EnumSet.of(IN_PROGRESS);
+        }
+    },
+    IN_PROGRESS {
+        @Override
+        public Set<TaskStatus> allowedTransition() {
+            return EnumSet.of(IN_REVIEW);
+        }
+    },
+    IN_REVIEW {
+        @Override
+        public Set<TaskStatus> allowedTransition() {
+            return EnumSet.of(IN_PROGRESS, COMPLETED);
+        }
+    },
+    COMPLETED {
+        @Override
+        public Set<TaskStatus> allowedTransition() {
+            return EnumSet.noneOf(TaskStatus.class);
+        }
+    };
+
+    public abstract Set<TaskStatus> allowedTransition();
+
+    public boolean mayAllowedTransition(TaskStatus nextStatus) {
+        return allowedTransition().contains(nextStatus);
+    }
+    }
