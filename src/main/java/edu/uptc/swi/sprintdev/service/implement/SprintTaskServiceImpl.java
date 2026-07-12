@@ -1,10 +1,7 @@
 package edu.uptc.swi.sprintdev.service.implement;
 
 import edu.uptc.swi.sprintdev.domain.*;
-import edu.uptc.swi.sprintdev.exceptions.SprintIsClosedException;
-import edu.uptc.swi.sprintdev.exceptions.StatusTaskIsNotPossibleToChangeException;
-import edu.uptc.swi.sprintdev.exceptions.TheListNeedAtleastOneTaskException;
-import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
+import edu.uptc.swi.sprintdev.exceptions.*;
 import edu.uptc.swi.sprintdev.repository.ISprintTaskRepo;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import org.springframework.stereotype.Service;
@@ -80,8 +77,9 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
 
     @Override
     public boolean updateTaskStatus(Task task, int creatorId)
-            throws UserDontHavePermissionException, StatusTaskIsNotPossibleToChangeException {
+            throws UserDontHavePermissionException, StatusTaskIsNotPossibleToChangeException, SprintIsNotActiveException {
         Task existingTask = this.findTaskById(task.getId());
+        this.validateSprintIsActive(existingTask.getSprint());
         this.validatePermission(existingTask, creatorId);
         this.validateStatusTransition(existingTask.getStatus(), task.getStatus());
         existingTask.setStatus(task.getStatus());
@@ -125,4 +123,10 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         sprint.setVersion(sprint.getVersion()+1);
     }
 
+    private boolean validateSprintIsActive(Sprint sprint)throws SprintIsNotActiveException{
+        if (sprint.getStatus() !=  SprintStatus.ACTIVE) {
+            throw new SprintIsNotActiveException("El sprint debe estar activo para permitir el cambio de estado");
+        }
+        return true;
+    }
 }
