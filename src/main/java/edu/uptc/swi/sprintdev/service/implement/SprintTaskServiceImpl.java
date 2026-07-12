@@ -110,8 +110,10 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
     }
 
     private void validateStatusTransition(TaskStatus previous, TaskStatus next) throws StatusTaskIsNotPossibleToChangeException {
+        String previousStr = ("" + previous).toLowerCase();
+        String nextStr = ("" + next).toLowerCase();
         if (!previous.mayAllowedTransition(next)) {
-            throw new StatusTaskIsNotPossibleToChangeException("El cambio de estado no es posible: " + previous + " -> " + next);
+            throw new StatusTaskIsNotPossibleToChangeException("El cambio de estado no es posible: " + previousStr + " -> " + nextStr);
         }
     }
     private void configCreateTask(Task task, Sprint sprint) {
