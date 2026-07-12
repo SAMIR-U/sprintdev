@@ -19,12 +19,12 @@ public class RegistUserController extends AbstractController{
     }
 
     @GetMapping("/registuser")
-    public String loginPage() {
+    public String registPage() {
         return "registuser";
     }
 
     @PostMapping("/registuser")
-    public String login(@RequestParam String user,
+    public String regist(@RequestParam String user,
                         @RequestParam String password,
                         HttpSession session,
                         RedirectAttributes redirect) {
@@ -39,6 +39,6 @@ public class RegistUserController extends AbstractController{
             return "redirect:/workspace";
         }
         operfailMsg(redirect, "regist");
-        return "registuser";
+        return "redirect:/registuser";
     }
 }

@@ -34,6 +34,6 @@ public class LoginController extends AbstractController{
             return "redirect:/workspace";
         }
         operfailMsg(redirect, "login");
-        return "login";
+        return "redirect:/login";
     }
 }

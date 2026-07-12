@@ -11,8 +11,6 @@ public class LogoutController extends AbstractController{
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("user");
-        session.removeAttribute("login");
-        session.removeAttribute("regist");
         return "redirect:/";
     }
 }
