@@ -177,7 +177,12 @@ public class SprintServiceImpl implements ISprintService {
     }
 
     private Sprint findSprintById(int sprintId) {
-        return this.sprintRepo.getReferenceById(sprintId);
+        Sprint sprint = sprintRepo.findById(sprintId)
+                .orElseThrow(() -> new RuntimeException("Sprint no encontrado"));
+
+        sprint.getTasks().size(); // fuerza la carga
+
+        return sprint;
     }
 
     private boolean validateSprintDates(Sprint sprint) {
