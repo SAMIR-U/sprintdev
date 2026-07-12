@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.SprintIsClosedException;
 import edu.uptc.swi.sprintdev.exceptions.TheListNeedAtleastOneTaskException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
+import edu.uptc.swi.sprintdev.net.TaskForm;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintTaskService;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
@@ -58,10 +60,7 @@ public class TaskController extends AbstractController{
     }
 
     @PostMapping("/createtask")
-    public String createTask(@RequestParam int sprintid,
-                        @RequestParam String title,
-                        @RequestParam String description,
-                        @RequestParam List<String> assignedUserNames,
+    public String createTask(@ModelAttribute TaskForm taskForm,
                         HttpSession session,
                         RedirectAttributes redirect) {
                             
@@ -69,15 +68,10 @@ public class TaskController extends AbstractController{
         if (user == null) {
             return "redirect:/login";
         }
-        Sprint sprint = sprintService.findSprintById(sprintid, user.getId());
 
-        Task task = new Task();
-        Set<User> assignedUsers = obtainUsers(assignedUserNames);
-        task.setTitle(title);
-        task.setDescription(description);
-        task.setAssignedUsers(assignedUsers);
-        task.setSprint(sprint);
         try {
+            Task task = buildTask(taskForm, user);
+            
             if (sprintTaskService.createTask(task,user.getId())) {
                 operSuccessMsg(redirect, "createtask");
             }else{
@@ -86,7 +80,7 @@ public class TaskController extends AbstractController{
         } catch (UserDontHavePermissionException|SprintIsClosedException e) {
             operfailMsg(redirect, "createtask", e.getMessage());
         }
-        return "redirect:/workspace/backlog?sprintId="+sprintid;
+        return "redirect:/workspace/backlog?sprintId="+taskForm.getSprintid();
     }
 
     @PostMapping("/updatetaks")
@@ -128,7 +122,7 @@ public class TaskController extends AbstractController{
         if (user == null) {
             return "redirect:/login";
         }
-
+        
         Task task = sprintTaskService.findTaskById(taskId);
         try {
             if (sprintTaskService.deleteTask(task, user.getId())) {
@@ -141,7 +135,7 @@ public class TaskController extends AbstractController{
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
-
+    
     private Set<User> obtainUsers(List<String> userNames) {
         Set<User> users = new HashSet<User>();
         for (String userName : userNames) {
@@ -151,5 +145,17 @@ public class TaskController extends AbstractController{
             }
         }
         return users;
+    }
+
+    private Task buildTask(TaskForm taskForm, User user) {
+        Sprint sprint = sprintService.findSprintById(taskForm.getSprintid(), user.getId());
+
+        Task task = new Task();
+        Set<User> assignedUsers = obtainUsers(taskForm.getAssignedUserNames());
+        task.setTitle(taskForm.getTitle());
+        task.setDescription(taskForm.getDescription());
+        task.setAssignedUsers(assignedUsers);
+        task.setSprint(sprint);
+        return task;
     }
 }
