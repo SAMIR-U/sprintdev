@@ -10,6 +10,7 @@ import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
 import edu.uptc.swi.sprintdev.domain.TaskStatus;
 import edu.uptc.swi.sprintdev.domain.User;
+import edu.uptc.swi.sprintdev.exceptions.SprintIsNotActiveException;
 import edu.uptc.swi.sprintdev.exceptions.StatusTaskIsNotPossibleToChangeException;
 import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
@@ -78,6 +79,8 @@ public class DashboardRestController extends AbstractController{
         } catch(UserDontHavePermissionException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (StatusTaskIsNotPossibleToChangeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (SprintIsNotActiveException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
