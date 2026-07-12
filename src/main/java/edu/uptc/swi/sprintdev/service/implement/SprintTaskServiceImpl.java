@@ -35,6 +35,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         if (!this.existsTask(task)) {
             task.setStatus(TaskStatus.PENDING);
             task.setCreationDate(LocalDateTime.now());
+            sprint.setVersion(sprint.getVersion()+1);
             this.sprintTaskRepo.save(task);
             return true;
         }
