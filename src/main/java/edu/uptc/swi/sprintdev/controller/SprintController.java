@@ -46,17 +46,12 @@ public class SprintController extends AbstractController{
                                HttpSession session,
                                RedirectAttributes redirect) {
 
-        User creator = autenticatedUserIn(session);
-        if (creator == null) {
+        User user = autenticatedUserIn(session);
+        if (user == null) {
             return "redirect:/login";
         }
         
-        Sprint sprint = new Sprint();
-        sprint.setName(sprintForm.getName());
-        sprint.setGoal(sprintForm.getGoal());
-        sprint.setStartDate(sprintForm.getStartDate());
-        sprint.setEndDate(sprintForm.getEndDate());
-        sprint.setCreator(creator);
+        Sprint sprint = buildSprint(sprintForm, user);
 
         try {
             if (sprintService.createSprint(sprint)) {
@@ -91,5 +86,15 @@ public class SprintController extends AbstractController{
             operfailMsg(redirect, "loadsprint", e.getMessage());
         }
         return "sprint";
+    }
+
+    private Sprint buildSprint(SprintForm sprintForm, User creator) {
+        Sprint sprint =new Sprint();
+        sprint.setName(sprintForm.getName());
+        sprint.setGoal(sprintForm.getGoal());
+        sprint.setStartDate(sprintForm.getStartDate());
+        sprint.setEndDate(sprintForm.getEndDate());
+        sprint.setCreator(creator);
+        return sprint;
     }
 }
