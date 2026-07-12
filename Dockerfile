@@ -2,9 +2,11 @@ FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-COPY src .
+COPY . .
 
+RUN sed -i 's/\r$//' mvnw
 RUN chmod +x mvnw
+
 RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
