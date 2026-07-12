@@ -216,3 +216,14 @@
     background: var(--paper);
 
 }
+
+@media (max-width: 600px){
+    .main-container{margin:24px auto;padding:0 16px;}
+    .page-title{font-size:26px;}
+    .btn-new{width:100%;}
+    .modal{padding:16px;align-items:flex-start;overflow-y:auto;}
+    .modal-content{width:100%;padding:22px 18px;margin:auto 0;}
+    .modal-buttons{flex-direction:column-reverse;}
+    .modal-buttons button{width:100%;}
+    .content{padding:24px 16px;}
+}

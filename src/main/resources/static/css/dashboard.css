@@ -248,3 +248,11 @@
         padding: 0 16px
     }
 }
+
+@media (max-width: 480px) {
+    .dashboard-page{margin:24px auto 48px;padding:0 12px;}
+    .page-title{font-size:27px;}
+    .board{grid-template-columns:repeat(4, minmax(230px, 78vw));gap:12px;}
+    .column{min-width:0;padding:12px;}
+    .board-help{line-height:1.5;}
+}

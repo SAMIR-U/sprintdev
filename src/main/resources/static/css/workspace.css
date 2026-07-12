@@ -402,3 +402,15 @@
     text-decoration: none;
     color: inherit;
 }
+
+@media (max-width: 600px){
+    .workspace{margin:24px auto 48px;padding:0 16px;}
+    .workspace-header{margin-bottom:22px;}
+    .workspace-header h1{font-size:27px;}
+    .addSprintBtn{width:100%;justify-content:center;}
+    .addSprintMenu{padding:16px;align-items:flex-start;overflow-y:auto;}
+    .addSprintMenu-content{width:100%;max-width:none;padding:22px 18px;margin:auto 0;}
+    .modal-buttons{flex-direction:column-reverse;}
+    .modal-buttons button{width:100%;}
+    .sprint-card{padding:18px;}
+}

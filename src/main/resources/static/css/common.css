@@ -184,3 +184,8 @@ a {
     color: var(--grafito);
     font-weight: 600;
 }
+
+@media (max-width: 480px){
+    .banner{left:12px;right:12px;top:12px;min-width:0;max-width:none;}
+    .breadcrumb{gap:6px;flex-wrap:wrap;font-size:12px;}
+}

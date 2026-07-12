@@ -80,6 +80,33 @@
     font-weight: 700;
 }
 
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn-dashboard{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--sprint-pale);
+    background:white;
+    color:var(--sprint-deep);
+    border-radius:12px;
+    padding:12px 20px;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    transition:.2s;
+}
+
+.btn-dashboard:hover{
+    background:#eaf1f6;
+    border-color:var(--sprint);
+}
+
 /*==============================================
     Tarjetas de estadísticas
 ==============================================*/
@@ -244,17 +271,6 @@ tbody td{
 
 tbody tr:hover{
     background: #fafbfd;
-}
-
-.col-id{
-    width: 70px;
-}
-
-.task-id{
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    color: #9aa5ad;
-    font-size: 13px;
 }
 
 .col-task{
@@ -648,4 +664,29 @@ tbody tr:hover{
         width: 100%;
         justify-content: center;
     }
+
+    .header-actions{
+        width:100%;
+    }
+
+    .btn-dashboard{
+        flex:1;
+    }
+}
+
+@media (max-width: 600px){
+    .backlog-page{margin:24px auto 48px;padding:0 16px;}
+    .page-title{font-size:27px;}
+    .backlog-panel{padding:16px;border-radius:14px;}
+    .backlog-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+    .backlog-stats .stat-card{padding:15px;}
+    .stat-value{font-size:22px;}
+    .status-filter{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}
+    .filter-chip{flex:0 0 auto;}
+    .modal{padding:12px;align-items:flex-start;overflow-y:auto;}
+    .modal-content,.modal-content-small{width:100%;padding:22px 18px;margin:auto 0;}
+    .modal-buttons{flex-direction:column-reverse;}
+    .modal-buttons button{width:100%;}
+    .header-actions{flex-direction:column;align-items:stretch;}
+    .btn-dashboard{width:100%;}
 }
