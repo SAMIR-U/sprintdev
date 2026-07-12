@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.Task;
@@ -36,8 +37,8 @@ public class TaskController extends AbstractController{
 
     @GetMapping("/backlog")
     public String loadbacklog(@RequestParam int sprintId,
-                            HttpSession session
-    ) {
+                            HttpSession session,
+                            RedirectAttributes redirect) {
         User user = autenticatedUserIn(session);
         if (user == null) {
             return "redirect:/login";
@@ -51,7 +52,7 @@ public class TaskController extends AbstractController{
             session.setAttribute("tasks", tasks);
             session.setAttribute("readers", readers);
         } catch (UserDontHavePermissionException e) {
-            operfailMsg(session, "backlog", e.getMessage());
+            operfailMsg(redirect, "backlog", e.getMessage());
         }
         return "backlog";
     }
@@ -61,7 +62,8 @@ public class TaskController extends AbstractController{
                         @RequestParam String title,
                         @RequestParam String description,
                         @RequestParam List<String> assignedUserNames,
-                        HttpSession session) {
+                        HttpSession session,
+                        RedirectAttributes redirect) {
                             
         User user = autenticatedUserIn(session);
         if (user == null) {
@@ -77,12 +79,12 @@ public class TaskController extends AbstractController{
         task.setSprint(sprint);
         try {
             if (sprintTaskService.createTask(task,user.getId())) {
-                operSuccessMsg(session, "createtask");
+                operSuccessMsg(redirect, "createtask");
             }else{
-                operfailMsg(session, "createtask");
+                operfailMsg(redirect, "createtask");
             }
         } catch (UserDontHavePermissionException|SprintIsClosedException e) {
-            operfailMsg(session, "createtask", e.getMessage());
+            operfailMsg(redirect, "createtask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -92,7 +94,8 @@ public class TaskController extends AbstractController{
                         @RequestParam int taskId,
                         @RequestParam String title,
                         @RequestParam String description,
-                        HttpSession session) {
+                        HttpSession session,
+                        RedirectAttributes redirect) {
 
         User user = autenticatedUserIn(session);
         if (user == null) {
@@ -105,12 +108,12 @@ public class TaskController extends AbstractController{
 
         try {
             if (sprintTaskService.updateTask(task, user.getId())) {
-                operSuccessMsg(session, "edittask");
+                operSuccessMsg(redirect, "edittask");
             }else{
-                operfailMsg(session, "edittask");
+                operfailMsg(redirect, "edittask");
             }
         } catch (UserDontHavePermissionException e) {
-            operfailMsg(session, "edittask", e.getMessage());
+            operfailMsg(redirect, "edittask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }
@@ -118,7 +121,8 @@ public class TaskController extends AbstractController{
     @PostMapping("/deletetaks")
     public String deleteTask(@RequestParam int sprintid,
                         @RequestParam int taskId,
-                        HttpSession session) {
+                        HttpSession session,
+                        RedirectAttributes redirect) {
 
         User user = autenticatedUserIn(session);
         if (user == null) {
@@ -128,12 +132,12 @@ public class TaskController extends AbstractController{
         Task task = sprintTaskService.findTaskById(taskId);
         try {
             if (sprintTaskService.deleteTask(task, user.getId())) {
-                operSuccessMsg(session, "deletetask");
+                operSuccessMsg(redirect, "deletetask");
             }else{
-                operfailMsg(session, "deletetask");
+                operfailMsg(redirect, "deletetask");
             }
         } catch (UserDontHavePermissionException|TheListNeedAtleastOneTaskException e) {
-            operfailMsg(session, "deletetask", e.getMessage());
+            operfailMsg(redirect, "deletetask", e.getMessage());
         }
         return "redirect:/workspace/backlog?sprintId="+sprintid;
     }

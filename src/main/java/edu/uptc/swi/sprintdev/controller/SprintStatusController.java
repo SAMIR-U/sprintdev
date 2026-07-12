@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.TheListIsFullException;
@@ -23,7 +24,8 @@ public class SprintStatusController extends AbstractController{
 
     @PostMapping("/sprint/active")
     public String activeSprint(@RequestParam int sprintId,
-                               HttpSession session) {
+                               HttpSession session,
+                               RedirectAttributes redirect) {
 
         User creator = autenticatedUserIn(session);
         if (creator == null) {
@@ -31,12 +33,12 @@ public class SprintStatusController extends AbstractController{
         }
         try {
             if (sprintService.activateSprint(sprintId, creator.getId())) {
-                operSuccessMsg(session, "activesprint");
+                operSuccessMsg(redirect, "activesprint");
             } else {
-                operfailMsg(session, "activesprint");
+                operfailMsg(redirect, "activesprint");
             }
         } catch (UserDontHavePermissionException| UserAlreadyExistInListException| TheListIsFullException e) {
-            operfailMsg(session, "activesprint", e.getMessage());
+            operfailMsg(redirect, "activesprint", e.getMessage());
         }
         
         return "redirect:/workspace/sprint?sprintId="+sprintId;
@@ -44,7 +46,8 @@ public class SprintStatusController extends AbstractController{
 
     @PostMapping("/sprint/close")
     public String closeSprint(@RequestParam int sprintId,
-                               HttpSession session) {
+                               HttpSession session,
+                               RedirectAttributes redirect) {
 
         User creator = autenticatedUserIn(session);
         if (creator == null) {
@@ -53,12 +56,12 @@ public class SprintStatusController extends AbstractController{
 
         try {
             if (sprintService.closeSprint(sprintId, creator.getId())) {
-                operSuccessMsg(session, "closesprint");
+                operSuccessMsg(redirect, "closesprint");
             } else {
-                operfailMsg(session, "closesprint");
+                operfailMsg(redirect, "closesprint");
             }
         } catch (UserDontHavePermissionException e) {
-            operfailMsg(session, "closesprint", e.getMessage());
+            operfailMsg(redirect, "closesprint", e.getMessage());
         }
 
         return "redirect:/workspace/sprint?sprintId="+sprintId;

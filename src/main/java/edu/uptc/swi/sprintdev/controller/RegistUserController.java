@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.service.interfaces.IUserService;
@@ -25,18 +26,19 @@ public class RegistUserController extends AbstractController{
     @PostMapping("/registuser")
     public String login(@RequestParam String user,
                         @RequestParam String password,
-                        HttpSession session) {
+                        HttpSession session,
+                        RedirectAttributes redirect) {
 
         User userObj = new User();
         userObj.setUserName(user);
         userObj.setPassword(password);
 
         if (userService.registerUser(userObj)) {
-            operSuccessMsg(session, "regist");
-            setAutenticatedUserIn(session, userService.obtainUserByUsername(user));
+            operSuccessMsg(redirect, "regist");
+            setAutenticatedUserIn(session, redirect,userService.obtainUserByUsername(user));
             return "redirect:/workspace";
         }
-        operfailMsg(session, "regist");
+        operfailMsg(redirect, "regist");
         return "registuser";
     }
 }

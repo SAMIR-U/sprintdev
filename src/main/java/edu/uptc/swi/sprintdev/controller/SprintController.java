@@ -1,13 +1,14 @@
 package edu.uptc.swi.sprintdev.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.uptc.swi.sprintdev.domain.Sprint;
 import edu.uptc.swi.sprintdev.domain.User;
@@ -15,6 +16,7 @@ import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
 import edu.uptc.swi.sprintdev.exceptions.InvalidDateException;
 import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
+import edu.uptc.swi.sprintdev.net.SprintForm;
 
 @Controller
 @RequestMapping("/workspace")
@@ -40,11 +42,9 @@ public class SprintController extends AbstractController{
     }
 
     @PostMapping("/createsprint")
-    public String createSprint(@RequestParam String name,
-                               @RequestParam String goal,
-                               @RequestParam LocalDate startDate,
-                               @RequestParam LocalDate endDate,
-                               HttpSession session) {
+    public String createSprint(@ModelAttribute SprintForm sprintForm,
+                               HttpSession session,
+                               RedirectAttributes redirect) {
 
         User creator = autenticatedUserIn(session);
         if (creator == null) {
@@ -52,28 +52,30 @@ public class SprintController extends AbstractController{
         }
         
         Sprint sprint = new Sprint();
-        sprint.setName(name);
-        sprint.setGoal(goal);
-        sprint.setStartDate(startDate);
-        sprint.setEndDate(endDate);
+        sprint.setName(sprintForm.getName());
+        sprint.setGoal(sprintForm.getGoal());
+        sprint.setStartDate(sprintForm.getStartDate());
+        sprint.setEndDate(sprintForm.getEndDate());
         sprint.setCreator(creator);
 
         try {
             if (sprintService.createSprint(sprint)) {
-                operSuccessMsg(session, "createsprint");
+                operSuccessMsg(redirect, "createsprint");
             } else {
-                operfailMsg(session, "createsprint");
+                redirect.addFlashAttribute("sprintForm", sprintForm);                
+                operfailMsg(redirect, "createsprint");
             }
         } catch (InvalidDateException e) {
-            operfailMsg(session, "createsprint", e.getMessage());
+            operfailMsg(redirect, "createsprint", e.getMessage());
+            redirect.addFlashAttribute("sprintForm", sprintForm);                
         }
-
         return "redirect:/workspace";
     }
 
     @GetMapping("/sprint")
     public String accestToSprint(@RequestParam int sprintId,
-                              HttpSession session) {
+                              HttpSession session,
+                              RedirectAttributes redirect) {
         
         User user = autenticatedUserIn(session);
         if (user == null) {
@@ -86,7 +88,7 @@ public class SprintController extends AbstractController{
             session.setAttribute("sprint", sprint);
             session.setAttribute("readers", readers);
         }catch (UserNotFoundException e) {
-            operfailMsg(session, "loadsprint", e.getMessage());
+            operfailMsg(redirect, "loadsprint", e.getMessage());
         }
         return "sprint";
     }
