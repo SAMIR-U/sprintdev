@@ -14,3 +14,9 @@ window.onclick = function (event) {
         closeAddSprintForm();
     }
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.sprintMessage && window.sprintMessage !== "success") {
+        openAddSprintForm();
+    }
+});
