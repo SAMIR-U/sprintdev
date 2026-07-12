@@ -116,6 +116,12 @@ public class SprintServiceImpl implements ISprintService {
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para realizar esta acción");
     }
 
+    @Override
+    public int obtainSprintVersion(int sprintId) {
+        Sprint sprint = this.findSprintById(sprintId);
+        return sprint.getVersion();
+    }
+
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserAlreadyExistInListException, TheListIsFullException {
         if (!this.validateReaderListSize(sprint)) {
             throw new TheListIsFullException("La lista esta llena");

@@ -20,4 +20,5 @@ public interface ISprintService {
     Sprint findSprintById(int sprintId, int userId) throws UserDontHavePermissionException;
     User obtainCreator(int sprintId);
     List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException;
+    int obtainSprintVersion(int sprintId);
 }
