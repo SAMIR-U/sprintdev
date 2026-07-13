@@ -151,5 +151,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     updateCounts();
     validateVersion(true);
-    window.setInterval(validateVersion, 10000);
+    window.setInterval(validateVersion, 5000);
 });
