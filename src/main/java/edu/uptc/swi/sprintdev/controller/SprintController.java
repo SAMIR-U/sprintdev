@@ -18,6 +18,11 @@ import edu.uptc.swi.sprintdev.exceptions.InvalidDateException;
 import edu.uptc.swi.sprintdev.exceptions.UserNotFoundException;
 import edu.uptc.swi.sprintdev.net.SprintForm;
 
+/**
+ * Controller responsible for managing sprint-related operations
+ * within the workspace, including loading sprints, creating new
+ * sprints, and accessing sprint details.
+ */
 @Controller
 @RequestMapping("/workspace")
 public class SprintController extends AbstractController{
@@ -28,6 +33,13 @@ public class SprintController extends AbstractController{
         this.sprintService = sprintService;
     }
     
+    /**
+     * Loads the workspace with the sprints that belong to the
+     * authenticated user.
+     *
+     * @param session the HTTP session used to verify authentication and save sprint data
+     * @return the workspace view when the user is authenticated, otherwise a login redirect
+     */
     @GetMapping("")
     public String loadSprints(HttpSession session) {
         User user = autenticatedUserIn(session);
@@ -41,6 +53,14 @@ public class SprintController extends AbstractController{
         return "workspace";
     }
 
+    /**
+     * Creates a new sprint from the submitted form and redirects back to the workspace.
+     *
+     * @param sprintForm the form object containing sprint details entered by the user
+     * @param session the HTTP session used to verify authentication
+     * @param redirect the redirect attributes used to send flash messages to the next request
+     * @return a redirect to the workspace after attempting to create the sprint
+     */
     @PostMapping("/createsprint")
     public String createSprint(@ModelAttribute SprintForm sprintForm,
                                HttpSession session,
@@ -67,6 +87,14 @@ public class SprintController extends AbstractController{
         return "redirect:/workspace";
     }
 
+    /**
+     * Opens the sprint details page if the authenticated user is authorized to view it.
+     *
+     * @param sprintId the ID of the sprint to access
+     * @param session the HTTP session used to verify authentication
+     * @param redirect the redirect attributes used to send error messages
+     * @return the sprint view, or a login redirect if the user is not authenticated
+     */
     @GetMapping("/sprint")
     public String accestToSprint(@RequestParam int sprintId,
                               HttpSession session,
@@ -88,6 +116,13 @@ public class SprintController extends AbstractController{
         return "sprint";
     }
 
+    /**
+     * Builds a Sprint entity from the submitted form data and creator information.
+     *
+     * @param sprintForm the form data provided by the user
+     * @param creator the authenticated user who will be marked as the sprint creator
+     * @return a Sprint object populated with the form values and creator
+     */
     private Sprint buildSprint(SprintForm sprintForm, User creator) {
         Sprint sprint =new Sprint();
         sprint.setName(sprintForm.getName());
