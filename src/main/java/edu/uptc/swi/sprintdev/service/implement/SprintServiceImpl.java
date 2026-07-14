@@ -15,6 +15,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of sprint-related business logic.
+ *
+ * This service manages sprint creation, activation, closure, reader assignments,
+ * and task retrieval, while enforcing permission checks and sprint state rules.
+ */
 @Service
 @Transactional
 public class SprintServiceImpl implements ISprintService {
@@ -122,6 +128,15 @@ public class SprintServiceImpl implements ISprintService {
         return sprint.getVersion();
     }
 
+    /**
+     * Validate whether a new reader can be added to the sprint.
+     *
+     * @param sprint the sprint to validate against
+     * @param userId the identifier of the candidate reader
+     * @return true when the reader may be added
+     * @throws TheListIsFullException when the sprint already has the maximum number of readers
+     * @throws UserAlreadyExistInListException when the candidate is already a reader or creator
+     */
     private boolean validateAddReaderConditions(Sprint sprint, int userId) throws UserAlreadyExistInListException, TheListIsFullException {
         if (!this.validateReaderListSize(sprint)) {
             throw new TheListIsFullException("La lista esta llena");
@@ -132,16 +147,37 @@ public class SprintServiceImpl implements ISprintService {
         return true;
     }
 
+    /**
+     * Check whether the sprint has space for another reader.
+     *
+     * @param sprint the sprint to verify
+     * @return true when the reader count is below the configured limit
+     */
     private boolean validateReaderListSize(Sprint sprint) {
         return sprint.getReaders().size() < 8;
     }
 
+    /**
+     * Validate the conditions required to activate a sprint.
+     *
+     * @param sprint the sprint to validate
+     * @param creatorId the identifier of the activating creator
+     * @return true if the sprint can be activated
+     */
     private boolean validateActivateSprintConditions(Sprint sprint, int creatorId) {
         return !sprint.getTasks().isEmpty()
                 && sprint.getStatus() == SprintStatus.CREATED
                 && isCreator(sprint, creatorId);
     }
 
+    /**
+     * Validate whether a sprint may be closed by the creator.
+     *
+     * @param sprint the sprint to close
+     * @param creatorId the identifier of the closing creator
+     * @return true when the sprint is active and all tasks are completed
+     * @throws UserDontHavePermissionException when the requesting user is not the creator
+     */
     private boolean validateCloseSprintConditions(Sprint sprint, int creatorId) throws UserDontHavePermissionException {
         if (!isCreator(sprint, creatorId)) {
             throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
@@ -158,6 +194,13 @@ public class SprintServiceImpl implements ISprintService {
         return true;
     }
 
+    /**
+     * Determine whether a specific user is already a reader of the sprint.
+     *
+     * @param sprint the sprint to inspect
+     * @param userId the user identifier to check
+     * @return true when the user is assigned as a reader
+     */
     private boolean isReader(Sprint sprint, int userId) {
         for (User user : sprint.getReaders()) {
             if (user.getId() == userId) {
@@ -167,15 +210,35 @@ public class SprintServiceImpl implements ISprintService {
         return false;
     }
 
+    /**
+     * Determine whether a user is the creator of the sprint.
+     *
+     * @param sprint the sprint to check
+     * @param userId the user identifier
+     * @return true when the user is the creator
+     */
     private boolean isCreator(Sprint sprint, int userId) {
         User creator = sprint.getCreator();
         return creator.getId() == userId;
     }
 
+    /**
+     * Check whether a user has access to the sprint as either creator or reader.
+     *
+     * @param sprint the sprint to check access for
+     * @param userId the requesting user's identifier
+     * @return true when the user is creator or reader
+     */
     private boolean hasAccess(Sprint sprint, int userId) {
         return this.isCreator(sprint, userId) || this.isReader(sprint, userId);
     }
 
+    /**
+     * Load a sprint by its identifier and initialize its task collection.
+     *
+     * @param sprintId the sprint identifier
+     * @return the loaded sprint
+     */
     private Sprint findSprintById(int sprintId) {
         Sprint sprint = sprintRepo.findById(sprintId)
                 .orElseThrow(() -> new RuntimeException("Sprint no encontrado"));
@@ -185,6 +248,12 @@ public class SprintServiceImpl implements ISprintService {
         return sprint;
     }
 
+    /**
+     * Validate that the sprint date range is correct.
+     *
+     * @param sprint the sprint to validate
+     * @return true when the start date is before the end date
+     */
     private boolean validateSprintDates(Sprint sprint) {
         return sprint.getStartDate().isBefore(sprint.getEndDate());
     }
