@@ -9,39 +9,61 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Entidad JPA de Sprint. Es una estructura de datos simple: solo
- * atributos, relaciones y accesores. Las reglas de negocio (activar,
- * cerrar, agregar lectores, etc.) NO viven aquí; están en la capa de
- * servicio.
+ * JPA entity representing a sprint in the application.
+ * This class is a simple data carrier for sprint attributes and relationships.
  */
 @Entity
 @Table(name = "sprints")
 public class Sprint {
 
+    /**
+     * Primary key for the sprint entity.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sprintId;
 
+    /**
+     * Human-readable sprint title.
+     */
     @Column(nullable = false, length = 120)
     private String name;
 
+    /**
+     * Description of the sprint goals.
+     */
     @Column(nullable = false, length = 500)
     private String goal;
 
+    /**
+     * Sprint start date.
+     */
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
+    /**
+     * Sprint end date.
+     */
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    /**
+     * Current status of the sprint.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private SprintStatus status;
 
+    /**
+     * The user who created the sprint.
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
+    /**
+     * Users who have read access to the sprint.
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "sprint_readers",
@@ -49,9 +71,15 @@ public class Sprint {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> readers = new HashSet<>();
 
+    /**
+     * Tasks that belong to this sprint.
+     */
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
+    /**
+     * Optimistic locking version used by JPA.
+     */
     @Version
     @Column(nullable = false)
     private int version;
