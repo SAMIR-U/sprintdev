@@ -13,6 +13,10 @@ import edu.uptc.swi.sprintdev.exceptions.UserDontHavePermissionException;
 import edu.uptc.swi.sprintdev.service.interfaces.ISprintService;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controller responsible for changing sprint status.
+ * It exposes endpoints to activate or close a sprint and handles authorization checks.
+ */
 @Controller
 @RequestMapping("/workspace")
 public class SprintStatusController extends AbstractController{
@@ -22,6 +26,14 @@ public class SprintStatusController extends AbstractController{
         this.sprintService = sprintService;
     }
 
+    /**
+     * Activates a sprint if the authenticated user has permission.
+     *
+     * @param sprintId the ID of the sprint to activate
+     * @param session the current HTTP session used to verify the authenticated user
+     * @param redirect redirect attributes used to add flash messages to the next request
+     * @return a redirect to the sprint details page after the operation
+     */
     @PostMapping("/sprint/active")
     public String activeSprint(@RequestParam int sprintId,
                                HttpSession session,
@@ -44,6 +56,14 @@ public class SprintStatusController extends AbstractController{
         return "redirect:/workspace/sprint?sprintId="+sprintId;
     }
 
+    /**
+     * Closes a sprint if the authenticated user has permission.
+     *
+     * @param sprintId the ID of the sprint to close
+     * @param session the current HTTP session used to verify the authenticated user
+     * @param redirect redirect attributes used to add flash messages to the next request
+     * @return a redirect to the sprint details page after the operation
+     */
     @PostMapping("/sprint/close")
     public String closeSprint(@RequestParam int sprintId,
                                HttpSession session,

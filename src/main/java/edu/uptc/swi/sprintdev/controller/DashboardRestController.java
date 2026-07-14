@@ -26,17 +26,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * REST controller responsible for providing dashboard data and
+ * handling task status updates within a sprint.
+ */
 @RestController
 @RequestMapping("/api")
 public class DashboardRestController extends AbstractController{
     private final ISprintService sprintService;
     private final ISprintTaskService sprintTaskService;
 
+    /**
+     * Constructs the controller with the required services.
+     *
+     * @param sprintService service to retrieve sprint data
+     * @param sprintTaskService service to update sprint tasks
+     */
     public DashboardRestController(ISprintService sprintService, ISprintTaskService sprintTaskService){
         this.sprintService = sprintService;
         this.sprintTaskService = sprintTaskService;
     }
 
+    /**
+     * Checks whether the provided client-side sprint version matches the server-side
+     * version for the given sprint. If versions match, returns 204 No Content
+     * (indicating no update is required); otherwise returns the full sprint payload.
+     *
+     * @param sprintId the id of the sprint to check
+     * @param version the client-side version number to compare
+     * @param session the HTTP session used to validate the authenticated user
+     * @return 204 No Content when versions are equal, 200 with sprint payload when different,
+     *         401 when unauthenticated, 404 when sprint is not found, or 403 when access is forbidden
+     */
     @GetMapping("/sprint/version")
     @Transactional(readOnly = true)
     public ResponseEntity<SprintDashboardResponse> isLastVersion(@RequestParam int sprintId,
@@ -60,6 +81,16 @@ public class DashboardRestController extends AbstractController{
         }
     }
 
+    /**
+     * Updates the status of a task. Validates authentication and permission.
+     * Returns 200 with the boolean result when successful, or an appropriate
+     * error status and message when the operation fails.
+     *
+     * @param taskId the id of the task to update
+     * @param taskStatus the new status to apply to the task
+     * @param session the HTTP session used to validate the authenticated user
+     * @return 200 with boolean result on success, 401/403/404/409 on failure with explanatory message
+     */
     @PostMapping("task/editstatus")
     public ResponseEntity<?> editStatus(@RequestParam int taskId,
                                         @RequestParam TaskStatus taskStatus,
@@ -85,10 +116,20 @@ public class DashboardRestController extends AbstractController{
         }
     }
 
+    /**
+     * Compares sprint version numbers.
+     *
+     * @param sprint the current server-side sprint version
+     * @param version the client-provided version to compare
+     * @return true when the provided version is positive and equals the server version
+     */
     private boolean equalSprintVersion(int sprint, int version){
         return sprint>0&&sprint==version;
     }
 
+    /**
+     * Response payload sent when the dashboard requires a full update.
+     */
     private record SprintDashboardResponse(int version, List<TaskDashboardResponse> tasks) {
         private static SprintDashboardResponse from(Sprint sprint) {
             return new SprintDashboardResponse(sprint.getVersion(), sprint.getTasks().stream()
@@ -96,6 +137,9 @@ public class DashboardRestController extends AbstractController{
         }
     }
 
+    /**
+     * DTO describing a task in the dashboard response.
+     */
     private record TaskDashboardResponse(int id, String title, TaskStatus status, List<UserDashboardResponse> assignedUsers) {
         private static TaskDashboardResponse from(Task task) {
             Set<User> assignedUsers = task.getAssignedUsers();
@@ -104,6 +148,9 @@ public class DashboardRestController extends AbstractController{
         }
     }
 
+    /**
+     * Simple DTO for user data returned in the dashboard response.
+     */
     private record UserDashboardResponse(String userName) { }
 
 }

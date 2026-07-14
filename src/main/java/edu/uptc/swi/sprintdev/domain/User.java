@@ -9,9 +9,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 /**
- * Entidad JPA de Usuario. Es una estructura de datos simple: solo
- * atributos y accesores. Las reglas de negocio (duplicados por número de
- * documento, bloqueo por intentos fallidos, etc.) NO viven aquí.
+ * JPA entity representing an application user.
+ * It contains only basic user attributes and persistence metadata.
+ * Business rules like duplicate detection or lockout are handled elsewhere.
  */
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -19,13 +19,22 @@ import jakarta.persistence.UniqueConstraint;
 })
 public class User {
 
+    /**
+     * Primary key for the user.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
+    /**
+     * Username used for authentication and identification.
+     */
     @Column(name = "user_name", nullable = false, length = 120)
     private String userName;
 
+    /**
+     * Encrypted password for authentication.
+     */
     @Column(name = "password", nullable = false)
     private String password;
 

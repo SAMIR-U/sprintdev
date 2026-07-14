@@ -7,36 +7,56 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Entidad JPA de Task. Es una estructura de datos simple: solo
- * atributos, relación con Sprint y accesores. La regla de movimiento
- * entre columnas del tablero NO vive aquí.
+ * JPA entity representing a task in a sprint.
+ * It acts as a simple data holder for task attributes, sprint association,
+ * and assigned users. Task movement rules are implemented elsewhere.
  */
 @Entity
 @Table(name = "tasks")
 public class Task {
 
+    /**
+     * Primary key for the task.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    /**
+     * Task title displayed in the backlog and board.
+     */
     @Column(nullable = false, length = 150)
     private String title;
 
+    /**
+     * Optional details describing the task.
+     */
     @Column(length = 500)
     private String description;
 
+    /**
+     * Current status of the task in the sprint board.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TaskStatus status;
 
+    /**
+     * Timestamp when the task was created.
+     */
     @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime creationDate;
 
+    /**
+     * Sprint that owns this task.
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sprint_id", nullable = false)
     private Sprint sprint;
 
-    //crea una tabla intermedia que solo contiene los id:D
+    /**
+     * Users assigned to work on this task.
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "task_assigned_users",
