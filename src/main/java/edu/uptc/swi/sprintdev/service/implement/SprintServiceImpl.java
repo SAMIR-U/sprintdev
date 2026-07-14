@@ -106,11 +106,6 @@ public class SprintServiceImpl implements ISprintService {
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
     }
 
-    @Override
-    public User obtainCreator(int sprintId) {
-        Sprint sprint = this.findSprintById(sprintId);
-        return sprint.getCreator();
-    }
 
     @Override
     public List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException {
@@ -119,12 +114,6 @@ public class SprintServiceImpl implements ISprintService {
             return sprint.getTasks();
         }
         throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para realizar esta acción");
-    }
-
-    @Override
-    public int obtainSprintVersion(int sprintId) {
-        Sprint sprint = this.findSprintById(sprintId);
-        return sprint.getVersion();
     }
 
     /**

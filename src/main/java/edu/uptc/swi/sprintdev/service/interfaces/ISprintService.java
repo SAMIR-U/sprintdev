@@ -88,14 +88,6 @@ public interface ISprintService {
     Sprint findSprintById(int sprintId, int userId) throws UserDontHavePermissionException;
 
     /**
-     * Obtain the creator of a sprint.
-     *
-     * @param sprintId the sprint identifier
-     * @return the user who created the sprint
-     */
-    User obtainCreator(int sprintId);
-
-    /**
      * Find all tasks belonging to a sprint for a user.
      *
      * @param sprintId the sprint identifier
@@ -105,11 +97,4 @@ public interface ISprintService {
      */
     List<Task> findAllSprintTasks(int sprintId, int userId) throws UserDontHavePermissionException;
 
-    /**
-     * Obtain the current version of a sprint.
-     *
-     * @param sprintId the sprint identifier
-     * @return sprint version number
-     */
-    int obtainSprintVersion(int sprintId);
 }
