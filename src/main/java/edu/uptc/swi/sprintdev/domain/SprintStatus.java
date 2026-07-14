@@ -1,9 +1,9 @@
 package edu.uptc.swi.sprintdev.domain;
 
 /**
- * Ciclo de vida de un Sprint. Solo enumera los valores posibles; las
- * reglas de qué transición es válida en cada momento están en
- * {@code service.rules.SprintLifecycleRules}, no aquí.
+ * Represents the lifecycle states of a sprint.
+ * This enum only defines possible values; transition rules are implemented
+ * in {@code service.rules.SprintLifecycleRules}.
  */
 public enum SprintStatus {
     CREATED,
