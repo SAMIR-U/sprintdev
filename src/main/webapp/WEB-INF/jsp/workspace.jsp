@@ -76,6 +76,27 @@
 
     </c:if>
 
+    
+    <c:if test="${not empty regist}">
+        <c:choose>
+            <c:when test="${regist == 'success'}">
+                <div class="banner success">
+                    Bienvenido, se ha registrado correctamente.
+                </div>
+            </c:when>
+        </c:choose>
+    </c:if>
+
+    <c:if test="${not empty login}">
+        <c:choose>
+            <c:when test="${login == 'success'}">
+                <div class="banner success">
+                    Bienvenido, ha iniciado sesión correctamente.
+                </div>
+            </c:when>
+        </c:choose>
+    </c:if>
+
     <section class="sprint-grid">
 
         <c:choose>
