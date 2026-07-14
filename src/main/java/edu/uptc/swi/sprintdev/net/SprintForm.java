@@ -2,10 +2,17 @@ package edu.uptc.swi.sprintdev.net;
 
 import java.time.LocalDate;
 
+/**
+ * Data transfer object used to submit sprint creation data from the web form.
+ */
 public class SprintForm {
+    /** Sprint title entered by the user. */
     private String name;
+    /** Sprint goal or description entered by the user. */
     private String goal;
+    /** Planned start date for the sprint. */
     private LocalDate startDate;
+    /** Planned end date for the sprint. */
     private LocalDate endDate;
     public SprintForm() {
     }
