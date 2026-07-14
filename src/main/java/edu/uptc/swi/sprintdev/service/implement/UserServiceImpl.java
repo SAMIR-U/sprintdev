@@ -12,7 +12,6 @@ import java.util.Optional;
 
 /**
  * Implementation of user management services.
- *
  * Handles user registration, login authentication, and user lookup operations.
  */
 @Service

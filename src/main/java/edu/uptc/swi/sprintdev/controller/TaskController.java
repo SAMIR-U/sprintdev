@@ -191,7 +191,7 @@ public class TaskController extends AbstractController{
      * @return a set of User entities that exist for the provided usernames
      */
     private Set<User> obtainUsers(List<String> userNames) {
-        Set<User> users = new HashSet<User>();
+        Set<User> users = new HashSet<>();
         for (String userName : userNames) {
             User user = userService.obtainUserByUsername(userName);
             if (user!=null) {

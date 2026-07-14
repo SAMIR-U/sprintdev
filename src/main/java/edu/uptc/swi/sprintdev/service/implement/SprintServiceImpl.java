@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 /**
  * Implementation of sprint-related business logic.
- *
  * This service manages sprint creation, activation, closure, reader assignments,
  * and task retrieval, while enforcing permission checks and sprint state rules.
  */
@@ -240,12 +239,8 @@ public class SprintServiceImpl implements ISprintService {
      * @return the loaded sprint
      */
     private Sprint findSprintById(int sprintId) {
-        Sprint sprint = sprintRepo.findById(sprintId)
+        return   sprintRepo.findById(sprintId)
                 .orElseThrow(() -> new RuntimeException("Sprint no encontrado"));
-
-        sprint.getTasks().size(); // fuerza la carga
-
-        return sprint;
     }
 
     /**

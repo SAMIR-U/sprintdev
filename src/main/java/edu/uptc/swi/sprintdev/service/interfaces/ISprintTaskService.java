@@ -1,14 +1,12 @@
 package edu.uptc.swi.sprintdev.service.interfaces;
 
 import edu.uptc.swi.sprintdev.domain.Task;
-import edu.uptc.swi.sprintdev.domain.User;
 import edu.uptc.swi.sprintdev.exceptions.*;
 
-import java.util.Set;
+
 
 /**
  * Service interface for task operations inside a sprint.
- *
  * Defines task creation, update, deletion, retrieval and status operations
  * with permission and sprint state validation.
  */
@@ -53,17 +51,6 @@ public interface ISprintTaskService {
      * @throws UserDontHavePermissionException when the current user lacks permission
      */
     Task findTaskById(int id) throws UserDontHavePermissionException;
-
-    /**
-     * Find all users assigned to a specific task.
-     *
-     * @param task the task entity
-     * @param userId the identifier of the requesting user
-     * @return set of assigned users
-     * @throws UserDontHavePermissionException when the requesting user lacks permission
-     */
-    Set<User> findAssignedUserTask(Task task, int userId)throws UserDontHavePermissionException;
-
     /**
      * Update the status of a task.
      *

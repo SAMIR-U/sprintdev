@@ -8,11 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+
 
 /**
  * Implementation of sprint task business logic.
- *
  * This service handles task creation, update, deletion, assignment checks,
  * status transitions, and sprint version tracking.
  */
@@ -72,13 +71,7 @@ public class SprintTaskServiceImpl implements ISprintTaskService {
         return this.sprintTaskRepo.getReferenceById(id);
     }
 
-    @Override
-    public Set<User> findAssignedUserTask(Task task, int userId) throws UserDontHavePermissionException {
-        if (this.hasPermission(task.getSprint(), userId)) {
-            return task.getAssignedUsers();
-        }
-        throw new UserDontHavePermissionException("No cuenta con los permisos requeridos para esta acción");
-    }
+
 
     @Override
     public boolean updateTaskStatus(Task task, int creatorId)
