@@ -10,6 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of user management services.
+ *
+ * Handles user registration, login authentication, and user lookup operations.
+ */
 @Service
 @Transactional
 public class UserServiceImpl implements IUserService {
@@ -45,10 +50,23 @@ public class UserServiceImpl implements IUserService {
         return this.userRepo.findUserByKeyWord(keyword);
     }
 
+    /**
+     * Check whether a user already exists by username.
+     *
+     * @param user the user to check
+     * @return true when a user with the same username exists
+     */
     private boolean userExist(User user) {
         return this.userRepo.findByUsername(user.getUserName()).isPresent();
     }
 
+    /**
+     * Validate the provided password against the stored user password.
+     *
+     * @param user the user whose password is checked
+     * @param password the password provided during login
+     * @return true when the provided password matches the stored password
+     */
     private boolean isCorrectPassword(User user, String password) {
         return user.getPassword().equals(password);
     }
